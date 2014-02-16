@@ -37,9 +37,10 @@ L:RegisterTranslations("enUS", function() return {
 	fearbar = "AoE Fear",
 	fearwarn = "AoE Fear in 5 Seconds!",
 
-	AoEtrigger = "is afflicted by Toxic Volley",
+	AoEtrigger = "Lord Kri's Toxic Volley hits",
 	AoEbar = "Toxic Volley",
 	AoEwarn = "Toxic Volley in 3 Seconds!",
+	
 } end )
 
 ----------------------------------
@@ -59,9 +60,10 @@ BigWigsBugFamily.revision = tonumber(string.sub("$Revision: 16639 $", 12, -3))
 function BigWigsBugFamily:OnEnable()
 	deaths = 0
 	fearstatus = nil
-	self:RegisterEvent("CHAT_MSG_COMBAT_HOSTILE_DEATH")
+	self:RegisterEvent("CHAT_MSG_COMBAT_HOSTILE_DEATH", "DeathCount")
 	self:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_CREATURE_BUFF")
 	self:RegisterEvent("PLAYER_REGEN_ENABLED", "CheckForWipe")
+	self:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_SELF_DAMAGE", "FearEvent")
 	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_PARTY_DAMAGE", "FearEvent")
 	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_SELF_DAMAGE", "FearEvent")
 	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_FRIENDLYPLAYER_DAMAGE", "FearEvent")
@@ -85,10 +87,10 @@ function BigWigsBugFamily:FearEvent(msg)
 	end
 end
 
-function BigWigsKelThuzad:BigWigs_RecvSync(sync, rest, nick)
+function BigWigsBugFamily:BigWigs_RecvSync(sync, rest, nick)
 	if sync == "KriBolt" then
-		self:TriggerEvent("BigWigs_StartBar", self, L["AoEbar"], 10, "Interface\\Icons\\Spell_Nature_Corrosivebreath")
-		self:ScheduleEvent("BigWigs_Message", 7, L["AoEwarn"], "Urgent")
+		self:TriggerEvent("BigWigs_StartBar", self, L["AoEbar"], 11, "Interface\\Icons\\Spell_Nature_Corrosivebreath")
+		self:ScheduleEvent("BigWigs_Message", 8, L["AoEwarn"], "Urgent")
 	end
 end
 
@@ -96,7 +98,7 @@ function BigWigsBugFamily:BigWigs_Message(txt)
 	if fearstatus and txt == L["fearwarn"] then fearstatus = nil end
 end
 
-function BigWigsBugFamily:CHAT_MSG_COMBAT_HOSTILE_DEATH(msg)
+function BigWigsBugFamily:DeathCount(msg)
 	if (msg == string.format(UNITDIESOTHER, kri) or msg == string.format(UNITDIESOTHER, yauj) or msg == string.format(UNITDIESOTHER, vem)) then
 		deaths = deaths + 1
 		if (deaths == 3) then
