@@ -64,6 +64,7 @@ function BigWigsBugFamily:OnEnable()
 	self:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_CREATURE_BUFF")
 	self:RegisterEvent("PLAYER_REGEN_ENABLED", "CheckForWipe")
 	self:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_SELF_DAMAGE", "FearEvent")
+	self:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_PARTY_DAMAGE", "FearEvent")
 	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_PARTY_DAMAGE", "FearEvent")
 	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_SELF_DAMAGE", "FearEvent")
 	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_FRIENDLYPLAYER_DAMAGE", "FearEvent")
@@ -89,8 +90,8 @@ end
 
 function BigWigsBugFamily:BigWigs_RecvSync(sync, rest, nick)
 	if sync == "KriBolt" then
-		self:TriggerEvent("BigWigs_StartBar", self, L["AoEbar"], 11, "Interface\\Icons\\Spell_Nature_Corrosivebreath")
-		self:ScheduleEvent("BigWigs_Message", 8, L["AoEwarn"], "Urgent")
+		self:TriggerEvent("BigWigs_StartBar", self, L["AoEbar"], 10, "Interface\\Icons\\Spell_Nature_Corrosivebreath")
+		self:ScheduleEvent("BigWigs_Message", 7, L["AoEwarn"], "Urgent")
 	end
 end
 
@@ -111,7 +112,7 @@ end
 function BigWigsBugFamily:CHAT_MSG_SPELL_CREATURE_VS_CREATURE_BUFF(msg)
 	if msg == L["healtrigger"] and self.db.profile.heal then
 		self:TriggerEvent("BigWigs_StartBar", self, L["healbar"], 2, "Interface\\Icons\\Spell_Holy_Heal")
-		self:TriggerEvent("BigWigs_Message", L["healwarn"], "Urgent", true, "Alert")
+		self:TriggerEvent("BigWigs_Message", L["healwarn"], "Urgent")
 	end
 end
 
