@@ -1,4 +1,4 @@
-﻿------------------------------
+------------------------------
 --      Are you local?      --
 ------------------------------
 
@@ -25,7 +25,7 @@ L:RegisterTranslations("enUS", function() return {
 	shieldwall_name = "Shield Wall Timer",
 	shieldwall_desc = "Show timer for Shield Wall",
 
-	startwarn = "Instructor Razuvious engaged! 20sec to Shout, 30sec to Unbalancing Strike!",
+	startwarn = "Instructor Razuvious engaged! 25sec to Shout, 30sec to Unbalancing Strike!",
 
 	starttrigger1 = "Stand and fight!",
 	starttrigger2 = "Show me what you've got!",
@@ -38,7 +38,7 @@ L:RegisterTranslations("enUS", function() return {
 	shout10secwarn = "10 sec to Disrupting Shout",
 	shout5secwarn = "5 sec to Disrupting Shout!",
 	shoutwarn = "Disrupting Shout!",
-	noshoutwarn = "No shout! Next in 20secs",
+	noshoutwarn = "No shout! Next in 25secs",
 	shoutbar = "Disrupting Shout",
 
     unbalance_trigger = "afflicted by Unbalancing Strike",
@@ -103,9 +103,9 @@ function BigWigsRazuvious:CHAT_MSG_MONSTER_YELL( msg )
 	        end
 		if self.db.profile.shout then
 			self:TriggerEvent("BigWigs_Message", L["startwarn"], "Urgent", nil, "Alarm")
-			self:ScheduleEvent("bwrazuviousshout10sec", "BigWigs_Message", 10, L["shout10secwarn"], "Attention")
-			self:ScheduleEvent("bwrazuviousshout5sec", "BigWigs_Message", 15, L["shout5secwarn"], "Urgent", nil, "Alert")
-			self:TriggerEvent("BigWigs_StartBar", self, L["shoutbar"], 20, "Interface\\Icons\\Ability_Warrior_WarCry")
+			self:ScheduleEvent("bwrazuviousshout10sec", "BigWigs_Message", 15, L["shout10secwarn"], "Attention")
+			self:ScheduleEvent("bwrazuviousshout5sec", "BigWigs_Message", 20, L["shout5secwarn"], "Urgent", nil, "Alert")
+			self:TriggerEvent("BigWigs_StartBar", self, L["shoutbar"], 25, "Interface\\Icons\\Ability_Warrior_WarCry")
 			self:TriggerEvent("BigWigs_StartBar", self, L["unbalancebar"], 30, "Interface\\Icons\\Ability_Warrior_DecisiveStrike")
 		end
 		self:ScheduleEvent("bwrazuviousnoshout", self.noShout, self.timeShout - 5, self )
@@ -130,7 +130,7 @@ end
 
 function BigWigsRazuvious:noShout()	
 	self:CancelScheduledEvent("bwrazuviousnoshout")
-	self:ScheduleEvent("bwrazuviousnoshout", self.noShout, self.timeShout - 5, self )
+	self:ScheduleEvent("bwrazuviousnoshout", self.noShout, self.timeShout, self )
 	if self.db.profile.shout then
 		self:TriggerEvent("BigWigs_Message", L["noshoutwarn"], "Attention")
 		self:ScheduleEvent("bwrazuviousshout10sec", "BigWigs_Message", 10, L["shout10secwarn"], "Attention")
@@ -185,13 +185,12 @@ end
 
 function BigWigsRazuvious:Run1()
             if (UnitClass("player") == "Mage") or (UnitClass("player") == "Warlock") or (UnitClass("player") == "Hunter") then
-	        self:ScheduleEvent(function() BigWigsThaddiusArrows:Direction("Run") end, 20)
+	        self:ScheduleEvent(function() BigWigsThaddiusArrows:Direction("Run") end, 22)
 	end
 end
 
 function BigWigsRazuvious:Run2()
             if (UnitClass("player") == "Mage") or (UnitClass("player") == "Warlock") or (UnitClass("player") == "Hunter") then
-	        self:ScheduleEvent(function() BigWigsThaddiusArrows:Direction("Run") end, 15)
+	        self:ScheduleEvent(function() BigWigsThaddiusArrows:Direction("Run") end, 17)
 	end
 end
-
