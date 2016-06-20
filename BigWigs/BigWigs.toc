@@ -1,10 +1,10 @@
 ﻿## Interface: 11200
 
-## Title: Big Wigs |cff1fff1fFeenix|r edition
-## Notes: Boss Mods. Made by |cff1fff1f Sulfuras|r, Updates by Soge and Shyva, Rev 8.3
-## Contributing Authors: Sulfuras, Soge, Shyva
-## Version: 8.3
-## X-Website: http://www.wow-one.com/
+## Title: Big Wigs |cff02bf02VG|r edition
+## Notes: Boss Mods. Made by |cff1fff1f Sulfuras|r, Updates by Soge and Shyva, Rev 8.3 & |cff02bf02Luise|r
+## Contributing Authors: Sulfuras, Soge, Shyva, Luise
+## Version: 9
+## X-Website: http://www.vanillagaming.org
 ## X-Email: sulf.the.great@gmail.com, okey14@gmail.com
 ## X-Category: Raid
 
