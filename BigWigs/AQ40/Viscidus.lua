@@ -67,7 +67,7 @@ BigWigsViscidus = BigWigs:NewModule(boss)
 BigWigsViscidus.zonename = AceLibrary("Babble-Zone-2.2")["Ahn'Qiraj"]
 BigWigsViscidus.enabletrigger = boss
 BigWigsViscidus.toggleoptions = {"freeze", "volley", "toxinyou", "toxinother", "bosskill"}
-BigWigsViscidus.revision = tonumber(string.sub("$Revision: 16282 $", 12, -3))
+BigWigsViscidus.revision = tonumber(string.sub("$Revision: 19000 $", 12, -3))
 
 ------------------------------
 --      Initialization      --
@@ -87,7 +87,7 @@ function BigWigsViscidus:OnEnable()
 
 
 	self:RegisterEvent("BigWigs_RecvSync")
-	self:TriggerEvent("BigWigs_ThrottleSync", "ViscidusAoE", 7)
+	self:TriggerEvent("BigWigs_ThrottleSync", "ViscidusAoE", 12)
 end
 
 ------------------------------
@@ -114,8 +114,8 @@ end
 
 function BigWigsViscidus:BigWigs_RecvSync( sync )
 	if sync == "ViscidusAoE" then
-		self:ScheduleEvent("BigWigs_Message", 7, L["warn7"], "Urgent")
-		self:TriggerEvent("BigWigs_StartBar", self, L["bar1text"], 10, "Interface\\Icons\\Spell_Nature_CorrosiveBreath")
+		self:ScheduleEvent("BigWigs_Message", 12, L["warn7"], "Urgent")
+		self:TriggerEvent("BigWigs_StartBar", self, L["bar1text"], 15, "Interface\\Icons\\Spell_Nature_CorrosiveBreath")
 	end
 end
 
