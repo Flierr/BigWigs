@@ -131,10 +131,10 @@ function BigWigsNefarian:CHAT_MSG_MONSTER_YELL(msg)
 			else
 				if self.db.profile.otherwarn and string.find(msg, L["landing_soon_trigger"]) then 
                                    self:TriggerEvent("BigWigs_Message", v[1], "Important", true, "Long")
-			           self:TriggerEvent("BigWigs_StartBar", self, L["land"], 135, "Interface\\Icons\\INV_Misc_Head_Dragon_Black")
+			           self:TriggerEvent("BigWigs_StartBar", self, L["land"], 225, "Interface\\Icons\\INV_Misc_Head_Dragon_Black")
 			           self:TriggerEvent("BigWigs_StartBar", self, L["Mob_Spawn"], 10, "Interface\\Icons\\Spell_Holy_PrayerOfHealing")
-		                   self:ScheduleEvent("BigWigs_Message", 105, L["landing_soon_warning"], "Important", true, "Alarm")
-		                   self:ScheduleEvent("BigWigs_Message", 125, L["landing_very_soon"], "Important", true, "Long")
+		                   self:ScheduleEvent("BigWigs_Message", 195, L["landing_soon_warning"], "Important", true, "Alarm")
+		                   self:ScheduleEvent("BigWigs_Message", 215, L["landing_very_soon"], "Important", true, "Long")
 				elseif self.db.profile.otherwarn and string.find(msg, L["landing_trigger"]) then 
                                    self:TriggerEvent("BigWigs_Message", v[1], "Important", true, "Long")
 				elseif self.db.profile.otherwarn and string.find(msg, L["zerg_trigger"]) then 
