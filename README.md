@@ -10,6 +10,7 @@ VG edit by Flier & Luise (De Profundis)
 
 
 Implemented fixes:
-- Anub Locust Swarm timer
-- Razuvious Shout timer
-- Gluth decimate
+- Anub locust swarm timer
+- Razuvious shout timer
+- Gluth decimate timer
+- Nefarian landing timer (Testing needed).
