@@ -127,7 +127,101 @@ function BigWigsTwins:BigWigs_RecvSync(sync, rest, nick)
 			self:ScheduleEvent("BigWigs_Message", 20, L["portdelaywarn10"], "Urgent")
 			self:ScheduleEvent("BigWigs_Message", 25, L["portdelaywarn"], "Urgent")
 			self:TriggerEvent("BigWigs_StartBar", self, L["bartext"], 30, "Interface\\Icons\\Spell_Arcane_Blink")
-		end
+			
+			--Bars and warnings for 10 mins, because VG has no teleport in combatlog - needs testing
+			self:ScheduleEvent("BigWigs_Message", 50, L["portdelaywarn10"], "Urgent")
+			self:ScheduleEvent("BigWigs_Message", 55, L["portdelaywarn"], "Urgent")
+			self:TriggerEvent("BigWigs_StartBar", 60, self, L["bartext"], 30, "Interface\\Icons\\Spell_Arcane_Blink")
+			
+			self:ScheduleEvent("BigWigs_Message", 80, L["portdelaywarn10"], "Urgent")
+			self:ScheduleEvent("BigWigs_Message", 85, L["portdelaywarn"], "Urgent")
+			self:TriggerEvent("BigWigs_StartBar", 90, self, L["bartext"], 30, "Interface\\Icons\\Spell_Arcane_Blink")
+			
+			self:ScheduleEvent("BigWigs_Message", 110, L["portdelaywarn10"], "Urgent")
+			self:ScheduleEvent("BigWigs_Message", 115, L["portdelaywarn"], "Urgent")
+			self:TriggerEvent("BigWigs_StartBar", 120, self, L["bartext"], 30, "Interface\\Icons\\Spell_Arcane_Blink")
+			
+			self:ScheduleEvent("BigWigs_Message", 140, L["portdelaywarn10"], "Urgent")
+			self:ScheduleEvent("BigWigs_Message", 145, L["portdelaywarn"], "Urgent")
+			self:TriggerEvent("BigWigs_StartBar", 150, self, L["bartext"], 30, "Interface\\Icons\\Spell_Arcane_Blink")
+			
+			self:ScheduleEvent("BigWigs_Message", 170, L["portdelaywarn10"], "Urgent")
+			self:ScheduleEvent("BigWigs_Message", 175, L["portdelaywarn"], "Urgent")
+			self:TriggerEvent("BigWigs_StartBar", 180, self, L["bartext"], 30, "Interface\\Icons\\Spell_Arcane_Blink")
+			
+			self:ScheduleEvent("BigWigs_Message", 200, L["portdelaywarn10"], "Urgent")
+			self:ScheduleEvent("BigWigs_Message", 205, L["portdelaywarn"], "Urgent")
+			self:TriggerEvent("BigWigs_StartBar", 210, self, L["bartext"], 30, "Interface\\Icons\\Spell_Arcane_Blink")
+			
+			self:ScheduleEvent("BigWigs_Message", 230, L["portdelaywarn10"], "Urgent")
+			self:ScheduleEvent("BigWigs_Message", 235, L["portdelaywarn"], "Urgent")
+			self:TriggerEvent("BigWigs_StartBar", 240, self, L["bartext"], 30, "Interface\\Icons\\Spell_Arcane_Blink")
+			
+			self:ScheduleEvent("BigWigs_Message", 260, L["portdelaywarn10"], "Urgent")
+			self:ScheduleEvent("BigWigs_Message", 265, L["portdelaywarn"], "Urgent")
+			self:TriggerEvent("BigWigs_StartBar", 270, self, L["bartext"], 30, "Interface\\Icons\\Spell_Arcane_Blink")
+			
+			self:ScheduleEvent("BigWigs_Message", 290, L["portdelaywarn10"], "Urgent")
+			self:ScheduleEvent("BigWigs_Message", 295, L["portdelaywarn"], "Urgent")
+			self:TriggerEvent("BigWigs_StartBar", 300, self, L["bartext"], 30, "Interface\\Icons\\Spell_Arcane_Blink")
+			
+			self:ScheduleEvent("BigWigs_Message", 320, L["portdelaywarn10"], "Urgent")
+			self:ScheduleEvent("BigWigs_Message", 325, L["portdelaywarn"], "Urgent")
+			self:TriggerEvent("BigWigs_StartBar", 330, self, L["bartext"], 30, "Interface\\Icons\\Spell_Arcane_Blink")
+			
+			self:ScheduleEvent("BigWigs_Message", 350, L["portdelaywarn10"], "Urgent")
+			self:ScheduleEvent("BigWigs_Message", 355, L["portdelaywarn"], "Urgent")
+			self:TriggerEvent("BigWigs_StartBar", 360, self, L["bartext"], 30, "Interface\\Icons\\Spell_Arcane_Blink")
+			
+			self:ScheduleEvent("BigWigs_Message", 380, L["portdelaywarn10"], "Urgent")
+			self:ScheduleEvent("BigWigs_Message", 385, L["portdelaywarn"], "Urgent")
+			self:TriggerEvent("BigWigs_StartBar", 390, self, L["bartext"], 30, "Interface\\Icons\\Spell_Arcane_Blink")
+			
+			self:ScheduleEvent("BigWigs_Message", 410, L["portdelaywarn10"], "Urgent")
+			self:ScheduleEvent("BigWigs_Message", 415, L["portdelaywarn"], "Urgent")
+			self:TriggerEvent("BigWigs_StartBar", 420, self, L["bartext"], 30, "Interface\\Icons\\Spell_Arcane_Blink")
+			
+			self:ScheduleEvent("BigWigs_Message", 440, L["portdelaywarn10"], "Urgent")
+			self:ScheduleEvent("BigWigs_Message", 445, L["portdelaywarn"], "Urgent")
+			self:TriggerEvent("BigWigs_StartBar", 450, self, L["bartext"], 30, "Interface\\Icons\\Spell_Arcane_Blink")
+			
+			self:ScheduleEvent("BigWigs_Message", 470, L["portdelaywarn10"], "Urgent")
+			self:ScheduleEvent("BigWigs_Message", 475, L["portdelaywarn"], "Urgent")
+			self:TriggerEvent("BigWigs_StartBar", 480, self, L["bartext"], 30, "Interface\\Icons\\Spell_Arcane_Blink")
+			
+			self:ScheduleEvent("BigWigs_Message", 500, L["portdelaywarn10"], "Urgent")
+			self:ScheduleEvent("BigWigs_Message", 505, L["portdelaywarn"], "Urgent")
+			self:TriggerEvent("BigWigs_StartBar", 510, self, L["bartext"], 30, "Interface\\Icons\\Spell_Arcane_Blink")
+			
+			self:ScheduleEvent("BigWigs_Message", 530, L["portdelaywarn10"], "Urgent")
+			self:ScheduleEvent("BigWigs_Message", 535, L["portdelaywarn"], "Urgent")
+			self:TriggerEvent("BigWigs_StartBar", 540, self, L["bartext"], 30, "Interface\\Icons\\Spell_Arcane_Blink")
+			
+			self:ScheduleEvent("BigWigs_Message", 560, L["portdelaywarn10"], "Urgent")
+			self:ScheduleEvent("BigWigs_Message", 565, L["portdelaywarn"], "Urgent")
+			self:TriggerEvent("BigWigs_StartBar", 570, self, L["bartext"], 30, "Interface\\Icons\\Spell_Arcane_Blink")
+			
+			self:ScheduleEvent("BigWigs_Message", 590, L["portdelaywarn10"], "Urgent")
+			self:ScheduleEvent("BigWigs_Message", 595, L["portdelaywarn"], "Urgent")
+			self:TriggerEvent("BigWigs_StartBar", 600, self, L["bartext"], 30, "Interface\\Icons\\Spell_Arcane_Blink")
+			
+			self:ScheduleEvent("BigWigs_Message", 620, L["portdelaywarn10"], "Urgent")
+			self:ScheduleEvent("BigWigs_Message", 625, L["portdelaywarn"], "Urgent")
+			self:TriggerEvent("BigWigs_StartBar", 630, self, L["bartext"], 30, "Interface\\Icons\\Spell_Arcane_Blink")
+			
+			self:ScheduleEvent("BigWigs_Message", 650, L["portdelaywarn10"], "Urgent")
+			self:ScheduleEvent("BigWigs_Message", 655, L["portdelaywarn"], "Urgent")
+			self:TriggerEvent("BigWigs_StartBar", 660, self, L["bartext"], 30, "Interface\\Icons\\Spell_Arcane_Blink")
+			
+			self:ScheduleEvent("BigWigs_Message", 680, L["portdelaywarn10"], "Urgent")
+			self:ScheduleEvent("BigWigs_Message", 685, L["portdelaywarn"], "Urgent")
+			self:TriggerEvent("BigWigs_StartBar", 690, self, L["bartext"], 30, "Interface\\Icons\\Spell_Arcane_Blink")
+			
+			self:ScheduleEvent("BigWigs_Message", 710, L["portdelaywarn10"], "Urgent")
+			self:ScheduleEvent("BigWigs_Message", 715, L["portdelaywarn"], "Urgent")
+			self:TriggerEvent("BigWigs_StartBar", 720, self, L["bartext"], 30, "Interface\\Icons\\Spell_Arcane_Blink")
+
+	end
 		if self.db.profile.enrage then
 	                self:ScheduleRepeatingEvent("bwtwinstelebar", self.Telebar, 30.1, self)
 			self:TriggerEvent("BigWigs_Message", L["startwarn"], "Important")
@@ -145,6 +239,7 @@ function BigWigsTwins:BigWigs_RecvSync(sync, rest, nick)
 		self:ScheduleEvent("BigWigs_Message", 20, L["portdelaywarn10"], "Urgent")
 		self:ScheduleEvent("BigWigs_Message", 25, L["portdelaywarn"], "Urgent")
 		self:TriggerEvent("BigWigs_StartBar", self, L["bartext"], 30, "Interface\\Icons\\Spell_Arcane_Blink")
+		
 	end
 end
 
@@ -156,6 +251,7 @@ function BigWigsTwins:Telebar()
 		self:TriggerEvent("BigWigs_StartBar", self, L["bartext"], 30.1, "Interface\\Icons\\Spell_Arcane_Blink")
 end	
 
+--not working on VG
 function BigWigsTwins:CHAT_MSG_SPELL_CREATURE_VS_CREATURE_DAMAGE(msg)
 	if (string.find(msg, L["porttrigger"])) then
 		self:TriggerEvent("BigWigs_SendSync", "TwinsTeleport")
