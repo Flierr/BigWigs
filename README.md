@@ -14,3 +14,4 @@ Implemented fixes:
 - Razuvious shout timer
 - Gluth decimate timer
 - Nefarian landing timer (Testing needed).
+- Twins Teleport fixed repeat Timer (Testing needed)
