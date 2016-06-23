@@ -52,7 +52,7 @@ BigWigsRazorgore = BigWigs:NewModule(boss)
 BigWigsRazorgore.zonename = AceLibrary("Babble-Zone-2.2")["Blackwing Lair"]
 BigWigsRazorgore.enabletrigger = { boss, controller }
 BigWigsRazorgore.toggleoptions = { "mc", "eggs", "phase", "bosskill" }
-BigWigsRazorgore.revision = tonumber(string.sub("$Revision: 17555 $", 12, -3))
+BigWigsRazorgore.revision = tonumber(string.sub("$Revision: 19001 $", 12, -3))
 
 ------------------------------
 --      Initialization      --
