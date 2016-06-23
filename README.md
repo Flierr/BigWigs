@@ -13,5 +13,6 @@ Implemented fixes:
 - Anub locust swarm timer
 - Razuvious shout timer
 - Gluth decimate timer
-- Nefarian landing timer (Testing needed).
+- Nefarian landing timer (Working correctly)
 - Twins Teleport fixed repeat Timer (Testing needed)
+- Firemaw inital wing buffet and repeat buffet timer (Testing needed)
