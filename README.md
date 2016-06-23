@@ -15,4 +15,4 @@ Implemented fixes:
 - Gluth decimate timer
 - Nefarian landing timer (Working correctly)
 - Twins Teleport fixed repeat Timer (Testing needed)
-- Firemaw inital wing buffet and repeat buffet timer (Testing needed)
+- Firemaw initial wing buffet and repeat buffet timer (Testing needed)
