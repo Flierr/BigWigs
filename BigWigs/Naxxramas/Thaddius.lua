@@ -241,7 +241,7 @@ function BigWigsThaddius:BigWigs_RecvSync( sync )
 	if sync == "ThaddiusPolarity" and self.db.profile.polarity then
 	        self:ScheduleEvent("bwthaddiustestcheck", self.Testcheck, 3.5, self)
                 self:TriggerEvent("BigWigs_StartBar", self, L["castbar"], 3.1, "Interface\\Icons\\Spell_Nature_Lightning")
-		self:ScheduleEvent("BigWigs_Message", 25, L["pswarn3"], "Urgent")
+		self:ScheduleEvent("BigWigs_Message", 27, L["pswarn3"], "Urgent")
 		self:TriggerEvent("BigWigs_StartBar", self, L["bar1text"], 30, "Interface\\Icons\\Spell_Nature_Lightning")
 	elseif sync == "StalaggPower" and self.db.profile.power then
 		self:TriggerEvent("BigWigs_Message", L["stalaggwarn"], "Important")
@@ -250,13 +250,13 @@ function BigWigsThaddius:BigWigs_RecvSync( sync )
 end
 
 function BigWigsThaddius:Throwst()
-		self:ScheduleRepeatingEvent( "bwthaddiusthrow", self.Throw, 20.2, self )
+		self:ScheduleRepeatingEvent( "bwthaddiusthrow", self.Throw, 21, self )
 end
 
 function BigWigsThaddius:Throw()
 	if self.db.profile.throw then
-		self:TriggerEvent("BigWigs_StartBar", self, L["throwbar"], 20.2, "Interface\\Icons\\Ability_Druid_Maul")
-		self:ScheduleEvent("bwthaddiusthrowwarn", "BigWigs_Message", 16.2, L["throwwarn"], "Urgent")
+		self:TriggerEvent("BigWigs_StartBar", self, L["throwbar"], 20, "Interface\\Icons\\Ability_Druid_Maul")
+		self:ScheduleEvent("bwthaddiusthrowwarn", "BigWigs_Message", 15, L["throwwarn"], "Urgent")
 	end
 end
 
@@ -289,7 +289,7 @@ function BigWigsThaddius:Testcheck()
 		elseif chargetype == L["negativetype"] then
 			self:TriggerEvent("BigWigs_Message", L["negwarn"], "Urgent", true, "Alert")
 		end
-		self:TriggerEvent("BigWigs_StartBar", self, L["polaritytickbar"], 4.3, chargetype, "Important")
+		self:TriggerEvent("BigWigs_StartBar", self, L["polaritytickbar"], 6, chargetype, "Important")
 	end
 	self.previousCharge = chargetype
 end
