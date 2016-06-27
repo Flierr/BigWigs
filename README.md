@@ -16,3 +16,4 @@ Implemented fixes:
 - Nefarian landing timer (Working correctly)
 - Twins Teleport fixed repeat Timer (Testing needed)
 - Firemaw initial wing buffet and repeat buffet timer (Testing needed)
+- Magmadar fear timer (Testing needed)
