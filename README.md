@@ -9,11 +9,19 @@ This is a repository for the maintenance and upkeep of BigWigs VG Edition, initi
 VG edit by Flier & Luise (De Profundis)
 
 
-Implemented fixes:
+Implemented fixes **(Working correctly)**:
+- Nefarian landing timer
+- Gluth decimate timer
+
+Implemented fixes **(Testing needed)**:
 - Anub locust swarm timer
 - Razuvious shout timer
-- Gluth decimate timer
-- Nefarian landing timer (Working correctly)
-- Twins Teleport fixed repeat Timer (Testing needed)
-- Firemaw initial wing buffet and repeat buffet timer (Testing needed)
-- Magmadar fear timer (Testing needed)
+- Twins Teleport fixed repeat Timer 
+- Firemaw initial wing buffet and repeat buffet timer
+- Magmadar fear timer
+- Thaddius (throw) timers
+
+TODO / current issues:
+- Maexxna spider timers
+- The four horsemen
+- Baron Geddon Inferno
