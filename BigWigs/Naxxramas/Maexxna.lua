@@ -66,7 +66,7 @@ BigWigsMaexxna = BigWigs:NewModule(boss)
 BigWigsMaexxna.zonename = AceLibrary("Babble-Zone-2.2")["Naxxramas"]
 BigWigsMaexxna.enabletrigger = boss
 BigWigsMaexxna.toggleoptions = {"spray", "poison", "cocoon", "enrage", "bosskill"}
-BigWigsMaexxna.revision = tonumber(string.sub("$Revision: 15520 $", 12, -3))
+BigWigsMaexxna.revision = tonumber(string.sub("$Revision: 17990 $", 12, -3))
 
 ------------------------------
 --      Initialization      --
@@ -145,8 +145,8 @@ function BigWigsMaexxna:BigWigs_RecvSync( sync, rest )
 
 		self:TriggerEvent("BigWigs_Message", L["webspraywarn"], "Important")	
 -- However there is still a bar for it
-		self:TriggerEvent("BigWigs_StartBar", self, L["cocoonbar"], 22, "Interface\\Icons\\Spell_Nature_Web" )
-		self:TriggerEvent("BigWigs_StartBar", self, L["spiderbar"], 35, "Interface\\Icons\\INV_Misc_MonsterSpiderCarapace_01" )
+		self:TriggerEvent("BigWigs_StartBar", self, L["cocoonbar"], 20, "Interface\\Icons\\Spell_Nature_Web" )
+		self:TriggerEvent("BigWigs_StartBar", self, L["spiderbar"], 30, "Interface\\Icons\\INV_Misc_MonsterSpiderCarapace_01" )
 		self:TriggerEvent("BigWigs_StartBar", self, L["webspraybar"], 40, "Interface\\Icons\\Ability_Ensnare" )
 	
 	elseif sync == "MaexxnaCocoon" then
@@ -171,14 +171,6 @@ function BigWigsMaexxna:UNIT_HEALTH( msg )
 	end
 end
 
--- Doesnt happen yet, so comment out until its fixed
---function BigWigsMaexxna:CHAT_MSG_MONSTER_EMOTE( msg )
---	if self.db.profile.enrage and msg == L["enragetrigger"] then 
---		self:TriggerEvent("BigWigs_Message", L["enragewarn"], "Important")
---	end
---end
-
--- Workaround
 function BigWigsMaexxna:Enrage( msg )
 	if string.find(msg, L["etrigger1"]) then
 		if self.db.profile.enrage then 
