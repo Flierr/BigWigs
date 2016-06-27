@@ -20,7 +20,7 @@ L:RegisterTranslations("enUS", function() return {
 	-- Warnings and bar texts
 	["Frenzy alert!"] = true,
 	["5 seconds until AoE Fear!"] = true,
-	["AoE Fear - 30 seconds until next!"] = true,
+	["AoE Fear - 35 seconds until next!"] = true,
 	["AoE Fear"] = true,
 
 	-- AceConsole strings
@@ -85,9 +85,9 @@ end
 function BigWigsMagmadar:BigWigs_RecvSync( sync ) 
 	if sync ~= "MagmadarFear" then return end
 	if self.db.profile.fear then
-		self:TriggerEvent("BigWigs_StartBar", self, L["AoE Fear"], 31, "Interface\\Icons\\Spell_Shadow_PsychicScream")
-		self:TriggerEvent("BigWigs_Message", L["AoE Fear - 30 seconds until next!"], "Important")
-		self:ScheduleEvent("BigWigs_Message", 25, L["5 seconds until AoE Fear!"], "Urgent", true, "Alert")
+		self:TriggerEvent("BigWigs_StartBar", self, L["AoE Fear"], 35, "Interface\\Icons\\Spell_Shadow_PsychicScream")
+		self:TriggerEvent("BigWigs_Message", L["AoE Fear - 35 seconds until next!"], "Important")
+		self:ScheduleEvent("BigWigs_Message", 30, L["5 seconds until AoE Fear!"], "Urgent", true, "Alert")
 	end
 end
 
