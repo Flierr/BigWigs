@@ -9,6 +9,7 @@ This is a repository for the maintenance and upkeep of BigWigs VG Edition, initi
 VG edit by Flier & Luise (De Profundis)
 
 http://vanillagaming.org/
+
 http://deprofundis.shivtr.com/
 
 
