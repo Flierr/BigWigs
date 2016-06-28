@@ -145,8 +145,8 @@ function BigWigsHorsemen:BigWigs_RecvSync(sync, rest)
 			end
 			self.marks = self.marks + 1
 			if self.db.profile.mark then 
-				self:TriggerEvent("BigWigs_StartBar", self, string.format( L["markbar"], self.marks ), 12, "Interface\\Icons\\Spell_Shadow_CurseOfAchimonde")
-				self:ScheduleEvent("bwhorsemenmark2", "BigWigs_Message", 7, string.format( L["markwarn2"], self.marks ), "Urgent")
+				self:TriggerEvent("BigWigs_StartBar", self, string.format( L["markbar"], self.marks ), 20, "Interface\\Icons\\Spell_Shadow_CurseOfAchimonde")
+				self:ScheduleEvent("bwhorsemenmark2", "BigWigs_Message", 15, string.format( L["markwarn2"], self.marks ), "Urgent")
 			end
 		end
 	elseif sync == "HorsemenMeteor1" then
