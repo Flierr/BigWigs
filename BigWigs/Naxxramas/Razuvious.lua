@@ -133,10 +133,10 @@ function BigWigsRazuvious:noShout()
 	self:ScheduleEvent("bwrazuviousnoshout", self.noShout, self.timeShout, self )
 	if self.db.profile.shout then
 		self:TriggerEvent("BigWigs_Message", L["noshoutwarn"], "Attention")
-		self:ScheduleEvent("bwrazuviousshout10sec", "BigWigs_Message", 10, L["shout10secwarn"], "Attention")
+		self:ScheduleEvent("bwrazuviousshout10sec", "BigWigs_Message", 15, L["shout10secwarn"], "Attention")
 			self:Run2()
-		self:ScheduleEvent("bwrazuviousshout5sec", "BigWigs_Message", 15, L["shout5secwarn"], "Urgent", nil, "Alert")
-		self:TriggerEvent("BigWigs_StartBar", self, L["shoutbar"], 20, "Interface\\Icons\\Ability_Warrior_WarCry")
+		self:ScheduleEvent("bwrazuviousshout5sec", "BigWigs_Message", 20, L["shout5secwarn"], "Urgent", nil, "Alert")
+		self:TriggerEvent("BigWigs_StartBar", self, L["shoutbar"], 25, "Interface\\Icons\\Ability_Warrior_WarCry")
 	end
 end
 
