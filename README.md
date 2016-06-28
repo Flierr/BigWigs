@@ -16,9 +16,10 @@ http://deprofundis.shivtr.com/
 Implemented fixes **(Working correctly)**:
 - Nefarian landing timer
 - Gluth decimate timer
+- Anub locust swarm timer
 
 Implemented fixes **(Testing needed)**:
-- Anub locust swarm timer
+
 - Razuvious shout timer
 - Twins Teleport fixed repeat Timer 
 - Firemaw initial wing buffet and repeat buffet timer
