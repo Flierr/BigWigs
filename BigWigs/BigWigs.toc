@@ -1,11 +1,11 @@
 ﻿## Interface: 11200
 
 ## Title: Big Wigs |cff02bf02VG|r edition
-## Notes: Boss Mods. Made by |cff1fff1f Sulfuras|r, Updates by Soge and Shyva & |cff02bf02Luise|r, Rev 19001
+## Notes: Boss Mods. Made by |cff1fff1f Sulfuras|r, Updates by Soge and Shyva & |cff02bf02Luise|r & |cff02bf02Flier|r, Rev 19001
 ## Contributing Authors: Sulfuras, Soge, Shyva, Luise
 ## Version: 19001
 ## X-Website: http://www.vanillagaming.org
-## X-Email: sulf.the.great@gmail.com, okey14@gmail.com
+## X-Email: flierrgaming@gmail.com
 ## X-Category: Raid
 
 ## OptionalDeps: Ace2, FuBar, FuBarPlugin-2.0, Babble-2.2, CandyBar, CompostLib, DewdropLib, PaintChipsLib, TabletLib, MikScrollingBattleText, sct
