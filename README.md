@@ -8,6 +8,9 @@ This is a repository for the maintenance and upkeep of BigWigs VG Edition, initi
 
 VG edit by Flier & Luise (De Profundis)
 
+http://vanillagaming.org/
+http://deprofundis.shivtr.com/
+
 
 Implemented fixes **(Working correctly)**:
 - Nefarian landing timer
@@ -19,9 +22,10 @@ Implemented fixes **(Testing needed)**:
 - Twins Teleport fixed repeat Timer 
 - Firemaw initial wing buffet and repeat buffet timer
 - Magmadar fear timer
-- Thaddius (throw) timers
-- Maexxna spider timers
+- Thaddius (throw) timer
+- Maexxna spider timer
+- The four horsemen mark timer
 
 TODO / current issues:
-- The four horsemen
+- The four horsemen (void zones later in the fight seem slightly longer than at the start)
 - Baron Geddon Inferno
