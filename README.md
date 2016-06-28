@@ -20,8 +20,8 @@ Implemented fixes **(Testing needed)**:
 - Firemaw initial wing buffet and repeat buffet timer
 - Magmadar fear timer
 - Thaddius (throw) timers
+- Maexxna spider timers
 
 TODO / current issues:
-- Maexxna spider timers
 - The four horsemen
 - Baron Geddon Inferno
