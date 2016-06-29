@@ -43,7 +43,6 @@ L:RegisterTranslations("enUS", function() return {
 	cursewarn_other = "%s is cursed!",
 
 	start = "Welcome to da great show friends! Step right up to die!",
-	testbar = "test",
 
 	you = "You",
 	are = "are",
@@ -83,16 +82,15 @@ end
 
 function BigWigsJindo:CHAT_MSG_MONSTER_YELL(msg)
 	if string.find(msg, L["start"]) then
-	        self:ScheduleRepeatingEvent("bwjindototembar", self.Totembar, 16, self)
-		self:TriggerEvent("BigWigs_StartBar", self, L["warnhealing"], 16, "Interface\\Icons\\Spell_Nature_MagicImmunity")
-		self:TriggerEvent("BigWigs_StartBar", self, L["testbar"], 600, "Interface\\Icons\\Spell_Shadow_UnholyFrenzy")
+	        self:ScheduleRepeatingEvent("bwjindototembar", self.Totembar, 18, self)
+		self:TriggerEvent("BigWigs_StartBar", self, L["warnhealing"], 18, "Interface\\Icons\\Spell_Nature_MagicImmunity")
 	end
 end
 
 function BigWigsJindo:Totembar()
 		self:ScheduleEvent("BigWigs_Message", 1, L["warnhealing"], "Urgent")
 		self:ScheduleEvent("BigWigs_SetRaidIcon", 1.5, "Powerful Healing Ward")
-		self:TriggerEvent("BigWigs_StartBar", self, L["warnhealing"], 16, "Interface\\Icons\\Spell_Nature_MagicImmunity")
+		self:TriggerEvent("BigWigs_StartBar", self, L["warnhealing"], 18, "Interface\\Icons\\Spell_Nature_MagicImmunity")
 end
 
 function BigWigsJindo:CHAT_MSG_SPELL_CREATURE_VS_CREATURE_BUFF( msg )
