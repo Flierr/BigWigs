@@ -27,6 +27,7 @@ Implemented fixes **(Testing needed)**:
 - Thaddius (throw) timer
 - Maexxna spider timer
 - The four horsemen mark timer
+- Jin'do healing ward timer
 
 TODO / current issues:
 - The four horsemen (void zones later in the fight seem slightly longer than at the start)
