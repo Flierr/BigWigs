@@ -1,4 +1,4 @@
-﻿------------------------------
+------------------------------
 --      Are you local?      --
 ------------------------------
 
@@ -20,6 +20,8 @@ L:RegisterTranslations("enUS", function() return {
 	plagueother_name = "Plague on others alert",
 	plagueother_desc = "Warn if others got the Plague",
 
+	plaguebar = "Plague on ",
+	
 	thunderclap_cmd = "thunderclap",
 	thunderclap_name = "Thunderclap Alert",
 	thunderclap_desc = "Warn for Thunderclap",
@@ -132,9 +134,11 @@ function BigWigsDefenders:CheckPlague(msg)
 		if self.db.profile.plagueyou and pplayer == L["plagueyou"] then
 			self:TriggerEvent("BigWigs_Message", L["plagueyouwarn"], "Personal", true)
 			self:TriggerEvent("BigWigs_Message", UnitName("player") .. L["plaguewarn"], "Attention", nil, nil, true)
+			self:TriggerEvent("BigWigs_StartBar", self, L["plaguebar"] .. pplayer, 40, "Interface\\Icons\\Spell_Shadow_CurseOfTounges")
 		elseif self.db.profile.plagueother then
 			self:TriggerEvent("BigWigs_Message", pplayer .. L["plaguewarn"], "Attention")
 			self:TriggerEvent("BigWigs_SendTell", pplayer, L["plagueyouwarn"])
+			self:TriggerEvent("BigWigs_StartBar", self, L["plaguebar"] .. pplayer, 40, "Interface\\Icons\\Spell_Shadow_CurseOfTounges")
 		end
 
 		if self.db.profile.icon then
