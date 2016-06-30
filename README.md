@@ -34,4 +34,4 @@ Implemented fixes **(Testing needed)**:
 TODO / current issues:
 - The four horsemen (void zones later in the fight seem slightly longer than at the start)
 - Baron Geddon Inferno
-- Cthun: small eyes are off for like 1-5 secs / no dark glare timer during spell cast / phase 2 initialization working / weaken not working and timers are off after first weaken
+- Cthun: small eyes are off for like 1-5 secs / no dark glare timer during spell cast / phase 2 initialization working / weaken not working and timers are off after first weaken (how can we know its weakened without combatlog data?)
