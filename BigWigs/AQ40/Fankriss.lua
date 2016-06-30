@@ -14,7 +14,7 @@ L:RegisterTranslations("enUS", function() return {
 	worm_cmd = "worm",
 	worm_name = "Worm Alert",
 	worm_desc = "Warn for Incoming Worms",
-
+-- not working because no combatlog messages when a worm spawns on VG
 	wormtrigger = "Fankriss the Unyielding casts Summon Worm.",
 	wormwarn = "Incoming Worm! (%d)",
 	wormbar = "Sandworm Enrage (%d)",
