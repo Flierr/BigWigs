@@ -17,11 +17,12 @@ Implemented fixes **(Working correctly)**:
 - Nefarian landing timer
 - Gluth decimate timer
 - Anub locust swarm timer
+- Twins Teleport fixed repeat Timer 
 
 Implemented fixes **(Testing needed)**:
 
 - Razuvious shout timer
-- Twins Teleport fixed repeat Timer 
+
 - Firemaw initial wing buffet and repeat buffet timer
 - Magmadar fear timer
 - Thaddius (throw) timer
@@ -33,3 +34,4 @@ Implemented fixes **(Testing needed)**:
 TODO / current issues:
 - The four horsemen (void zones later in the fight seem slightly longer than at the start)
 - Baron Geddon Inferno
+- Cthun: small eyes are off for like 1-5 secs / no dark glare timer during spell cast / phase 2 initialization working / weaken not working and timers are off after first weaken
