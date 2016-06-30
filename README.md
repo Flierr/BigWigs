@@ -28,6 +28,7 @@ Implemented fixes **(Testing needed)**:
 - Maexxna spider timer
 - The four horsemen mark timer
 - Jin'do healing ward timer
+- Plague Bars on AQ40 Anubisath Defenders
 
 TODO / current issues:
 - The four horsemen (void zones later in the fight seem slightly longer than at the start)
