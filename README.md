@@ -29,8 +29,7 @@ Implemented fixes **(Testing needed)**:
 - The four horsemen mark timer
 - Jin'do healing ward timer
 - Plague Bars on AQ40 Anubisath Defenders
+- Baron Geddon Inferno timer
 
-TODO / current issues:
-- The four horsemen (void zones later in the fight seem slightly longer than at the start)
-- Baron Geddon Inferno -> first one is after 45 sec (tested, needs fix).
-- Cthun: small eyes are off for like 1-5 secs / no dark glare timer during spell cast / phase 2 initialization working / weaken not working and timers are off after first weaken (how can we know its weakened without combatlog data?)
+See issues tab for known problems. If you find new issues, please open a new issue or contact me ingame.
+
