@@ -182,7 +182,7 @@ BigWigs.cmdtable = {type = "group", handler = BigWigs, args = {
 }}
 BigWigs:RegisterChatCommand({"/bw", "/BigWigs"}, BigWigs.cmdtable)
 BigWigs.debugFrame = ChatFrame5
-BigWigs.revision = tonumber(string.sub("$Revision: 19001$", 12, -2))
+BigWigs.revision = tonumber(string.sub("$Revision: 19002$", 12, -2))
 
 --------------------------------
 --      Module Prototype      --
