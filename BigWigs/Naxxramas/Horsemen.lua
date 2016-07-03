@@ -1,4 +1,4 @@
-﻿------------------------------
+------------------------------
 --      Are you local?      --
 ------------------------------
 
@@ -61,7 +61,7 @@ L:RegisterTranslations("enUS", function() return {
 	wrathtrigger = "Holy Wrath",
 	wrathbar = "Holy Wrath",
 
-	startwarn = "The Four Horsemen Engaged! Mark in 20 sec",
+	startwarn = "The Four Horsemen Engaged! Mark in 25 sec",
 
 	shieldwallbar = "%s - Shield Wall",
 	shieldwalltrigger = "(.*) gains Shield Wall.",
@@ -131,8 +131,8 @@ function BigWigsHorsemen:BigWigs_RecvSync(sync, rest)
 			self:TriggerEvent("BigWigs_Message", L["startwarn"], "Attention")
 			self:TriggerEvent("BigWigs_SendSync", "HorsemenMeteor")
 		        self:TriggerEvent("BigWigs_SendSync", "HorsemenVoid")
-	                self:ScheduleRepeatingEvent("bwhorsemenvoid", self.Void, 12, self)
-			self:TriggerEvent("BigWigs_StartBar", self, L["wrathbar"], 12, "Interface\\Icons\\Spell_Holy_Excorcism")
+	                self:ScheduleRepeatingEvent("bwhorsemenvoid", self.Void, 11.5, self)
+			self:TriggerEvent("BigWigs_StartBar", self, L["wrathbar"], 11.5, "Interface\\Icons\\Spell_Holy_Excorcism")
 			self:TriggerEvent("BigWigs_StartBar", self, string.format( L["markbar"], self.marks), 20, "Interface\\Icons\\Spell_Shadow_CurseOfAchimonde")
 			self:ScheduleEvent("bwhorsemenmark2", "BigWigs_Message", 15, string.format( L["markwarn2"], self.marks ), "Urgent")
 		end
@@ -151,7 +151,7 @@ function BigWigsHorsemen:BigWigs_RecvSync(sync, rest)
 		end
 	elseif sync == "HorsemenMeteor1" then
 		if self.db.profile.meteor then
-			self:TriggerEvent("BigWigs_StartBar", self, L["meteorbar"], 12, "Interface\\Icons\\Spell_Fire_Fireball02")
+			self:TriggerEvent("BigWigs_StartBar", self, L["meteorbar"], 11.5, "Interface\\Icons\\Spell_Fire_Fireball02")
 		end
 	elseif sync == "HorsemenWrath1" then
 		if self.db.profile.wrath then
@@ -160,7 +160,7 @@ function BigWigsHorsemen:BigWigs_RecvSync(sync, rest)
 	elseif sync == "HorsemenVoid" then
 		if self.db.profile.void then
 			self:TriggerEvent("BigWigs_Message", L["voidwarn"], "Important")
-			self:TriggerEvent("BigWigs_StartBar", self, L["voidbar"], 12, "Interface\\Icons\\Spell_Frost_IceStorm")
+			self:TriggerEvent("BigWigs_StartBar", self, L["voidbar"], 11.5, "Interface\\Icons\\Spell_Frost_IceStorm")
 		end
 	elseif sync == "HorsemenShieldWall" and self.db.profile.shieldwall and rest then
 		self:TriggerEvent("BigWigs_Message", string.format(L["shieldwallwarn"], rest), "Attention")
