@@ -133,8 +133,8 @@ function BigWigsBaronGeddon:BigWigs_RecvSync(sync, rest, nick)
 		end
 	elseif sync == "GeddonInferno" and self.db.profile.inferno then
 	        self:CancelScheduledEvent("bwgeddoninfernowarn")
-		self:TriggerEvent("BigWigs_StartBar", self, L["inferno_bar"], 40, "Interface\\Icons\\Spell_Fire_SealOfFire", "Orange")
-		self:ScheduleEvent("bwgeddoninfernowarn", "BigWigs_Message", 35, L["inferno_message"], "Urgent")
+		self:TriggerEvent("BigWigs_StartBar", self, L["inferno_bar"], 45, "Interface\\Icons\\Spell_Fire_SealOfFire", "Orange")
+		self:ScheduleEvent("bwgeddoninfernowarn", "BigWigs_Message", 40, L["inferno_message"], "Urgent")
 	end
 end
 
