@@ -30,10 +30,9 @@ Implemented fixes **(Testing needed)**:
 - Flamegor initial wing buffet and repeat buffet timer (27s,25s)
 
 - Razuvious shout timer
-- Thaddius (throw) timer
-- The four horsemen mark timer
+- Thaddius throw timer
+- The four horsemen mark timer and void zone (20s,12s)
 - Jin'do healing ward timer
 - Plague Bars on AQ40 Anubisath Defenders
 
 See issues tab for known problems. If you find new issues, please open a new issue or contact me ingame.
-
