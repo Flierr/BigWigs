@@ -25,8 +25,11 @@ Implemented fixes **(Working correctly)**:
 
 Implemented fixes **(Testing needed)**:
 
+- Firemaw initial wing buffet and repeat buffet timer (27s,25s)
+- Ebonroc initial wing buffet and repeat buffet timer (27s,25s)
+- Flamegor initial wing buffet and repeat buffet timer (27s,25s)
+
 - Razuvious shout timer
-- Firemaw initial wing buffet and repeat buffet timer
 - Thaddius (throw) timer
 - The four horsemen mark timer
 - Jin'do healing ward timer
