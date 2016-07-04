@@ -15,8 +15,8 @@ L:RegisterTranslations("enUS", function() return {
 	frenzy_trigger = "^Flamegor gains Frenzy",
 	frenzyfade_trigger = "Frenzy fades from Flamegor",
 
-	startwarn = "Flamegor Engaged! First Wing Buffet in 18 seconds!",
-	wingbuffet_message = "Wing Buffet! 30sec to next!",
+	startwarn = "Flamegor Engaged! First Wing Buffet in 27 seconds!",
+	wingbuffet_message = "Wing Buffet! 25sec to next!",
 	wingbuffet_warning = "3sec to Wing Buffet!",
 	shadowflame_warning = "Shadow Flame incoming!",
 	frenzy_message = "Frenzy - Tranq Shot!",
@@ -89,12 +89,12 @@ function BigWigsFlamegor:BigWigs_RecvSync(sync)
 		self:TriggerEvent("BigWigs_SendSync", "FlamegorStart")
 	elseif sync == "FlamegorStart" and self.db.profile.wingbuffet then
 		self:TriggerEvent("BigWigs_Message", L["startwarn"], "Important")
-		self:ScheduleEvent("BigWigs_Message", 15, L["wingbuffet_warning"], "Important", true, "Alarm")
-		self:TriggerEvent("BigWigs_StartBar", self, L["wingbuffet_bar"], 18, "Interface\\Icons\\Spell_Fire_SelfDestruct")
+		self:ScheduleEvent("BigWigs_Message", 24, L["wingbuffet_warning"], "Important", true, "Alarm")
+		self:TriggerEvent("BigWigs_StartBar", self, L["wingbuffet_bar"], 27, "Interface\\Icons\\Spell_Fire_SelfDestruct")
 	elseif sync == "FlamegorWingBuffet" and self.db.profile.wingbuffet then
 		self:TriggerEvent("BigWigs_Message", L["wingbuffet_message"], "Important")
-		self:ScheduleEvent("BigWigs_Message", 27, L["wingbuffet_warning"], "Important")
-		self:TriggerEvent("BigWigs_StartBar", self, L["wingbuffet_bar"], 30, "Interface\\Icons\\Spell_Fire_SelfDestruct")
+		self:ScheduleEvent("BigWigs_Message", 22, L["wingbuffet_warning"], "Important")
+		self:TriggerEvent("BigWigs_StartBar", self, L["wingbuffet_bar"], 25, "Interface\\Icons\\Spell_Fire_SelfDestruct")
 	elseif sync == "FlamegorShadowflame" and self.db.profile.shadowflame then
 		self:TriggerEvent("BigWigs_StartBar", self, L["shadowflame_bar"], 2.5, "Interface\\Icons\\Spell_Fire_Incinerate")
 		self:TriggerEvent("BigWigs_Message", L["shadowflame_warning"], "Important")
