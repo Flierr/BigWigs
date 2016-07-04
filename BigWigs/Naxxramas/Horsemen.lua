@@ -217,14 +217,14 @@ function BigWigsHorsemen:CHAT_MSG_SPELL_PERIODIC_SELF_DAMAGE( msg )
 	if self.db.profile.buff then
 		if string.find(msg, L["voidtrigger2"]) then
 			self:CancelScheduledEvent("bwhorsemenvoidzone")
-			self:ScheduleEvent("bwhorsemenvoidzone", self.Stopf, 6, self )
+			self:ScheduleEvent("bwhorsemenvoidzone", self.Stopvz, 6, self )
 			self:TriggerEvent("BigWigs_Message", L["voidzonewarn"], "Personal", true, "Alarm")
 				BigWigsThaddiusArrows:Direction("VoidZone")
 		end
 	end
 end
 
-function BigWigsFaerlina:CHAT_MSG_SPELL_AURA_GONE_SELF( msg )
+function BigWigsHorsemen:CHAT_MSG_SPELL_AURA_GONE_SELF( msg )
 	if self.db.profile.buff then
 		if string.find(msg, L["voidtrigger2"]) then
 				BigWigsThaddiusArrows:VoidZonestop()
@@ -232,7 +232,7 @@ function BigWigsFaerlina:CHAT_MSG_SPELL_AURA_GONE_SELF( msg )
 	end
 end
 
-function BigWigsFaerlina:Stopvz()
+function BigWigsHorsemen:Stopvz()
 	if self.db.profile.buff then
             BigWigsThaddiusArrows:VoidZonestop()
 	end
