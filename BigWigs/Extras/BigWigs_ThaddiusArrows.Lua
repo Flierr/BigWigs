@@ -474,7 +474,19 @@ function BigWigsThaddiusArrows:OnRegister()
 	self.texWisdom:SetAllPoints(self.frameWisdom)
 	self.frameWisdom:SetAlpha(0.6)
 	self.frameWisdom:Hide()
-
+	
+	self.frameVoidZone = CreateFrame("Frame", nil, UIParent)
+	self.texVoidZone = self.frameVoidZone:CreateTexture(nil, "BACKGROUND")
+	-- Create the frame we will be using for the Arrow
+	self.frameVoidZone:SetFrameStrata("MEDIUM")
+	self.frameVoidZone:SetWidth(100)  -- Set These to whatever height/width is needed 
+	self.frameVoidZone:SetHeight(100) -- for your Texture
+	-- Apply Texture
+	self.texVoidZone:SetTexture("Interface\\Icons\\Spell_Shadow_DeadofNight")	
+	self.texVoidZone:SetAllPoints(self.frameVoidZone)
+	self.frameVoidZone:SetAlpha(0.6)
+	self.frameVoidZone:Hide()
+	
 	self:RegisterChatCommand({ "/"..L["setstrategy_cmd"] }, {
 		type = "execute",
 		name = L["setstrategy_name"],
@@ -564,6 +576,7 @@ function BigWigsThaddiusArrows:OnDisable()
 	if self.frameStoneshield then self.frameStoneshield:Hide() end
 	if self.frameLight then self.frameLight:Hide() end
 	if self.frameWisdom then self.frameWisdom:Hide() end
+	if self.frameVoidZone then self.frameVoidZone:Hide() end
 end
 
 ------------------------------
@@ -909,6 +922,14 @@ function BigWigsThaddiusArrows:Direction( direction )
 			self.frameWisdom:Show()
 			self:ScheduleEvent(function() self.frameWisdom:Hide() end, 15)
 		end
+	elseif direction == "VoidZone" then -- Void Zone
+		if self.db.profile.graphic then
+			self.frameVoidZone.texture = self.texVoidZone
+			self.texVoidZone:SetTexCoord(0, 1, 0, 1)
+			self.frameVoidZone:SetPoint("CENTER", -175, 100)
+			self.frameVoidZone:Show()
+			self:ScheduleEvent(function() self.frameVoidZone:Hide() end, 15)
+		end
 	end
 end
 
@@ -1030,6 +1051,10 @@ end
 
 function BigWigsThaddiusArrows:Wisdomstop()
 	self.frameWisdom:Hide()
+end
+
+function BigWigsThaddiusArrows:VoidZonestop()
+	self.frameVoidZone:Hide()
 end
 
 function BigWigsThaddiusArrows:CrystalCharge()
