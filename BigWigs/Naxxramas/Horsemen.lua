@@ -52,8 +52,9 @@ L:RegisterTranslations("enUS", function() return {
 
 	voidtrigger = "Void Zone",
 	voidtrigger2 = "Consumption",
-	voidwarn = "Void/Meteor/Wrath Incoming!",
-	voidbar = "Void/Meteor/Wrath",
+	voidwarn = "Void Zone Incoming!",
+	voidbar = "Void Zone",
+	voidzonewarn = "Move out of Void Zone",
 
 	meteortrigger = "Meteor",
 	meteorbar = "Meteor",
@@ -61,7 +62,7 @@ L:RegisterTranslations("enUS", function() return {
 	wrathtrigger = "Holy Wrath",
 	wrathbar = "Holy Wrath",
 
-	startwarn = "The Four Horsemen Engaged! Mark in 25 sec",
+	startwarn = "The Four Horsemen Engaged! Mark in 20 sec",
 
 	shieldwallbar = "%s - Shield Wall",
 	shieldwalltrigger = "(.*) gains Shield Wall.",
@@ -77,7 +78,7 @@ BigWigsHorsemen = BigWigs:NewModule(boss)
 BigWigsHorsemen.zonename = AceLibrary("Babble-Zone-2.2")["Naxxramas"]
 BigWigsHorsemen.enabletrigger = { thane, mograine, zeliek, blaumeux }
 BigWigsHorsemen.toggleoptions = {"mark", "shieldwall", "buff", -1, "meteor", "void", "wrath", "bosskill"}
-BigWigsHorsemen.revision = tonumber(string.sub("$Revision: 19003 $", 12, -3))
+BigWigsHorsemen.revision = tonumber(string.sub("$Revision: 19004 $", 12, -3))
 
 ------------------------------
 --      Initialization      --
@@ -94,33 +95,42 @@ function BigWigsHorsemen:OnEnable()
 	self:RegisterEvent("PLAYER_REGEN_DISABLED", "CheckForEngage")
 	self:RegisterEvent("CHAT_MSG_COMBAT_HOSTILE_DEATH")
 	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_CREATURE_BUFFS")
-	self:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_CREATURE_BUFF")
+	-- creates error when loading ???
+	--self:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_CREATURE_BUFF")
 	self:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_CREATURE_DAMAGE", "SkillEvent")
 	self:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_PARTY_DAMAGE", "SkillEvent")
 	self:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_SELF_DAMAGE", "SkillEvent")
 	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_FRIENDLYPLAYER_DAMAGE", "SkillEvent")
 	self:RegisterEvent("CHAT_MSG_YELL", "SkillEvent")
+	
+	--guessing Void Zone Message
+	--self:RegisterEvent("CHAT_MSG_SPELL_FRIENDLYPLAYER_DAMAGE", "SkillEvent")
+	--self:RegisterEvent("CHAT_MSG_SPELL_SELF_DAMAGE", "SkillEvent")
+
 
 	self:RegisterEvent("BigWigs_RecvSync")
-	self:TriggerEvent("BigWigs_ThrottleSync", "HorsemenShieldWall", 3)
-	-- Upgraded to HorsemenMark2 so that we don't get blocked by throttled syncs
-	-- from older revisions.
-	self:TriggerEvent("BigWigs_ThrottleSync", "HorsemenMark2", 8)
-	self:TriggerEvent("BigWigs_ThrottleSync", "HorsemenVoid", 8)
-	self:TriggerEvent("BigWigs_ThrottleSync", "HorsemenWrath", 4)
-	self:TriggerEvent("BigWigs_ThrottleSync", "HorsemenMeteor", 8)
+	self:TriggerEvent("BigWigs_ThrottleSync", "HorsemenShieldWall3", 3)
+	-- Upgraded to Horsemenxxx3 no more legacy addon problems
+	self:TriggerEvent("BigWigs_ThrottleSync", "HorsemenMark3", 8)
+	self:TriggerEvent("BigWigs_ThrottleSync", "HorsemenVoid3", 8)
+	self:TriggerEvent("BigWigs_ThrottleSync", "HorsemenWrath3", 4)
+	self:TriggerEvent("BigWigs_ThrottleSync", "HorsemenMeteor3", 8)
 end
 
+--parser during combat registering new spells / events from boss and calling functions/syncs
 function BigWigsHorsemen:SkillEvent(msg)
 	if string.find(msg, L["marktrigger"]) then
-			self:TriggerEvent("BigWigs_SendSync", "HorsemenMark2 "..tostring(self.marks + 1))
+			self:TriggerEvent("BigWigs_SendSync", "HorsemenMark3 "..tostring(self.marks + 1))
 	elseif string.find(msg, L["meteortrigger"]) then
-			self:TriggerEvent("BigWigs_SendSync", "HorsemenMeteor")
+			self:TriggerEvent("BigWigs_SendSync", "HorsemenMeteor3")
 	elseif string.find(msg, L["wrathtrigger"]) then
-			self:TriggerEvent("BigWigs_SendSync", "HorsemenWrath")
+			self:TriggerEvent("BigWigs_SendSync", "HorsemenWrath3")
+	elseif string.find(msg, L["voidtrigger"]) then
+			self:TriggerEvent("BigWigs_SendSync", "HorsemenVoid3")
 	end
 end
 
+--initial pull and trigger when receiving a sync from the combat parser above
 function BigWigsHorsemen:BigWigs_RecvSync(sync, rest)
 	if sync == self:GetEngageSync() and rest and rest == boss and not started then
 		started = true
@@ -129,14 +139,20 @@ function BigWigsHorsemen:BigWigs_RecvSync(sync, rest)
 		end
 		if self.db.profile.mark then
 			self:TriggerEvent("BigWigs_Message", L["startwarn"], "Attention")
-			self:TriggerEvent("BigWigs_SendSync", "HorsemenMeteor")
-		        self:TriggerEvent("BigWigs_SendSync", "HorsemenVoid")
-	                self:ScheduleRepeatingEvent("bwhorsemenvoid", self.Void, 12, self)
-			self:TriggerEvent("BigWigs_StartBar", self, L["wrathbar"], 12, "Interface\\Icons\\Spell_Holy_Excorcism")
 			self:TriggerEvent("BigWigs_StartBar", self, string.format( L["markbar"], self.marks), 20, "Interface\\Icons\\Spell_Shadow_CurseOfAchimonde")
 			self:ScheduleEvent("bwhorsemenmark2", "BigWigs_Message", 15, string.format( L["markwarn2"], self.marks ), "Urgent")
 		end
-	elseif sync == "HorsemenMark2" and rest then
+		if self.db.profile.meteor then
+			self:TriggerEvent("BigWigs_SendSync", "HorsemenMeteor3")
+		end
+		if self.db.profile.wrath then
+		    self:TriggerEvent("BigWigs_SendSync", "HorsemenWrath3")
+		end
+		if self.db.profile.void then
+		    self:TriggerEvent("BigWigs_SendSync", "HorsemenVoid3")
+		end
+
+		elseif sync == "HorsemenMark3" and rest then
 		rest = tonumber(rest)
 		if rest == nil then return end
 		if rest == (self.marks + 1) then
@@ -149,20 +165,20 @@ function BigWigsHorsemen:BigWigs_RecvSync(sync, rest)
 				self:ScheduleEvent("bwhorsemenmark2", "BigWigs_Message", 15, string.format( L["markwarn2"], self.marks ), "Urgent")
 			end
 		end
-	elseif sync == "HorsemenMeteor1" then
+	elseif sync == "HorsemenMeteor3" then
 		if self.db.profile.meteor then
 			self:TriggerEvent("BigWigs_StartBar", self, L["meteorbar"], 12, "Interface\\Icons\\Spell_Fire_Fireball02")
 		end
-	elseif sync == "HorsemenWrath1" then
+	elseif sync == "HorsemenWrath3" then
 		if self.db.profile.wrath then
-			self:TriggerEvent("BigWigs_StartBar", self, L["wrathbar"], 6, "Interface\\Icons\\Spell_Holy_Excorcism")
+			self:TriggerEvent("BigWigs_StartBar", self, L["wrathbar"], 12, "Interface\\Icons\\Spell_Holy_Excorcism")
 		end
-	elseif sync == "HorsemenVoid" then
+	elseif sync == "HorsemenVoid3" then
 		if self.db.profile.void then
 			self:TriggerEvent("BigWigs_Message", L["voidwarn"], "Important")
 			self:TriggerEvent("BigWigs_StartBar", self, L["voidbar"], 12, "Interface\\Icons\\Spell_Frost_IceStorm")
 		end
-	elseif sync == "HorsemenShieldWall" and self.db.profile.shieldwall and rest then
+	elseif sync == "HorsemenShieldWall3" and self.db.profile.shieldwall and rest then
 		self:TriggerEvent("BigWigs_Message", string.format(L["shieldwallwarn"], rest), "Attention")
 		self:ScheduleEvent("BigWigs_Message", 20, string.format(L["shieldwallwarn2"], rest), "Positive")
 		self:TriggerEvent("BigWigs_StartBar", self, string.format(L["shieldwallbar"], rest), 20, "Interface\\Icons\\Ability_Warrior_ShieldWall")
@@ -171,13 +187,12 @@ end
 
 function BigWigsHorsemen:CHAT_MSG_SPELL_PERIODIC_CREATURE_BUFFS( msg )
 	local _,_, mob = string.find(msg, L["shieldwalltrigger"])
-	if mob then self:TriggerEvent("BigWigs_SendSync", "HorsemenShieldWall "..mob) end
+	if mob then self:TriggerEvent("BigWigs_SendSync", "HorsemenShieldWall3 "..mob) end
 end
 
-function BigWigsHorsemen:CHAT_MSG_SPELL_CREATURE_VS_CREATURE_BUFF(msg)
-	if msg == L["voidtrigger"] then
-		self:TriggerEvent("BigWigs_SendSync", "HorsemenVoid" )
-	end	
+
+function BigWigsHorsemen:Void()
+		self:TriggerEvent("BigWigs_SendSync", "HorsemenVoid3")
 end
 
 function BigWigsHorsemen:CHAT_MSG_COMBAT_HOSTILE_DEATH( msg )
@@ -198,6 +213,27 @@ function BigWigsHorsemen:CHAT_MSG_COMBAT_HOSTILE_DEATH( msg )
 	end
 end
 
-function BigWigsHorsemen:Void()
-		self:TriggerEvent("BigWigs_SendSync", "HorsemenVoid")
+function BigWigsHorsemen:CHAT_MSG_SPELL_PERIODIC_SELF_DAMAGE( msg )
+	if self.db.profile.buff then
+		if string.find(msg, L["voidtrigger2"]) then
+			self:CancelScheduledEvent("bwhorsemenvoidzone")
+			self:ScheduleEvent("bwhorsemenvoidzone", self.Stopf, 6, self )
+			self:TriggerEvent("BigWigs_Message", L["voidzonewarn"], "Personal", true, "Alarm")
+				BigWigsThaddiusArrows:Direction("VoidZone")
+		end
+	end
+end
+
+function BigWigsFaerlina:CHAT_MSG_SPELL_AURA_GONE_SELF( msg )
+	if self.db.profile.buff then
+		if string.find(msg, L["voidtrigger2"]) then
+				BigWigsThaddiusArrows:VoidZonestop()
+		end
+	end
+end
+
+function BigWigsFaerlina:Stopvz()
+	if self.db.profile.buff then
+            BigWigsThaddiusArrows:VoidZonestop()
+	end
 end
