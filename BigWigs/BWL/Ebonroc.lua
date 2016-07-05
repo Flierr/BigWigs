@@ -17,8 +17,8 @@ L:RegisterTranslations("enUS", function() return {
 	you = "You",
 	are = "are",
 
-	startwarn = "Ebonroc Engaged! First Wing Buffet in 18 seconds!",
-	wingbuffet_message = "Wing Buffet! 30sec to next!",
+	startwarn = "Ebonroc Engaged! First Wing Buffet in 27 seconds!",
+	wingbuffet_message = "Wing Buffet! 25sec to next!",
 	wingbuffet_warning = "3sec to Wing Buffet!",
 	shadowflame_warning = "Shadow Flame incoming!",
 	shadowflame_message_you = "You have Shadow of Ebonroc!",
@@ -101,12 +101,12 @@ function BigWigsEbonroc:BigWigs_RecvSync(sync, rest)
 		self:TriggerEvent("BigWigs_SendSync", "EbonrocStart")
 	elseif sync == "EbonrocStart" and self.db.profile.wingbuffet then
 		self:TriggerEvent("BigWigs_Message", L["startwarn"], "Important")
-		self:ScheduleEvent("BigWigs_Message", 15, L["wingbuffet_warning"], "Important", true, "Alarm")
-		self:TriggerEvent("BigWigs_StartBar", self, L["wingbuffet_bar"], 18, "Interface\\Icons\\Spell_Fire_SelfDestruct")
+		self:ScheduleEvent("BigWigs_Message", 24, L["wingbuffet_warning"], "Important", true, "Alarm")
+		self:TriggerEvent("BigWigs_StartBar", self, L["wingbuffet_bar"], 27, "Interface\\Icons\\Spell_Fire_SelfDestruct")
 	elseif sync == "EbonrocWingBuffet" and self.db.profile.wingbuffet then
 		self:TriggerEvent("BigWigs_Message", L["wingbuffet_message"], "Important")
-		self:ScheduleEvent("BigWigs_Message", 27, L["wingbuffet_warning"], "Important")
-		self:TriggerEvent("BigWigs_StartBar", self, L["wingbuffet_bar"], 30, "Interface\\Icons\\Spell_Fire_SelfDestruct")
+		self:ScheduleEvent("BigWigs_Message", 22, L["wingbuffet_warning"], "Important")
+		self:TriggerEvent("BigWigs_StartBar", self, L["wingbuffet_bar"], 25, "Interface\\Icons\\Spell_Fire_SelfDestruct")
 	elseif sync == "EbonrocShadowflame" and self.db.profile.shadowflame then
 		self:TriggerEvent("BigWigs_StartBar", self, L["shadowflame_bar"], 2.5, "Interface\\Icons\\Spell_Fire_Incinerate")
 		self:TriggerEvent("BigWigs_Message", L["shadowflame_warning"], "Important")
