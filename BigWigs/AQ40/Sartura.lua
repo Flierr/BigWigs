@@ -24,13 +24,7 @@ L:RegisterTranslations("enUS", function() return {
 	enragetrigger = "becomes enraged",
 	enragewarn = "Enrage - Enrage - Enrage",
 	bartext = "Enrage",
-	warn1 = "Enrage in 8 minutes",
-	warn2 = "Enrage in 5 minutes",
-	warn3 = "Enrage in 3 minutes",
-	warn4 = "Enrage in 90 seconds",
-	warn5 = "Enrage in 60 seconds",
-	warn6 = "Enrage in 30 seconds",
-	warn7 = "Enrage in 10 seconds",
+	warn1 = "Enrage in 60 seconds",
 	whirlwindon = "Battleguard Sartura gains Whirlwind.",
 	whirlwindoff = "Whirlwind fades from Battleguard Sartura.",
 	whirlwindonwarn = "Whirlwind - Battleguard Sartura - Whirlwind",
@@ -71,9 +65,9 @@ end
 function BigWigsSartura:BigWigs_RecvSync(sync)
 	if sync == "SarturaWhirlwind" and self.db.profile.whirlwind then
 		self:TriggerEvent("BigWigs_Message", L["whirlwindonwarn"], "Important")
-		self:TriggerEvent("BigWigs_StartBar", self, L["whirlwindbartext"], 15, "Interface\\Icons\\Ability_Whirlwind")
-		self:ScheduleEvent("BigWigs_Message", 25, L["whirlwindinctext"], "Attention", true, "Alarm")
-		self:TriggerEvent("BigWigs_StartBar", self, L["whirlwindnextbartext"], 28, "Interface\\Icons\\Ability_UpgradeMoonGlaive")
+		self:TriggerEvent("BigWigs_StartBar", self, L["whirlwindbartext"], 35, "Interface\\Icons\\Ability_Whirlwind")
+		self:ScheduleEvent("BigWigs_Message", 39, L["whirlwindinctext"], "Attention", true, "Alarm")
+		self:TriggerEvent("BigWigs_StartBar", self, L["whirlwindnextbartext"], 42, "Interface\\Icons\\Ability_UpgradeMoonGlaive")
 	end
 end
 
@@ -87,13 +81,7 @@ function BigWigsSartura:CHAT_MSG_MONSTER_YELL(msg)
 	if self.db.profile.enrage and string.find(msg, L["starttrigger"]) then
 		self:TriggerEvent("BigWigs_Message", L["startwarn"], "Important")
 		self:TriggerEvent("BigWigs_StartBar", self, L["bartext"], 600, "Interface\\Icons\\Spell_Shadow_UnholyFrenzy")
-		self:ScheduleEvent("BigWigs_Message", 120, L["warn1"], "Attention")
-		self:ScheduleEvent("BigWigs_Message", 300, L["warn2"], "Attention")
-		self:ScheduleEvent("BigWigs_Message", 420, L["warn3"], "Attention")
-		self:ScheduleEvent("BigWigs_Message", 510, L["warn4"], "Urgent")
-		self:ScheduleEvent("BigWigs_Message", 540, L["warn5"], "Urgent")
-		self:ScheduleEvent("BigWigs_Message", 570, L["warn6"], "Important")
-		self:ScheduleEvent("BigWigs_Message", 590, L["warn7"], "Important")
+		self:ScheduleEvent("BigWigs_Message", 540, L["warn1"], "Urgent")
 	end
 end
 
