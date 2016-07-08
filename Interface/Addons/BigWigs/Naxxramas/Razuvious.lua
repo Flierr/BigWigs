@@ -25,7 +25,7 @@ L:RegisterTranslations("enUS", function() return {
 	shieldwall_name = "Shield Wall Timer",
 	shieldwall_desc = "Show timer for Shield Wall",
 
-	startwarn = "Instructor Razuvious engaged! 25sec to Shout, 30sec to Unbalancing Strike!",
+	startwarn = "Instructor Razuvious engaged! 25sec to Shout, ~20sec to Unbalancing Strike!",
 
 	starttrigger1 = "Stand and fight!",
 	starttrigger2 = "Show me what you've got!",
@@ -43,7 +43,7 @@ L:RegisterTranslations("enUS", function() return {
 
     unbalance_trigger = "afflicted by Unbalancing Strike",
 	unbalancesoonwarn = "Unbalancing Strike coming soon!",
-	unbalancewarn = "Unbalancing Strike! Next in ~30sec",
+	unbalancewarn = "Unbalancing Strike! Next in ~20sec",
 	unbalancebar = "Unbalancing Strike",
 	
 	shieldwalltrigger   = "Death Knight Understudy gains Shield Wall.",
@@ -59,7 +59,7 @@ BigWigsRazuvious.zonename = AceLibrary("Babble-Zone-2.2")["Naxxramas"]
 BigWigsRazuvious.enabletrigger = { boss }
 BigWigsRazuvious.wipemobs = { understudy }
 BigWigsRazuvious.toggleoptions = {"shout", "shieldwall", "unbalance", "bosskill"}
-BigWigsRazuvious.revision = tonumber(string.sub("$Revision: 15233 $", 12, -3))
+BigWigsRazuvious.revision = tonumber(string.sub("$Revision: 19004 $", 12, -3))
 
 ------------------------------
 --      Initialization      --
@@ -72,9 +72,9 @@ function BigWigsRazuvious:OnEnable()
 	self:RegisterEvent("PLAYER_REGEN_ENABLED", "CheckForWipe")
 	self:RegisterEvent("CHAT_MSG_COMBAT_HOSTILE_DEATH", "GenericBossDeath")
 	self:RegisterEvent("CHAT_MSG_MONSTER_YELL")
-	self:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_CREATURE_DAMAGE", "Shout")
-	self:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_SELF_DAMAGE", "Shout")
-	self:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_PARTY_DAMAGE", "Shout")
+	--self:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_CREATURE_DAMAGE", "Shout")
+	--self:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_SELF_DAMAGE", "Shout")
+	--self:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_PARTY_DAMAGE", "Shout")
 
 	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_PARTY_DAMAGE", "Unbalance")
 	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_FRIENDLYPLAYER_DAMAGE", "Unbalance")
@@ -102,13 +102,16 @@ function BigWigsRazuvious:CHAT_MSG_MONSTER_YELL( msg )
 				BigWigsThaddiusArrows:Direction("Sunder")
 	        end
 		if self.db.profile.shout then
-			self:TriggerEvent("BigWigs_Message", L["startwarn"], "Urgent", nil, "Alarm")
+			self:ScheduleRepeatingEvent("bwreazuviousshoutvg", self.RazuviousShoutVG, 25, self)
+			
 			self:ScheduleEvent("bwrazuviousshout10sec", "BigWigs_Message", 15, L["shout10secwarn"], "Attention")
 			self:ScheduleEvent("bwrazuviousshout5sec", "BigWigs_Message", 20, L["shout5secwarn"], "Urgent", nil, "Alert")
 			self:TriggerEvent("BigWigs_StartBar", self, L["shoutbar"], 25, "Interface\\Icons\\Ability_Warrior_WarCry")
-			self:TriggerEvent("BigWigs_StartBar", self, L["unbalancebar"], 30, "Interface\\Icons\\Ability_Warrior_DecisiveStrike")
+			
+			self:TriggerEvent("BigWigs_Message", L["startwarn"], "Urgent", nil, "Alarm")
+			self:TriggerEvent("BigWigs_StartBar", self, L["unbalancebar"], 20, "Interface\\Icons\\Ability_Warrior_DecisiveStrike")
 		end
-		self:ScheduleEvent("bwrazuviousnoshout", self.noShout, self.timeShout - 5, self )
+		--self:ScheduleEvent("bwrazuviousnoshout", self.noShout, self.timeShout - 5, self )
 	end
 end
 
@@ -121,7 +124,7 @@ function BigWigsRazuvious:Shieldwall( msg )
 		self:TriggerEvent("BigWigs_SendSync", "RazuviousShieldwall")
 	end
 end
-
+--[[
 function BigWigsRazuvious:Shout( msg )
 	if string.find(msg, L["shouttrigger"]) and not self.prior then
 		self:TriggerEvent("BigWigs_SendSync", "RazuviousShout")
@@ -139,6 +142,13 @@ function BigWigsRazuvious:noShout()
 		self:TriggerEvent("BigWigs_StartBar", self, L["shoutbar"], 25, "Interface\\Icons\\Ability_Warrior_WarCry")
 	end
 end
+]]--
+
+function BigWigsRazuvious:RazuviousShoutVG()	
+	self:ScheduleEvent("bwrazuviousshout10sec", "BigWigs_Message", 15, L["shout10secwarn"], "Attention")
+	self:ScheduleEvent("bwrazuviousshout5sec", "BigWigs_Message", 20, L["shout5secwarn"], "Urgent", nil, "Alert")
+	self:TriggerEvent("BigWigs_StartBar", self, L["shoutbar"], 25, "Interface\\Icons\\Ability_Warrior_WarCry")
+end
 
 function BigWigsRazuvious:Unbalance(msg)	
 	if string.find(msg, L["unbalance_trigger"]) then
@@ -148,14 +158,14 @@ end
 
 function BigWigsRazuvious:BigWigs_RecvSync( sync )
 	if sync == "RazuviousShout" then
-		self:CancelScheduledEvent("bwrazuviousnoshout")
-		self:ScheduleEvent("bwrazuviousnoshout", self.noShout, self.timeShout, self )		
+		--self:CancelScheduledEvent("bwrazuviousnoshout")
+		--self:ScheduleEvent("bwrazuviousnoshout", self.noShout, self.timeShout, self )		
 		if self.db.profile.shout then
-			self:TriggerEvent("BigWigs_Message", L["shoutwarn"], "Attention", nil, "Alarm")
-			self:ScheduleEvent("bwrazuviousshout10sec", "BigWigs_Message", 15, L["shout10secwarn"], "Urgent")
-				self:Run2()
-			self:ScheduleEvent("bwrazuviousshout5sec", "BigWigs_Message", 20, L["shout5secwarn"], "Urgent", nil, "Alert")
-			self:TriggerEvent("BigWigs_StartBar", self, L["shoutbar"], 25, "Interface\\Icons\\Ability_Warrior_WarCry")
+			--self:TriggerEvent("BigWigs_Message", L["shoutwarn"], "Attention", nil, "Alarm")
+			--self:ScheduleEvent("bwrazuviousshout10sec", "BigWigs_Message", 15, L["shout10secwarn"], "Urgent")
+			--	self:Run2()
+			--self:ScheduleEvent("bwrazuviousshout5sec", "BigWigs_Message", 20, L["shout5secwarn"], "Urgent", nil, "Alert")
+			--self:TriggerEvent("BigWigs_StartBar", self, L["shoutbar"], 25, "Interface\\Icons\\Ability_Warrior_WarCry")
 		end
 		self.prior = true
 	elseif sync == "RazuviousShieldwall" then
@@ -165,8 +175,8 @@ function BigWigsRazuvious:BigWigs_RecvSync( sync )
 	elseif sync == "RazuviousUnbalance" then
 		if self.db.profile.unbalance then
 		self:TriggerEvent("BigWigs_Message", L["unbalancewarn"], "Urgent")
-		self:ScheduleEvent("bwrazuviousunbalance5sec", "BigWigs_Message", 25, L["unbalancesoonwarn"], "Urgent", nil, "Alert")
-		self:TriggerEvent("BigWigs_StartBar", self, L["unbalancebar"], 30, "Interface\\Icons\\Ability_Warrior_DecisiveStrike")
+		self:ScheduleEvent("bwrazuviousunbalance5sec", "BigWigs_Message", 15, L["unbalancesoonwarn"], "Urgent", nil, "Alert")
+		self:TriggerEvent("BigWigs_StartBar", self, L["unbalancebar"], 20, "Interface\\Icons\\Ability_Warrior_DecisiveStrike")
 		end
 	end
 end
