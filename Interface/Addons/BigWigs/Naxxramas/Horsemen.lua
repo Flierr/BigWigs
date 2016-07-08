@@ -50,8 +50,8 @@ L:RegisterTranslations("enUS", function() return {
 	markwarn2 = "Mark %d in 5 sec",
 	marktrigger = "afflicted by Mark of ",
 
-	voidtrigger = "Void Zone",
-	voidtrigger2 = "Consumption",
+	voidtrigger = "cast Void Zone",
+	--voidtrigger2 = "Consumption",
 	voidwarn = "Void Zone Incoming!",
 	voidbar = "Void Zone",
 	voidzonewarn = "Move out of Void Zone",
@@ -102,11 +102,11 @@ function BigWigsHorsemen:OnEnable()
 	self:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_SELF_DAMAGE", "SkillEvent")
 	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_FRIENDLYPLAYER_DAMAGE", "SkillEvent")
 	self:RegisterEvent("CHAT_MSG_YELL", "SkillEvent")
+	--Mark
+	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_SELF_DAMAGE", "SkillEvent")
+	--Void Zone self CHAT_MSG_SPELL_SELF_DAMAGE
+	self:RegisterEvent("CHAT_MSG_SPELL_SELF_DAMAGE", "SkillEvent")
 	
-	--guessing Void Zone Message
-	--self:RegisterEvent("CHAT_MSG_SPELL_FRIENDLYPLAYER_DAMAGE", "SkillEvent")
-	--self:RegisterEvent("CHAT_MSG_SPELL_SELF_DAMAGE", "SkillEvent")
-
 
 	self:RegisterEvent("BigWigs_RecvSync")
 	self:TriggerEvent("BigWigs_ThrottleSync", "HorsemenShieldWall3", 3)
@@ -117,7 +117,6 @@ function BigWigsHorsemen:OnEnable()
 	self:TriggerEvent("BigWigs_ThrottleSync", "HorsemenMeteor3", 8)
 end
 
---parser during combat registering new spells / events from boss and calling functions/syncs
 function BigWigsHorsemen:SkillEvent(msg)
 	if string.find(msg, L["marktrigger"]) then
 			self:TriggerEvent("BigWigs_SendSync", "HorsemenMark3 "..tostring(self.marks + 1))
@@ -130,7 +129,6 @@ function BigWigsHorsemen:SkillEvent(msg)
 	end
 end
 
---initial pull and trigger when receiving a sync from the combat parser above
 function BigWigsHorsemen:BigWigs_RecvSync(sync, rest)
 	if sync == self:GetEngageSync() and rest and rest == boss and not started then
 		started = true
@@ -176,7 +174,7 @@ function BigWigsHorsemen:BigWigs_RecvSync(sync, rest)
 	elseif sync == "HorsemenVoid3" then
 		if self.db.profile.void then
 			self:TriggerEvent("BigWigs_Message", L["voidwarn"], "Important")
-			self:TriggerEvent("BigWigs_StartBar", self, L["voidbar"], 12, "Interface\\Icons\\Spell_Frost_IceStorm")
+			self:TriggerEvent("BigWigs_StartBar", self, L["voidbar"], 12, "Interface\\Icons\\Spell_Shadow_SealOfKings")
 		end
 	elseif sync == "HorsemenShieldWall3" and self.db.profile.shieldwall and rest then
 		self:TriggerEvent("BigWigs_Message", string.format(L["shieldwallwarn"], rest), "Attention")
@@ -188,11 +186,6 @@ end
 function BigWigsHorsemen:CHAT_MSG_SPELL_PERIODIC_CREATURE_BUFFS( msg )
 	local _,_, mob = string.find(msg, L["shieldwalltrigger"])
 	if mob then self:TriggerEvent("BigWigs_SendSync", "HorsemenShieldWall3 "..mob) end
-end
-
-
-function BigWigsHorsemen:Void()
-		self:TriggerEvent("BigWigs_SendSync", "HorsemenVoid3")
 end
 
 function BigWigsHorsemen:CHAT_MSG_COMBAT_HOSTILE_DEATH( msg )
@@ -210,30 +203,5 @@ function BigWigsHorsemen:CHAT_MSG_COMBAT_HOSTILE_DEATH( msg )
 			if self.db.profile.bosskill then self:TriggerEvent("BigWigs_Message", string.format(AceLibrary("AceLocale-2.2"):new("BigWigs")["%s have been defeated"], boss), "Bosskill", nil, "Victory") end
 			self.core:ToggleModuleActive(self, false)
 		end
-	end
-end
-
-function BigWigsHorsemen:CHAT_MSG_SPELL_PERIODIC_SELF_DAMAGE( msg )
-	if self.db.profile.buff then
-		if string.find(msg, L["voidtrigger2"]) then
-			self:CancelScheduledEvent("bwhorsemenvoidzone")
-			self:ScheduleEvent("bwhorsemenvoidzone", self.Stopvz, 6, self )
-			self:TriggerEvent("BigWigs_Message", L["voidzonewarn"], "Personal", true, "Alarm")
-				BigWigsThaddiusArrows:Direction("VoidZone")
-		end
-	end
-end
-
-function BigWigsHorsemen:CHAT_MSG_SPELL_AURA_GONE_SELF( msg )
-	if self.db.profile.buff then
-		if string.find(msg, L["voidtrigger2"]) then
-				BigWigsThaddiusArrows:VoidZonestop()
-		end
-	end
-end
-
-function BigWigsHorsemen:Stopvz()
-	if self.db.profile.buff then
-            BigWigsThaddiusArrows:VoidZonestop()
 	end
 end
