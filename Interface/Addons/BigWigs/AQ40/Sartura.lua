@@ -30,7 +30,7 @@ L:RegisterTranslations("enUS", function() return {
 	whirlwindonwarn = "Whirlwind - Battleguard Sartura - Whirlwind",
 	whirlwindoffwarn = "Whirlwind faded!",
 	whirlwindbartext = "Whirlwind",
-	whirlwindnextbartext = "Next Whirlwind",
+	whirlwindnextbartext = "~ next Whirlwind",
 	whirlwindinctext = "Whirlwind inc",
 } end )
 
@@ -42,7 +42,7 @@ BigWigsSartura = BigWigs:NewModule(boss)
 BigWigsSartura.zonename = AceLibrary("Babble-Zone-2.2")["Ahn'Qiraj"]
 BigWigsSartura.enabletrigger = boss
 BigWigsSartura.toggleoptions = {"enrage", "whirlwind", "bosskill"}
-BigWigsSartura.revision = tonumber(string.sub("$Revision: 16639 $", 12, -3))
+BigWigsSartura.revision = tonumber(string.sub("$Revision: 19004 $", 12, -3))
 
 ------------------------------
 --      Initialization      --
@@ -65,7 +65,7 @@ end
 function BigWigsSartura:BigWigs_RecvSync(sync)
 	if sync == "SarturaWhirlwind" and self.db.profile.whirlwind then
 		self:TriggerEvent("BigWigs_Message", L["whirlwindonwarn"], "Important")
-		self:TriggerEvent("BigWigs_StartBar", self, L["whirlwindbartext"], 35, "Interface\\Icons\\Ability_Whirlwind")
+		self:TriggerEvent("BigWigs_StartBar", self, L["whirlwindbartext"], 15, "Interface\\Icons\\Ability_Whirlwind")
 		self:ScheduleEvent("BigWigs_Message", 39, L["whirlwindinctext"], "Attention", true, "Alarm")
 		self:TriggerEvent("BigWigs_StartBar", self, L["whirlwindnextbartext"], 42, "Interface\\Icons\\Ability_UpgradeMoonGlaive")
 	end
@@ -82,6 +82,8 @@ function BigWigsSartura:CHAT_MSG_MONSTER_YELL(msg)
 		self:TriggerEvent("BigWigs_Message", L["startwarn"], "Important")
 		self:TriggerEvent("BigWigs_StartBar", self, L["bartext"], 600, "Interface\\Icons\\Spell_Shadow_UnholyFrenzy")
 		self:ScheduleEvent("BigWigs_Message", 540, L["warn1"], "Urgent")
+		self:ScheduleEvent("BigWigs_Message", 33, L["whirlwindinctext"], "Attention", true, "Alarm")
+		self:TriggerEvent("BigWigs_StartBar", self, L["whirlwindnextbartext"], 35, "Interface\\Icons\\Ability_UpgradeMoonGlaive")
 	end
 end
 
