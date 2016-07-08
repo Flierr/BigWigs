@@ -1,4 +1,4 @@
-﻿------------------------------
+------------------------------
 --      Are you local?      --
 ------------------------------
 
@@ -36,7 +36,7 @@ L:RegisterTranslations("enUS", function() return {
 	starttrigger2 = "Teamanare shi rikk mannor rikk lok karkun",
 	casttrigger = "Unrelenting Rider begins to cast Shadow Bolt Volley.",
 	castwarn = "Shadow Bolt Volley!",
-	startwarn = "Gothik the Harvester engaged! 4:30 till he's in the room.",
+	startwarn = "Gothik the Harvester engaged! 4:40 till he's in the room.",
 
 	rider_name = "Unrelenting Rider",
 	spectral_rider_name = "Spectral Rider",
@@ -82,7 +82,7 @@ BigWigsGothik.wipemobs = {
 	L["spectral_rider_name"], L["spectral_deathknight_name"], L["spectral_trainee_name"]
 }
 BigWigsGothik.toggleoptions = { "room", "buff", -1, "add", "adddeath", "bosskill" }
-BigWigsGothik.revision = tonumber(string.sub("$Revision: 15773 $", 12, -3))
+BigWigsGothik.revision = tonumber(string.sub("$Revision: 19004 $", 12, -3))
 
 ------------------------------
 --      Initialization      --
@@ -110,7 +110,7 @@ end
 function BigWigsGothik:CHAT_MSG_SPELL_CREATURE_VS_CREATURE_DAMAGE(msg)
 	if string.find(msg, L["casttrigger"]) and UnitName("target") == "Unrelenting Rider" then
 			self:TriggerEvent("BigWigs_Message", L["castwarn"], "Personal", true, "Alert")
-			self:TriggerEvent("BigWigs_StartBar", self, L["castwarn"], 3, "Interface\\Icons\\Spell_Shadow_Shadowbolt")
+			self:TriggerEvent("BigWigs_StartBar", self, L["castwarn"], 1, "Interface\\Icons\\Spell_Shadow_Shadowbolt")
 	end
 end
 
@@ -197,11 +197,11 @@ function BigWigsGothik:CHAT_MSG_MONSTER_YELL( msg )
 		if self.db.profile.room then
 			self:TriggerEvent("BigWigs_Message", L["startwarn"], "Important")
 			self:TriggerEvent("BigWigs_StartBar", self, L["inroombartext"], 271, "Interface\\Icons\\Spell_Magic_LesserInvisibilty")
-			self:ScheduleEvent("bwgothikwarn1", "BigWigs_Message", 90, L["warn1"], "Attention")
-			self:ScheduleEvent("bwgothikwarn2", "BigWigs_Message", 180, L["warn2"], "Attention")
-			self:ScheduleEvent("bwgothikwarn3", "BigWigs_Message", 210, L["warn3"], "Urgent")
-			self:ScheduleEvent("bwgothikwarn4", "BigWigs_Message", 240, L["warn4"], "Important")
-			self:ScheduleEvent("bwgothikwarn5", "BigWigs_Message", 260, L["warn5"], "Important")
+			self:ScheduleEvent("bwgothikwarn1", "BigWigs_Message", 100, L["warn1"], "Attention")
+			self:ScheduleEvent("bwgothikwarn2", "BigWigs_Message", 190, L["warn2"], "Attention")
+			self:ScheduleEvent("bwgothikwarn3", "BigWigs_Message", 220, L["warn3"], "Urgent")
+			self:ScheduleEvent("bwgothikwarn4", "BigWigs_Message", 250, L["warn4"], "Important")
+			self:ScheduleEvent("bwgothikwarn5", "BigWigs_Message", 270, L["warn5"], "Important")
 		end
 		self.tranum = 1
 		self.dknum = 1
