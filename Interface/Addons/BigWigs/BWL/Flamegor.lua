@@ -1,4 +1,4 @@
-﻿------------------------------
+------------------------------
 --      Are you local?      --
 ------------------------------
 
@@ -22,9 +22,12 @@ L:RegisterTranslations("enUS", function() return {
 	frenzy_message = "Frenzy - Tranq Shot!",
 
 	wingbuffet_bar = "Wing Buffet",
-	shadowflame_bar = "Shadow Flame",
+	shadowflame_bar = "Shadow Flame casting",
 	frenzy_bar = "Frenzy",
 
+	shadowflamenext_bar = "Shadow Flame",
+	shadowflamenext_message = "Shadow Flame soon",
+	
 	cmd = "Flamegor",
 
 	wingbuffet_cmd = "wingbuffet",
@@ -48,7 +51,7 @@ BigWigsFlamegor = BigWigs:NewModule(boss)
 BigWigsFlamegor.zonename = AceLibrary("Babble-Zone-2.2")["Blackwing Lair"]
 BigWigsFlamegor.enabletrigger = boss
 BigWigsFlamegor.toggleoptions = {"wingbuffet", "shadowflame", "frenzy", "bosskill"}
-BigWigsFlamegor.revision = tonumber(string.sub("$Revision: 16639 $", 12, -3))
+BigWigsFlamegor.revision = tonumber(string.sub("$Revision: 19004 $", 12, -3))
 
 ------------------------------
 --      Initialization      --
@@ -60,7 +63,6 @@ function BigWigsFlamegor:OnEnable()
 	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_CREATURE_BUFFS")
 	self:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_CREATURE_DAMAGE")
 	self:RegisterEvent("CHAT_MSG_SPELL_AURA_GONE_OTHER")
-	self:RegisterEvent("CHAT_MSG_MONSTER_EMOTE")
 	self:RegisterEvent("CHAT_MSG_COMBAT_HOSTILE_DEATH", "GenericBossDeath")
 
 	self:RegisterEvent("BigWigs_RecvSync")
@@ -80,24 +82,33 @@ function BigWigsFlamegor:CHAT_MSG_SPELL_CREATURE_VS_CREATURE_DAMAGE(msg)
 	end
 end
 
-function BigWigsFlamegor:BigWigs_RecvSync(sync)	
+function BigWigsFlamegor:BigWigs_RecvSync(sync, rest)	
 	if sync == self:GetEngageSync() and rest and rest == boss and not started then
 		started = true
 		if self:IsEventRegistered("PLAYER_REGEN_DISABLED") then
 			self:UnregisterEvent("PLAYER_REGEN_DISABLED")
 		end
 		self:TriggerEvent("BigWigs_SendSync", "FlamegorStart")
-	elseif sync == "FlamegorStart" and self.db.profile.wingbuffet then
-		self:TriggerEvent("BigWigs_Message", L["startwarn"], "Important")
-		self:ScheduleEvent("BigWigs_Message", 24, L["wingbuffet_warning"], "Important", true, "Alarm")
-		self:TriggerEvent("BigWigs_StartBar", self, L["wingbuffet_bar"], 27, "Interface\\Icons\\Spell_Fire_SelfDestruct")
+	elseif sync == "FlamegorStart" then
+		if self.db.profile.wingbuffet then
+			self:TriggerEvent("BigWigs_Message", L["startwarn"], "Important")
+			self:ScheduleEvent("BigWigs_Message", 32, L["wingbuffet_warning"], "Important", true, "Alarm")
+			self:TriggerEvent("BigWigs_StartBar", self, L["wingbuffet_bar"], 35, "Interface\\Icons\\Spell_Fire_SelfDestruct")
+		end
+		if self.db.profile.shadowflame then
+			self:TriggerEvent("BigWigs_StartBar", self, L["shadowflamenext_bar"], 30, "Interface\\Icons\\Spell_Fire_Incinerate")
+			self:ScheduleEvent("BigWigs_Message", 27, L["shadowflamenext_message"], "Important", true, "Alarm")
+		end
 	elseif sync == "FlamegorWingBuffet" and self.db.profile.wingbuffet then
 		self:TriggerEvent("BigWigs_Message", L["wingbuffet_message"], "Important")
 		self:ScheduleEvent("BigWigs_Message", 22, L["wingbuffet_warning"], "Important")
 		self:TriggerEvent("BigWigs_StartBar", self, L["wingbuffet_bar"], 25, "Interface\\Icons\\Spell_Fire_SelfDestruct")
 	elseif sync == "FlamegorShadowflame" and self.db.profile.shadowflame then
+		--when he got frenzy buff shadow flame cast is only 2sec
 		self:TriggerEvent("BigWigs_StartBar", self, L["shadowflame_bar"], 2.5, "Interface\\Icons\\Spell_Fire_Incinerate")
 		self:TriggerEvent("BigWigs_Message", L["shadowflame_warning"], "Important")
+		self:TriggerEvent("BigWigs_StartBar", self, L["shadowflamenext_bar"], 15, "Interface\\Icons\\Spell_Fire_Incinerate")
+		self:ScheduleEvent("BigWigs_Message", 12, L["shadowflamenext_message"], "Important", true, "Alarm")
 	end
 end
 
@@ -106,12 +117,6 @@ function BigWigsFlamegor:CHAT_MSG_SPELL_PERIODIC_CREATURE_BUFFS( msg )
 		self:Tranq()
 		self:TriggerEvent("BigWigs_Message", L["frenzy_message"], "Important", true, "Alarm")
 		self:TriggerEvent("BigWigs_StartBar", self, L["frenzy_bar"], 10, "Interface\\Icons\\Ability_Druid_ChallangingRoar")
-	end
-end
-
-function BigWigsFlamegor:CHAT_MSG_MONSTER_EMOTE(msg)
-	if msg == L["frenzy_trigger"] and self.db.profile.frenzy then
-		self:TriggerEvent("BigWigs_Message", L["frenzy_message"], "Important")
 	end
 end
 
