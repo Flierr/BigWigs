@@ -99,9 +99,13 @@ function BigWigsFiremaw:BigWigs_RecvSync( sync, rest )
 		self:TriggerEvent("BigWigs_Message", L["startwarn"], "Important")
 		self:ScheduleEvent("BigWigs_Message", 22, L["wingbuffet_warning"], "Important", true, "Alarm")
 		self:TriggerEvent("BigWigs_StartBar", self, L["wingbuffet_bar"], 25, "Interface\\Icons\\Spell_Fire_SelfDestruct")
-		self:TriggerEvent("BigWigs_StartBar", self, L["shadowflamenext_bar"], 30, "Interface\\Icons\\Spell_Fire_Incinerate")
-		self:ScheduleEvent("BigWigs_Message", 27, L["shadowflamenext_message"], "Important", true, "Alarm")
-		self:TriggerEvent("BigWigs_StartBar", self, L["flamebuffet_bar"], 5, "Interface\\Icons\\Spell_Fire_Fireball")
+		if self.db.profile.shadowflame then
+			self:TriggerEvent("BigWigs_StartBar", self, L["shadowflamenext_bar"], 30, "Interface\\Icons\\Spell_Fire_Incinerate")
+			self:ScheduleEvent("BigWigs_Message", 27, L["shadowflamenext_message"], "Important", true, "Alarm")
+		end
+		if self.db.profile.flamebuffet then
+			self:TriggerEvent("BigWigs_StartBar", self, L["flamebuffet_bar"], 5, "Interface\\Icons\\Spell_Fire_Fireball")
+		end
 	elseif sync == "FiremawWingBuffet" and self.db.profile.wingbuffet then
 		self:TriggerEvent("BigWigs_Message", L["wingbuffet_message"], "Important")
 		self:ScheduleEvent("BigWigs_Message", 47, L["wingbuffet_warning"], "Important", true, "Alarm")
