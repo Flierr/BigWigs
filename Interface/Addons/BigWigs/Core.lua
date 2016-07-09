@@ -182,7 +182,7 @@ BigWigs.cmdtable = {type = "group", handler = BigWigs, args = {
 }}
 BigWigs:RegisterChatCommand({"/bw", "/BigWigs"}, BigWigs.cmdtable)
 BigWigs.debugFrame = ChatFrame5
-BigWigs.revision = tonumber(string.sub("$Revision: 19003$", 12, -2))
+BigWigs.revision = tonumber(string.sub("$Revision: 19004$", 12, -2))
 
 --------------------------------
 --      Module Prototype      --
@@ -338,7 +338,7 @@ function BigWigs:OnEnable()
 end
 
 function BigWigs:AceEvent_FullyInitialized()
-	if GetNumRaidMembers() > 0 or not self.loading then
+	if GetNumRaidMembers() >= 0 or not self.loading then
 		-- Enable all disabled modules that are not boss modules.
 		for name, module in self:IterateModules() do
 			if type(module.IsBossModule) ~= "function" or not module:IsBossModule() then
