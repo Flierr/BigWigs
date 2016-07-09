@@ -1,4 +1,4 @@
-﻿------------------------------
+------------------------------
 --      Are you local?      --
 ------------------------------
 
@@ -25,7 +25,7 @@ L:RegisterTranslations("enUS", function() return {
 	mindcontrol_trigger = "Foolish ([^%s]+).",
 	mindcontrol_message = "%s has been mind controlled!",
 
-	egg_trigger = "casts Destroy Egg",
+	egg_trigger = "Destroy Egg",
 	egg_message = "%d/30 eggs destroyed!",
 
 	phase2_trigger = "Razorgore the Untamed's Warming Flames heals Razorgore the Untamed for .*.",
@@ -36,8 +36,8 @@ L:RegisterTranslations("enUS", function() return {
 	mc_desc = "Warn when players are mind controlled",
 
 	eggs_cmd = "eggs",
-	eggs_name = "Don't count eggs",
-	eggs_desc = "Don't count down the remaining eggs - this option does not work for everyone, we need better triggers.",
+	eggs_name = "Count eggs",
+	eggs_desc = "Count down the remaining eggs",
 
 	phase_cmd = "phase",
 	phase_name = "Phases",
@@ -52,7 +52,7 @@ BigWigsRazorgore = BigWigs:NewModule(boss)
 BigWigsRazorgore.zonename = AceLibrary("Babble-Zone-2.2")["Blackwing Lair"]
 BigWigsRazorgore.enabletrigger = { boss, controller }
 BigWigsRazorgore.toggleoptions = { "mc", "eggs", "phase", "bosskill" }
-BigWigsRazorgore.revision = tonumber(string.sub("$Revision: 19001 $", 12, -3))
+BigWigsRazorgore.revision = tonumber(string.sub("$Revision: 19004 $", 12, -3))
 
 ------------------------------
 --      Initialization      --
@@ -61,7 +61,8 @@ BigWigsRazorgore.revision = tonumber(string.sub("$Revision: 19001 $", 12, -3))
 function BigWigsRazorgore:OnEnable()
 	eggs = 0
 
-	self:RegisterEvent("CHAT_MSG_PLAYER_YELL")
+	--self:RegisterEvent("CHAT_MSG_PLAYER_YELL")
+	self:RegisterEvent("CHAT_MSG_MONSTER_YELL")
 	self:RegisterEvent("CHAT_MSG_SPELL_FRIENDLYPLAYER_BUFF")
 	self:RegisterEvent("CHAT_MSG_COMBAT_HOSTILE_DEATH", "GenericBossDeath")
 
@@ -73,15 +74,15 @@ end
 --      Event Handlers      --
 ------------------------------
 
-function BigWigsRazorgore:CHAT_MSG_PLAYER_YELL(msg)
+function BigWigsRazorgore:CHAT_MSG_MONSTER_YELL(msg)
 	if string.find(msg, L["start_trigger"]) then
 		if self.db.profile.phase then
 		        self:TriggerEvent("BigWigs_StartBar", self, L["enragebartext"], 900, "Interface\\Icons\\Spell_Shadow_UnholyFrenzy")
 			self:TriggerEvent("BigWigs_Message", L["start_message"], "Urgent")
-			self:TriggerEvent("BigWigs_StartBar", self, L["start_mob"], 45, "Interface\\Icons\\Spell_Holy_PrayerOfHealing")
-			self:ScheduleEvent("BigWigs_Message", 25, L["start_incsoon"], "Important")
-			self:ScheduleEvent("BigWigs_Message", 35, L["start_soon"], "Important")
-			self:ScheduleEvent("BigWigs_Message", 40, L["start_verysoon"], "Important")
+			self:TriggerEvent("BigWigs_StartBar", self, L["start_mob"], 35, "Interface\\Icons\\Spell_Holy_PrayerOfHealing")
+			self:ScheduleEvent("BigWigs_Message", 15, L["start_incsoon"], "Important")
+			self:ScheduleEvent("BigWigs_Message", 25, L["start_soon"], "Important")
+			self:ScheduleEvent("BigWigs_Message", 30, L["start_verysoon"], "Important")
 		end
 		eggs = 0
 	elseif self.db.profile.mc then
