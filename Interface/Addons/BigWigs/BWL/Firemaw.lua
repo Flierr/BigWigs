@@ -1,4 +1,4 @@
-﻿------------------------------
+------------------------------
 --      Are you local?      --
 ------------------------------
 
@@ -14,8 +14,8 @@ L:RegisterTranslations("enUS", function() return {
 	shadowflame_trigger = "Firemaw begins to cast Shadow Flame.",
     flame_trigger = "afflicted by Flame Buffet",
 
-	startwarn = "Firemaw Engaged! First Wing Buffet in 27 seconds!",
-	wingbuffet_message = "Wing Buffet! 25sec to next!",
+	startwarn = "Firemaw Engaged! First Wing Buffet in 25 seconds!",
+	wingbuffet_message = "Wing Buffet! 50sec to next!",
 	wingbuffet_warning = "3sec to Wing Buffet!",
 	shadowflame_warning = "Shadow Flame Incoming!",
 
@@ -47,7 +47,7 @@ BigWigsFiremaw = BigWigs:NewModule(boss)
 BigWigsFiremaw.zonename = AceLibrary("Babble-Zone-2.2")["Blackwing Lair"]
 BigWigsFiremaw.enabletrigger = boss
 BigWigsFiremaw.toggleoptions = {"wingbuffet", "flamebuffet", "shadowflame", "bosskill"}
-BigWigsFiremaw.revision = tonumber(string.sub("$Revision: 16639 $", 12, -3))
+BigWigsFiremaw.revision = tonumber(string.sub("$Revision: 19004 $", 12, -3))
 
 ------------------------------
 --      Initialization      --
@@ -94,12 +94,12 @@ function BigWigsFiremaw:BigWigs_RecvSync( sync, rest )
 		self:TriggerEvent("BigWigs_SendSync", "FiremawStart")
 	elseif sync == "FiremawStart" and self.db.profile.wingbuffet then
 		self:TriggerEvent("BigWigs_Message", L["startwarn"], "Important")
-		self:ScheduleEvent("BigWigs_Message", 24, L["wingbuffet_warning"], "Important", true, "Alarm")
-		self:TriggerEvent("BigWigs_StartBar", self, L["wingbuffet_bar"], 27, "Interface\\Icons\\Spell_Fire_SelfDestruct")
-	elseif sync == "FiremawWingBuffet" and self.db.profile.wingbuffet then
-		self:TriggerEvent("BigWigs_Message", L["wingbuffet_message"], "Important")
 		self:ScheduleEvent("BigWigs_Message", 22, L["wingbuffet_warning"], "Important", true, "Alarm")
 		self:TriggerEvent("BigWigs_StartBar", self, L["wingbuffet_bar"], 25, "Interface\\Icons\\Spell_Fire_SelfDestruct")
+	elseif sync == "FiremawWingBuffet" and self.db.profile.wingbuffet then
+		self:TriggerEvent("BigWigs_Message", L["wingbuffet_message"], "Important")
+		self:ScheduleEvent("BigWigs_Message", 47, L["wingbuffet_warning"], "Important", true, "Alarm")
+		self:TriggerEvent("BigWigs_StartBar", self, L["wingbuffet_bar"], 50, "Interface\\Icons\\Spell_Fire_SelfDestruct")
 	elseif sync == "FiremawShadowflame" and self.db.profile.shadowflame then
 		self:TriggerEvent("BigWigs_StartBar", self, L["shadowflame_bar"], 2.5, "Interface\\Icons\\Spell_Fire_Incinerate")
 		self:TriggerEvent("BigWigs_Message", L["shadowflame_warning"], "Important")
