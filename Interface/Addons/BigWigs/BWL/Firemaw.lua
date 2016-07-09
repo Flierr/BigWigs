@@ -20,9 +20,12 @@ L:RegisterTranslations("enUS", function() return {
 	shadowflame_warning = "Shadow Flame Incoming!",
 
 	wingbuffet_bar = "Wing Buffet",
-	shadowflame_bar = "Shadow Flame",
+	shadowflame_bar = "Shadow Flame casting",
 	flamebuffet_bar = "Flame Buffet",
-
+	
+	shadowflamenext_bar = "Shadow Flame",
+	shadowflamenext_message = "Shadow Flame soon",
+	
 	cmd = "Firemaw",
 
 
@@ -96,6 +99,9 @@ function BigWigsFiremaw:BigWigs_RecvSync( sync, rest )
 		self:TriggerEvent("BigWigs_Message", L["startwarn"], "Important")
 		self:ScheduleEvent("BigWigs_Message", 22, L["wingbuffet_warning"], "Important", true, "Alarm")
 		self:TriggerEvent("BigWigs_StartBar", self, L["wingbuffet_bar"], 25, "Interface\\Icons\\Spell_Fire_SelfDestruct")
+		self:TriggerEvent("BigWigs_StartBar", self, L["shadowflamenext_bar"], 30, "Interface\\Icons\\Spell_Fire_Incinerate")
+		self:ScheduleEvent("BigWigs_Message", 27, L["shadowflamenext_message"], "Important", true, "Alarm")
+		self:TriggerEvent("BigWigs_StartBar", self, L["flamebuffet_bar"], 5, "Interface\\Icons\\Spell_Fire_Fireball")
 	elseif sync == "FiremawWingBuffet" and self.db.profile.wingbuffet then
 		self:TriggerEvent("BigWigs_Message", L["wingbuffet_message"], "Important")
 		self:ScheduleEvent("BigWigs_Message", 47, L["wingbuffet_warning"], "Important", true, "Alarm")
@@ -103,5 +109,7 @@ function BigWigsFiremaw:BigWigs_RecvSync( sync, rest )
 	elseif sync == "FiremawShadowflame" and self.db.profile.shadowflame then
 		self:TriggerEvent("BigWigs_StartBar", self, L["shadowflame_bar"], 2.5, "Interface\\Icons\\Spell_Fire_Incinerate")
 		self:TriggerEvent("BigWigs_Message", L["shadowflame_warning"], "Important")
+		self:TriggerEvent("BigWigs_StartBar", self, L["shadowflamenext_bar"], 15, "Interface\\Icons\\Spell_Fire_Incinerate")
+		self:ScheduleEvent("BigWigs_Message", 12, L["shadowflamenext_message"], "Important", true, "Alarm")
 	end
 end
