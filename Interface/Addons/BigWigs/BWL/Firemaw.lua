@@ -95,10 +95,12 @@ function BigWigsFiremaw:BigWigs_RecvSync( sync, rest )
 			self:UnregisterEvent("PLAYER_REGEN_DISABLED")
 		end
 		self:TriggerEvent("BigWigs_SendSync", "FiremawStart")
-	elseif sync == "FiremawStart" and self.db.profile.wingbuffet then
-		self:TriggerEvent("BigWigs_Message", L["startwarn"], "Important")
-		self:ScheduleEvent("BigWigs_Message", 22, L["wingbuffet_warning"], "Important", true, "Alarm")
-		self:TriggerEvent("BigWigs_StartBar", self, L["wingbuffet_bar"], 25, "Interface\\Icons\\Spell_Fire_SelfDestruct")
+	elseif sync == "FiremawStart" then
+		if self.db.profile.wingbuffet then
+			self:TriggerEvent("BigWigs_Message", L["startwarn"], "Important")
+			self:ScheduleEvent("BigWigs_Message", 22, L["wingbuffet_warning"], "Important", true, "Alarm")
+			self:TriggerEvent("BigWigs_StartBar", self, L["wingbuffet_bar"], 25, "Interface\\Icons\\Spell_Fire_SelfDestruct")
+		end
 		if self.db.profile.shadowflame then
 			self:TriggerEvent("BigWigs_StartBar", self, L["shadowflamenext_bar"], 30, "Interface\\Icons\\Spell_Fire_Incinerate")
 			self:ScheduleEvent("BigWigs_Message", 27, L["shadowflamenext_message"], "Important", true, "Alarm")
