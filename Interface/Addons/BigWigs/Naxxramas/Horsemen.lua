@@ -105,9 +105,9 @@ function BigWigsHorsemen:OnEnable()
 	--Mark
 	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_SELF_DAMAGE", "SkillEvent")
 	--Void Zone casts
-	self:RegisterEvent("CHAT_MSG_SPELL_SELF_DAMAGE", "SkillEvent")
-	self:RegisterEvent("CHAT_MSG_SPELL_HOSTILEPLAYER_DAMAGE", "SkillEvent")
-	self:RegisterEvent("CHAT_MSG_SPELL_FRIENDLYPLAYER_DAMAGE", "SkillEvent")
+	self:RegisterEvent("CHAT_MSG_SPELL_SELF_DAMAGE", "VoidSkillEvent")
+	self:RegisterEvent("CHAT_MSG_SPELL_HOSTILEPLAYER_DAMAGE", "VoidSkillEvent")
+	self:RegisterEvent("CHAT_MSG_SPELL_FRIENDLYPLAYER_DAMAGE", "VoidSkillEvent")
 
 	self:RegisterEvent("BigWigs_RecvSync")
 	self:TriggerEvent("BigWigs_ThrottleSync", "HorsemenShieldWall3", 3)
@@ -125,7 +125,11 @@ function BigWigsHorsemen:SkillEvent(msg)
 			self:TriggerEvent("BigWigs_SendSync", "HorsemenMeteor3")
 	elseif string.find(msg, L["wrathtrigger"]) then
 			self:TriggerEvent("BigWigs_SendSync", "HorsemenWrath3")
-	elseif string.find(msg, L["voidtrigger"]) then
+	end
+end
+
+function BigWigsHorsemen:VoidSkillEvent(msg)
+	if string.find(msg, L["voidtrigger"]) then
 			self:TriggerEvent("BigWigs_SendSync", "HorsemenVoid3")
 	end
 end
