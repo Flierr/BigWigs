@@ -1,9 +1,9 @@
 ﻿## Interface: 11200
 
 ## Title: Big Wigs |cff02bf02VG|r edition
-## Notes: Boss Mods. Made by |cff1fff1f Sulfuras|r, Updates by Soge and Shyva & |cff02bf02Luise|r & |cff02bf02Flier|r, Rev 19005
+## Notes: Boss Mods. Made by |cff1fff1f Sulfuras|r, Updates by Soge and Shyva & |cff02bf02Luise|r & |cff02bf02Flier|r, Rev 19006
 ## Contributing Authors: Sulfuras, Soge, Shyva, Luise
-## Version: 19005
+## Version: 19006
 ## X-Website: http://www.vanillagaming.org
 ## X-Email: flierrgaming@gmail.com
 ## X-Category: Raid
