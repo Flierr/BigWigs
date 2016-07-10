@@ -78,7 +78,7 @@ BigWigsHorsemen = BigWigs:NewModule(boss)
 BigWigsHorsemen.zonename = AceLibrary("Babble-Zone-2.2")["Naxxramas"]
 BigWigsHorsemen.enabletrigger = { thane, mograine, zeliek, blaumeux }
 BigWigsHorsemen.toggleoptions = {"mark", "shieldwall", "buff", -1, "meteor", "void", "wrath", "bosskill"}
-BigWigsHorsemen.revision = tonumber(string.sub("$Revision: 19005 $", 12, -3))
+BigWigsHorsemen.revision = tonumber(string.sub("$Revision: 19006 $", 12, -3))
 
 ------------------------------
 --      Initialization      --
