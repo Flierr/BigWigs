@@ -33,13 +33,15 @@ L:RegisterTranslations("enUS", function() return {
 	warn1 = "Frenzy Alert!",
 	warn2 = "5 second until AoE Fear!",
 
-	startwarn = "Gluth Engaged! 105 seconds till Zombies!",
+	startwarn = "Gluth Engaged! 100 seconds till Zombies!",
 	decimatesoonwarn = "Decimate Soon!",
 	decimatewarn = "Decimate!",
 	decimatetrigger = "Decimate",
 	frenzy_bar = "Frenzy",
 	frenzyfade_trigger = "Frenzy fades from Gluth",
 
+	enragesoon = "Enrage soon!",
+	
 	bar1text = "AoE Fear",
 	decimatebartext = "Decimate Zombies",
 	enragebartext = "Enrage",
@@ -54,7 +56,7 @@ BigWigsGluth = BigWigs:NewModule(boss)
 BigWigsGluth.zonename = AceLibrary("Babble-Zone-2.2")["Naxxramas"]
 BigWigsGluth.enabletrigger = boss
 BigWigsGluth.toggleoptions = {"frenzy", "fear", "decimate", "bosskill"}
-BigWigsGluth.revision = tonumber(string.sub("$Revision: 16000 $", 12, -3))
+BigWigsGluth.revision = tonumber(string.sub("$Revision: 19004 $", 12, -3))
 
 ------------------------------
 --      Initialization      --
@@ -104,6 +106,7 @@ function BigWigsGluth:Fear( msg )
 	end
 end
 
+--does not work on VG, no combat log message when decimate is used
 function BigWigsGluth:Decimate( msg )
 	if string.find(msg, L["decimatetrigger"]) then
 		self:TriggerEvent("BigWigs_SendSync", "GluthDecimate")
@@ -115,6 +118,7 @@ function BigWigsGluth:BigWigs_RecvSync( sync, rest, nick )
 		self:TriggerEvent("BigWigs_StartBar", self, L["bar1text"], 20, "Interface\\Icons\\Spell_Shadow_PsychicScream")
 		self:ScheduleEvent("BigWigs_Message", 15, L["warn2"], "Urgent")
 		self.prior = true
+		--does not work on VG, no combat log message when decimate is used
 	elseif sync == "GluthDecimate" and self.db.profile.decimate then
 		self:TriggerEvent("BigWigs_Message", L["decimatewarn"], "Important")
 		self:TriggerEvent("BigWigs_StartBar", self, L["decimatebartext"], 100, "Interface\\Icons\\INV_Shield_01")
@@ -123,16 +127,21 @@ function BigWigsGluth:BigWigs_RecvSync( sync, rest, nick )
 		started = true
 		if self:IsEventRegistered("PLAYER_REGEN_DISABLED") then self:UnregisterEvent("PLAYER_REGEN_DISABLED") end
 		if self.db.profile.decimate then
-		        self:TriggerEvent("BigWigs_StartBar", self, L["bar1text"], 20, "Interface\\Icons\\Spell_Shadow_PsychicScream")
-		        self:ScheduleEvent("BigWigs_Message", 15, L["warn2"], "Urgent")
+			self:TriggerEvent("BigWigs_StartBar", self, L["bar1text"], 20, "Interface\\Icons\\Spell_Shadow_PsychicScream")
+			self:ScheduleEvent("BigWigs_Message", 15, L["warn2"], "Urgent")
 			self:TriggerEvent("BigWigs_Message", L["startwarn"], "Attention")
+			--1st decimate bar and warning
 			self:TriggerEvent("BigWigs_StartBar", self, L["decimatebartext"], 100, "Interface\\Icons\\INV_Shield_01")
-			self:ScheduleEvent("BigWigs_Message", 100, L["decimatesoonwarn"], "Urgent")
-	                self:ScheduleEvent("BigWigs_StartBar", 100, self, L["decimatebartext"], 100, "Interface\\Icons\\INV_Shield_01")
-	                self:ScheduleEvent("BigWigs_Message", 195, L["decimatesoonwarn"], "Urgent", true, "Alarm")
-	                self:ScheduleEvent("BigWigs_StartBar", 200, self, L["decimatebartext"], 100, "Interface\\Icons\\INV_Shield_01")
-	                self:ScheduleEvent("BigWigs_Message", 295, L["decimatesoonwarn"], "Urgent", true, "Alarm")
-	                self:ScheduleEvent("BigWigs_StartBar", 300, self, L["enragebartext"], 11, "Interface\\Icons\\Spell_Shadow_UnholyFrenzy")
+			self:ScheduleEvent("BigWigs_Message", 95, L["decimatesoonwarn"], "Urgent")
+			--2nd decimate bar and warning, visible after 120 seconds (20 sec after 1st deciamte when zombies are under control)
+			self:ScheduleEvent("BigWigs_Message", 195, L["decimatesoonwarn"], "Urgent", true, "Alarm")
+			self:ScheduleEvent("BigWigs_StartBar", 120, self, L["decimatebartext"], 80, "Interface\\Icons\\INV_Shield_01")
+			--3rd decimate bar and warning, visible after 220 seconds (20 sec after 1st deciamte when zombies are under control)
+			self:ScheduleEvent("BigWigs_Message", 295, L["decimatesoonwarn"], "Urgent", true, "Alarm")
+			self:ScheduleEvent("BigWigs_StartBar", 220, self, L["decimatebartext"], 80, "Interface\\Icons\\INV_Shield_01")
+			--enrage = wipe
+			self:ScheduleEvent("BigWigs_Message", 305, L["enragesoon"], "Urgent", true, "Alarm")
+			self:ScheduleEvent("BigWigs_StartBar", 300, self, L["enragebartext"], 11, "Interface\\Icons\\Spell_Shadow_UnholyFrenzy")
 		end
 	end
 end
