@@ -78,7 +78,7 @@ BigWigsHorsemen = BigWigs:NewModule(boss)
 BigWigsHorsemen.zonename = AceLibrary("Babble-Zone-2.2")["Naxxramas"]
 BigWigsHorsemen.enabletrigger = { thane, mograine, zeliek, blaumeux }
 BigWigsHorsemen.toggleoptions = {"mark", "shieldwall", "buff", -1, "meteor", "void", "wrath", "bosskill"}
-BigWigsHorsemen.revision = tonumber(string.sub("$Revision: 19004 $", 12, -3))
+BigWigsHorsemen.revision = tonumber(string.sub("$Revision: 19005 $", 12, -3))
 
 ------------------------------
 --      Initialization      --
@@ -101,6 +101,7 @@ function BigWigsHorsemen:OnEnable()
 	self:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_PARTY_DAMAGE", "SkillEvent")
 	self:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_SELF_DAMAGE", "SkillEvent")
 	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_FRIENDLYPLAYER_DAMAGE", "SkillEvent")
+	self:RegisterEvent("CHAT_MSG_SPELL_FRIENDLYPLAYER_DAMAGE", "SkillEvent")
 	self:RegisterEvent("CHAT_MSG_YELL", "SkillEvent")
 	--Mark
 	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_SELF_DAMAGE", "SkillEvent")
