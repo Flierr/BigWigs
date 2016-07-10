@@ -114,7 +114,7 @@ function BigWigsGothik:CHAT_MSG_SPELL_CREATURE_VS_CREATURE_DAMAGE(msg)
 	end
 end
 
-function BigWigsNoth:CHAT_MSG_SPELL_PERIODIC_SELF_BUFFS( msg )
+function BigWigsGothik:CHAT_MSG_SPELL_PERIODIC_SELF_BUFFS( msg )
 	if self.db.profile.buff then
 		if string.find(msg, L["GSPPtrigger"]) then
             BigWigsThaddiusArrows:GSPPstop()
