@@ -101,13 +101,13 @@ function BigWigsHorsemen:OnEnable()
 	self:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_PARTY_DAMAGE", "SkillEvent")
 	self:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_SELF_DAMAGE", "SkillEvent")
 	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_FRIENDLYPLAYER_DAMAGE", "SkillEvent")
-	self:RegisterEvent("CHAT_MSG_SPELL_FRIENDLYPLAYER_DAMAGE", "SkillEvent")
 	self:RegisterEvent("CHAT_MSG_YELL", "SkillEvent")
 	--Mark
 	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_SELF_DAMAGE", "SkillEvent")
-	--Void Zone self CHAT_MSG_SPELL_SELF_DAMAGE
+	--Void Zone casts
 	self:RegisterEvent("CHAT_MSG_SPELL_SELF_DAMAGE", "SkillEvent")
-	
+	self:RegisterEvent("CHAT_MSG_SPELL_HOSTILEPLAYER_DAMAGE", "SkillEvent")
+	self:RegisterEvent("CHAT_MSG_SPELL_FRIENDLYPLAYER_DAMAGE", "SkillEvent")
 
 	self:RegisterEvent("BigWigs_RecvSync")
 	self:TriggerEvent("BigWigs_ThrottleSync", "HorsemenShieldWall3", 3)
