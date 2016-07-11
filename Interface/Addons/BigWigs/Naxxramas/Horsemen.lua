@@ -51,7 +51,8 @@ L:RegisterTranslations("enUS", function() return {
 	marktrigger = "afflicted by Mark of ",
 
 	voidtrigger = "cast Void Zone",
-	--voidtrigger2 = "Consumption",
+	voidtrigger2 = "casts Void Zone",
+	--voidtrigger3 = "Consumption",
 	voidwarn = "Void Zone Incoming!",
 	voidbar = "Void Zone",
 	voidzonewarn = "Move out of Void Zone",
@@ -78,7 +79,7 @@ BigWigsHorsemen = BigWigs:NewModule(boss)
 BigWigsHorsemen.zonename = AceLibrary("Babble-Zone-2.2")["Naxxramas"]
 BigWigsHorsemen.enabletrigger = { thane, mograine, zeliek, blaumeux }
 BigWigsHorsemen.toggleoptions = {"mark", "shieldwall", "buff", -1, "meteor", "void", "wrath", "bosskill"}
-BigWigsHorsemen.revision = tonumber(string.sub("$Revision: 19006 $", 12, -3))
+BigWigsHorsemen.revision = tonumber(string.sub("$Revision: 19007 $", 12, -3))
 
 ------------------------------
 --      Initialization      --
@@ -129,8 +130,8 @@ function BigWigsHorsemen:SkillEvent(msg)
 end
 
 function BigWigsHorsemen:VoidSkillEvent(msg)
-	if string.find(msg, L["voidtrigger"]) then
-			self:TriggerEvent("BigWigs_SendSync", "HorsemenVoid3")
+	if string.find(msg, L["voidtrigger"]) or string.find(msg, L["voidtrigger2"]) then
+		self:TriggerEvent("BigWigs_SendSync", "HorsemenVoid3")
 	end
 end
 
