@@ -1,4 +1,4 @@
-﻿------------------------------
+------------------------------
 --      Are you local?      --
 ------------------------------
 
@@ -87,6 +87,7 @@ L:RegisterTranslations("enUS", function() return {
 
 	throwbar = "Throw",
 	throwwarn = "Throw in ~4 seconds!",
+	
 } end )
 
 ----------------------------------
@@ -97,18 +98,21 @@ BigWigsThaddius = BigWigs:NewModule(boss)
 BigWigsThaddius.zonename = AceLibrary("Babble-Zone-2.2")["Naxxramas"]
 BigWigsThaddius.enabletrigger = { boss, feugen, stalagg }
 BigWigsThaddius.toggleoptions = {"enrage", "charge", "polarity", -1, "power", "throw", "phase", "bosskill"}
-BigWigsThaddius.revision = tonumber(string.sub("$Revision: 17540 $", 12, -3))
+BigWigsThaddius.revision = tonumber(string.sub("$Revision: 19008 $", 12, -3))
 
 ------------------------------
 --      Initialization      --
 ------------------------------
 
 function BigWigsThaddius:OnEnable()
+	self.started = nil
 	self.enrageStarted = nil
 	self.addsdead = 0
 	self.teslawarn = nil
 	self.stage1warn = nil
 	self.previousCharge = ""
+	self.throwtime_initial = 22
+	self.throwtime = 21
 
 	self:RegisterEvent("CHAT_MSG_COMBAT_HOSTILE_DEATH", "GenericBossDeath")
 
@@ -132,14 +136,15 @@ end
 function BigWigsThaddius:CHAT_MSG_MONSTER_YELL( msg )
 	if string.find(msg, L["pstrigger"]) then
 		self:TriggerEvent("BigWigs_SendSync", "ThaddiusPolarity")
-    elseif msg == L["starttrigger"] or msg == L["starttrigger1"] then
+    elseif (msg == L["starttrigger"] or msg == L["starttrigger1"]) and started == nil then
+		started = true
 		if self.db.profile.phase and not self.stage1warn then
 			self:TriggerEvent("BigWigs_Message", L["startwarn"], "Important")
 		end
 		self.stage1warn = true
-		self:TriggerEvent("BigWigs_StartBar", self, L["throwbar"], 24, "Interface\\Icons\\Ability_Druid_Maul")
-		self:ScheduleEvent("bwthaddiusthrowwarn", "BigWigs_Message", 20, L["throwwarn"], "Urgent")
-	        self:ScheduleEvent("bwthaddiusthrowst", self.Throwst, 4, self)
+		self:TriggerEvent("BigWigs_StartBar", self, L["throwbar"], self.throwtime_initial, "Interface\\Icons\\Ability_Druid_Maul")
+		self:ScheduleEvent("bwthaddiusthrowwarn", "BigWigs_Message", self.throwtime_initial - 4, L["throwwarn"], "Urgent")
+	        self:ScheduleEvent("bwthaddiusthrowst", self.Throwst, self.throwtime_initial - self.throwtime, self)
 	elseif msg == L["adddie1"] or msg == L["adddie2"] then
 		self.addsdead = self.addsdead + 1
 		if self.addsdead == 1 then			
@@ -149,8 +154,8 @@ function BigWigsThaddius:CHAT_MSG_MONSTER_YELL( msg )
 				self:CancelScheduledEvent("bwthaddiusthrow")
 				self:CancelScheduledEvent("bwthaddiusthrowwarn")
 		else
-				self:TriggerEvent("BigWigs_StartBar", self, L["P2inc"], 19, "Interface\\Icons\\Spell_Nature_Purge")
-				self:ScheduleEvent("P2start", self.PhaseTwoStart, 19, self)
+				self:TriggerEvent("BigWigs_StartBar", self, L["P2inc"], 22, "Interface\\Icons\\Spell_Nature_Purge")
+				self:ScheduleEvent("P2start", self.PhaseTwoStart, 22, self)
 				self:TriggerEvent("BigWigs_StopBar", self, L["adddiebartext"])
 				self:TriggerEvent("BigWigs_StopBar", self, L["powersurgebar"])
 				klhtm:ResetRaidThreat()
@@ -250,13 +255,13 @@ function BigWigsThaddius:BigWigs_RecvSync( sync )
 end
 
 function BigWigsThaddius:Throwst()
-		self:ScheduleRepeatingEvent( "bwthaddiusthrow", self.Throw, 21, self )
+		self:ScheduleRepeatingEvent( "bwthaddiusthrow", self.Throw, self.throwtime, self )
 end
 
 function BigWigsThaddius:Throw()
 	if self.db.profile.throw then
-		self:TriggerEvent("BigWigs_StartBar", self, L["throwbar"], 20, "Interface\\Icons\\Ability_Druid_Maul")
-		self:ScheduleEvent("bwthaddiusthrowwarn", "BigWigs_Message", 15, L["throwwarn"], "Urgent")
+		self:TriggerEvent("BigWigs_StartBar", self, L["throwbar"], self.throwtime, "Interface\\Icons\\Ability_Druid_Maul")
+		self:ScheduleEvent("bwthaddiusthrowwarn", "BigWigs_Message", self.throwtime - 4, L["throwwarn"], "Urgent")
 	end
 end
 
