@@ -213,6 +213,8 @@ function BigWigsThaddius:PhaseTwoStart()
 	self:ScheduleEvent("bwthaddiuswarn3", "BigWigs_Message", 240, L["warn3"], "Urgent")
 	self:ScheduleEvent("bwthaddiuswarn4", "BigWigs_Message", 270, L["warn4"], "Important")
 	self:ScheduleEvent("bwthaddiuswarn5", "BigWigs_Message", 290, L["warn5"], "Important")
+	self:ScheduleEvent("BigWigs_Message", 27, L["pswarn3"], "Urgent")
+	self:TriggerEvent("BigWigs_StartBar", self, L["bar1text"], 30, "Interface\\Icons\\Spell_Nature_Lightning")
 end
 
 function BigWigsThaddius:CHAT_MSG_MONSTER_EMOTE( msg )
@@ -285,8 +287,8 @@ end
 
 function BigWigsThaddius:BigWigs_RecvSync( sync )
 	if sync == "ThaddiusPolarity" and self.db.profile.polarity then
-	        self:ScheduleEvent("bwthaddiustestcheck", self.Testcheck, 3.5, self)
-                self:TriggerEvent("BigWigs_StartBar", self, L["castbar"], 3.1, "Interface\\Icons\\Spell_Nature_Lightning")
+	    self:ScheduleEvent("bwthaddiustestcheck", self.Testcheck, 3.5, self)
+        self:TriggerEvent("BigWigs_StartBar", self, L["castbar"], 3.1, "Interface\\Icons\\Spell_Nature_Lightning")
 		self:ScheduleEvent("BigWigs_Message", 27, L["pswarn3"], "Urgent")
 		self:TriggerEvent("BigWigs_StartBar", self, L["bar1text"], 30, "Interface\\Icons\\Spell_Nature_Lightning")
 	elseif sync == "StalaggPower" and self.db.profile.power then
