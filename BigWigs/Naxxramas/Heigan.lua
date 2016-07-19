@@ -1,4 +1,4 @@
-﻿------------------------------
+------------------------------
 --      Are you local?      --
 ------------------------------
 
@@ -23,6 +23,11 @@ L:RegisterTranslations("enUS", function() return {
 	disease_cmd = "disease",
 	disease_name = "Decrepit Fever Alert",
 	disease_desc = "Warn for Decrepit Fever",
+	
+	splash_cmd = "splash",
+	splash_name = "Splash Timer",
+	splash_desc = "Timer Bar for Splash",
+	
 	
 	-- [[ Triggers ]]--
 	starttrigger = "You are mine now!",
@@ -51,6 +56,9 @@ L:RegisterTranslations("enUS", function() return {
 	back_bar = "Back on the floor!",
 	dbar = "Decrepit Fever",
 	
+	splash_bar = "SPLASH!",
+	dancesound = "Interface\\AddOns\\BigWigs\\Sounds\\dance.mp3",
+	
 	-- [[ Dream Room Mobs ]] --
 	["Eye Stalk"] = true,
 	["Rotting Maggot"] = true,
@@ -64,8 +72,8 @@ BigWigsHeigan = BigWigs:NewModule(boss)
 BigWigsHeigan.zonename = AceLibrary("Babble-Zone-2.2")["Naxxramas"]
 BigWigsHeigan.enabletrigger = boss
 BigWigsHeigan.wipemobs = { L["Eye Stalk"], L["Rotting Maggot"] }
-BigWigsHeigan.toggleoptions = {"engage", "teleport", "disease", "bosskill"}
-BigWigsHeigan.revision = tonumber(string.sub("$Revision: 17550 $", 12, -3))
+BigWigsHeigan.toggleoptions = {"engage", "teleport", "disease", "splash", "bosskill"}
+BigWigsHeigan.revision = tonumber(string.sub("$Revision: 19008 $", 12, -3))
 
 ------------------------------
 --      Initialization      --
@@ -74,6 +82,8 @@ BigWigsHeigan.revision = tonumber(string.sub("$Revision: 17550 $", 12, -3))
 function BigWigsHeigan:OnEnable()
 	self.toRoomTime = 45.5
 	self.toPlatformTime = 90
+	self.splashtime = 10
+	self.dancetime = 3.1
 	self:RegisterEvent("CHAT_MSG_MONSTER_YELL")
 	self:RegisterEvent("CHAT_MSG_MONSTER_EMOTE")
 	self:RegisterEvent("PLAYER_REGEN_ENABLED", "CheckForWipe")
@@ -107,7 +117,19 @@ function BigWigsHeigan:CHAT_MSG_MONSTER_YELL( msg )
 			self:ScheduleEvent("bwheiganwarn3", "BigWigs_Message", self.toPlatformTime-10, L["teleport_10sec_message"], "Important")
 			self:ScheduleEvent("bwheigantelewarn", self.TeleportWarn, self.toPlatformTime, self)
 		end
+		if self.db.profile.splash then
+			self:TriggerEvent("BigWigs_StartBar", self, L["splash_bar"], self.splashtime, "Interface\\Icons\\Spell_Nature_CorrosiveBreath")
+			self:ScheduleRepeatingEvent( "bwheigansplash", self.Splash, self.splashtime, self )
+		end
 	end
+end
+
+function BigWigsHeigan:Splash()
+	self:TriggerEvent("BigWigs_StartBar", self, L["splash_bar"], self.splashtime, "Interface\\Icons\\Spell_Nature_CorrosiveBreath")
+end
+
+function BigWigsHeigan:Dance()
+	self:TriggerEvent("BigWigs_StartBar", self, L["splash_bar"], self.dancetime, "Interface\\Icons\\Spell_Nature_CorrosiveBreath")
 end
 
 function BigWigsHeigan:BigWigs_RecvSync( sync )
@@ -123,6 +145,17 @@ function BigWigsHeigan:TeleportWarn()
 	self:TriggerEvent("BigWigs_Message", string.format(L["on_platform_message"], self.toRoomTime), "Attention")
 	self:ScheduleEvent("bwheiganwarn2","BigWigs_Message", self.toRoomTime-30, L["to_floor_30sec_message"], "Urgent")
 	self:ScheduleEvent("bwheiganwarn3","BigWigs_Message", self.toRoomTime-10, L["to_floor_10sec_message"], "Important")
+	
+	self:TriggerEvent("BigWigs_StopBar", self, L["splash_bar"])
+	self:CancelScheduledEvent("bwheigansplash")
+	
+	if self.db.profile.splash then
+		self:TriggerEvent("BigWigs_StartBar", self, L["splash_bar"], self.dancetime, "Interface\\Icons\\Spell_Nature_CorrosiveBreath")
+		self:ScheduleRepeatingEvent( "bwheigansdance", self.Dance, self.dancetime, self )
+	end
+	
+	PlaySoundFile(L["dancesound"])
+	
 end
 
 
@@ -141,5 +174,13 @@ function BigWigsHeigan:BackToRoom()
 		self:ScheduleEvent("bwheiganwarn3","BigWigs_Message", self.toPlatformTime-10, L["teleport_10sec_message"], "Important")
 		self:TriggerEvent("BigWigs_StartBar", self, L["teleport_bar"], self.toPlatformTime, "Interface\\Icons\\Spell_Arcane_Blink")
 		self:ScheduleEvent("bwheigantelewarn", self.TeleportWarn, self.toPlatformTime, self)
+	end
+	
+	self:TriggerEvent("BigWigs_StopBar", self, L["splash_bar"])
+	self:CancelScheduledEvent("bwheigansdance")
+
+	if self.db.profile.splash then
+		self:TriggerEvent("BigWigs_StartBar", self, L["splash_bar"], self.splashtime, "Interface\\Icons\\Spell_Nature_CorrosiveBreath")
+		self:ScheduleRepeatingEvent( "bwheigansplash", self.Splash, self.splashtime, self )
 	end
 end
