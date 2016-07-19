@@ -13,4 +13,5 @@ See issues tab for known problems. If you find new issues, please open a new iss
 Milestone rev 19008 - 19.07.2016 - every Boss in Naxxramas is tested on Testserver
 
 http://vanillagaming.org/
+
 http://deprofundis.shivtr.com/
