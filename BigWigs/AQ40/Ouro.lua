@@ -70,7 +70,7 @@ L:RegisterTranslations("enUS", function() return {
 	submergewarn = "~5 seconds until Ouro Emerges!",
 	submergebartext = "Ouro Emerge",
 
-	berserktrigger = "%s goes into a berserker rage!",
+	berserktrigger = "Ouro gains Berserk.",
 	berserkannounce = "Berserk!",
 	berserksoonwarn = "Berserk Soon - Get Ready!",
 
@@ -99,6 +99,9 @@ function BigWigsOuro:OnEnable()
 	self:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_CREATURE_DAMAGE")
 	self:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_CREATURE_BUFF")
 	
+	--berserk
+		self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_CREATURE_BUFFS")
+		
 	--submerge detection on VG
 	self:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_SELF_DAMAGE", "checksubmerge")
 	self:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_PARTY_DAMAGE", "checksubmerge")
@@ -109,7 +112,7 @@ function BigWigsOuro:OnEnable()
 	self:RegisterEvent("CHAT_MSG_COMBAT_CREATURE_VS_PARTY_HITS", "checkemerge")
 	self:RegisterEvent("CHAT_MSG_COMBAT_CREATURE_VS_PARTY_MISSES", "checkemerge")
 		
-	self:RegisterEvent("CHAT_MSG_MONSTER_EMOTE")
+	--self:RegisterEvent("CHAT_MSG_MONSTER_EMOTE")
 	--self:RegisterEvent("CHAT_MSG_YELL")
 	self:RegisterEvent("CHAT_MSG_COMBAT_HOSTILE_DEATH", "GenericBossDeath")
 
@@ -291,7 +294,7 @@ function BigWigsOuro:CHAT_MSG_SPELL_CREATURE_VS_CREATURE_DAMAGE( msg )
 	end
 end
 
-function BigWigsOuro:CHAT_MSG_MONSTER_EMOTE( msg )
+function BigWigsOuro:CHAT_MSG_SPELL_PERIODIC_CREATURE_BUFFS( msg )
 	if msg == L["berserktrigger"] then
 		self:TriggerEvent("BigWigs_SendSync", "OuroBerserk")
 	end
