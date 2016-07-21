@@ -1,10 +1,11 @@
-﻿------------------------------
+------------------------------
 --      Are you local?      --
 ------------------------------
 
 local boss = AceLibrary("Babble-Boss-2.2")["Chromaggus"]
 local L = AceLibrary("AceLocale-2.2"):new("BigWigs"..boss)
 local twenty
+local started = nil
 
 ----------------------------
 --      Localization      --
@@ -39,9 +40,14 @@ L:RegisterTranslations("enUS", function() return {
 	hit = "hits",
 	crit = "crits",
 
+	breath_warning_initial = "Unknown Breath in 5 seconds!",
+	breath_bar_1st = "1st Unknown Breath",
+	breath_bar_2nd = "2nd Unknown Breath",
+	
 	breath_warning = "%s in 5 seconds!",
 	breath_message = "%s is casting!",
 	vulnerability_message = "Vulnerability: %s!",
+	vulnerability_bar = "Vulnerability: %s!",
 	vulnerability_warning = "Spell vulnerability changed!",
 	frenzy_message = "Frenzy! Tranquil NOW!",
 	enrage_warning = "Enrage soon!",
@@ -61,6 +67,12 @@ L:RegisterTranslations("enUS", function() return {
 
 	castingbar = "Cast %s",
 	frenzy_bar = "Frenzy",
+	
+	icon_vuln_shadow = "Interface\\Icons\\Spell_Shadow_ShadowBolt",
+	icon_vuln_fire = "Interface\\Icons\\Spell_Fire_FlameBolt",
+	icon_vuln_frost = "Interface\\Icons\\Spell_Frost_FrostBolt02",
+	icon_vuln_arcane = "Interface\\Icons\\Spell_Nature_StarFall",
+	icon_vuln_nature = "Interface\\Icons\\Spell_Nature_AbolishMagic",
 
 } end )
 
@@ -72,7 +84,7 @@ BigWigsChromaggus = BigWigs:NewModule(boss)
 BigWigsChromaggus.zonename = AceLibrary("Babble-Zone-2.2")["Blackwing Lair"]
 BigWigsChromaggus.enabletrigger = boss
 BigWigsChromaggus.toggleoptions = { "enrage", "frenzy", "breath", "vulnerability", "bosskill"}
-BigWigsChromaggus.revision = tonumber(string.sub("$Revision: 16721 $", 12, -3))
+BigWigsChromaggus.revision = tonumber(string.sub("$Revision: 19008 $", 12, -3))
 
 ------------------------------
 --      Initialization      --
@@ -82,11 +94,14 @@ function BigWigsChromaggus:OnEnable()
 	-- in the module itself for resetting via schedule
 	self.vulnerability = nil
 	twenty = nil
+	started = nil
 
+	
+	self:RegisterEvent("PLAYER_REGEN_ENABLED", "CheckForWipe")
+	self:RegisterEvent("PLAYER_REGEN_DISABLED", "CheckForEngage")
 	self:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_CREATURE_DAMAGE")
 	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_CREATURE_BUFFS")
 	self:RegisterEvent("CHAT_MSG_SPELL_AURA_GONE_OTHER")
-	self:RegisterEvent("CHAT_MSG_MONSTER_EMOTE")
 	self:RegisterEvent("CHAT_MSG_SPELL_SELF_DAMAGE", "PlayerDamageEvents")
 	self:RegisterEvent("CHAT_MSG_SPELL_PET_DAMAGE", "PlayerDamageEvents")
 	self:RegisterEvent("CHAT_MSG_SPELL_PARTY_DAMAGE", "PlayerDamageEvents")
@@ -136,8 +151,17 @@ function BigWigsChromaggus:CHAT_MSG_SPELL_CREATURE_VS_CREATURE_DAMAGE( msg )
 end
 
 function BigWigsChromaggus:BigWigs_RecvSync(sync, spellId)
-	if sync ~= "ChromaggusBreath" or not spellId or not self.db.profile.breath then return end
-
+	--using some nasty code here for engage check and spellid for breath
+	if sync == self:GetEngageSync() and spellId and spellId == boss and not started then
+		started = true
+		if self:IsEventRegistered("PLAYER_REGEN_DISABLED") then self:UnregisterEvent("PLAYER_REGEN_DISABLED") end
+		
+		self:ScheduleEvent("bwchromaggusbreathinitial1", "BigWigs_Message", 25, L["breath_warning_initial"], "Important", true, "Alarm")
+		self:TriggerEvent("BigWigs_StartBar", self, L["breath_bar_1st"], 30, L["iconunknown"])
+		self:ScheduleEvent("bwchromaggusbreathinitial2", "BigWigs_Message", 55, L["breath_warning_initial"], "Important", true, "Alarm")
+		self:TriggerEvent("BigWigs_StartBar", self, L["breath_bar_2nd"], 60, L["iconunknown"])
+	
+	elseif sync ~= "ChromaggusBreath" or not spellId or not self.db.profile.breath then return end
 	local spellName = L:HasTranslation("breath"..spellId) and L["breath"..spellId] or nil
 	if not spellName then return end
 
@@ -145,10 +169,14 @@ function BigWigsChromaggus:BigWigs_RecvSync(sync, spellId)
 	self:TriggerEvent("BigWigs_Message", string.format(L["breath_message"], spellName), "Important")
 	self:ScheduleEvent("bwchromaggusbreath"..spellName, "BigWigs_Message", 55, string.format(L["breath_warning"], spellName), "Important", true, "Alarm")
 	self:TriggerEvent("BigWigs_StartBar", self, spellName, 60, L["icon"..spellId])
-            if (UnitClass("player") == "Warrior") or (UnitClass("player") == "Rogue") or (UnitClass("player") == "Mage") or (UnitClass("player") == "Warlock") or (UnitClass("player") == "Paladin") then
-	        self:ScheduleEvent(function() BigWigsThaddiusArrows:Direction("Run") end, 27) end
+	
+    if (UnitClass("player") == "Warrior") or (UnitClass("player") == "Rogue") or (UnitClass("player") == "Mage") or (UnitClass("player") == "Warlock") or (UnitClass("player") == "Paladin") then
+		self:ScheduleEvent(function() BigWigsThaddiusArrows:Direction("Run") end, 27) 
+	end
+	
 end
 
+--[[ not working on vg
 function BigWigsChromaggus:CHAT_MSG_MONSTER_EMOTE(msg)
 	if msg == L["vulnerability_trigger"] then
 		if self.db.profile.vulnerability then
@@ -157,32 +185,37 @@ function BigWigsChromaggus:CHAT_MSG_MONSTER_EMOTE(msg)
 		self:ScheduleEvent(function() BigWigsChromaggus.vulnerability = nil end, 2.5)
 	end
 end
+]]
 
-if (GetLocale() == "koKR") then
-	function BigWigsChromaggus:PlayerDamageEvents(msg)
-		if (not self.vulnerability) then
-			local _,_,_, dmg, school, type = string.find(msg, L["vulnerability_test"])
-			if ( type == L["hit"] or type == L["crit"] ) and tonumber(dmg or "") and school then
-				if (tonumber(dmg) >= 800 and type == L["hit"]) or (tonumber(dmg) >= 1600 and type == L["crit"]) then
-					self.vulnerability = school
-					if self.db.profile.vulnerability then self:TriggerEvent("BigWigs_Message", format(L["vulnerability_message"], school), "Positive") end
+function BigWigsChromaggus:PlayerDamageEvents(msg)
+	if (not self.vulnerability) then
+		local _,_, type, dmg, school = string.find(msg, L["vulnerability_test"])
+		if ( type == L["hit"] or type == L["crit"] ) and tonumber(dmg or "") and school then
+			if (tonumber(dmg) >= 6000 and type == L["hit"]) or (tonumber(dmg) >= 9000 and type == L["crit"]) then
+				self.vulnerability = school
+				if self.db.profile.vulnerability then
+					self:TriggerEvent("BigWigs_Message", format(L["vulnerability_message"], school), "Positive")
+					if school == "Shadow" then
+						self:TriggerEvent("BigWigs_StartBar", self, format(L["vulnerability_message"], school), 30, L["icon_vuln_shadow"])
+					elseif school == "Rire" then
+						self:TriggerEvent("BigWigs_StartBar", self, format(L["vulnerability_message"], school), 30, L["icon_vuln_fire"])
+					elseif school == "Frost" then
+						self:TriggerEvent("BigWigs_StartBar", self, format(L["vulnerability_message"], school), 30, L["icon_vuln_frost"])
+					elseif school == "Arcane" then
+						self:TriggerEvent("BigWigs_StartBar", self, format(L["vulnerability_message"], school), 30, L["icon_vuln_arcane"])
+					elseif school == "Nature" then
+						self:TriggerEvent("BigWigs_StartBar", self, format(L["vulnerability_message"], school), 30, L["icon_vuln_nature"])
+					end
+					
+					--end vulnerability after 30 secs
+					self:ScheduleEvent(function() BigWigsChromaggus.vulnerability = nil end, 30)
 				end
-			end
-		end
-	end
-else
-	function BigWigsChromaggus:PlayerDamageEvents(msg)
-		if (not self.vulnerability) then
-			local _,_, type, dmg, school = string.find(msg, L["vulnerability_test"])
-			if ( type == L["hit"] or type == L["crit"] ) and tonumber(dmg or "") and school then
-				if (tonumber(dmg) >= 800 and type == L["hit"]) or (tonumber(dmg) >= 1600 and type == L["crit"]) then
-					self.vulnerability = school
-					if self.db.profile.vulnerability then self:TriggerEvent("BigWigs_Message", format(L["vulnerability_message"], school), "Positive") end
-				end
+				
 			end
 		end
 	end
 end
+
 
 function BigWigsChromaggus:Tranq()
             if (UnitClass("player") == "Hunter") then
