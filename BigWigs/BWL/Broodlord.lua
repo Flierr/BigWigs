@@ -1,4 +1,4 @@
-﻿------------------------------
+------------------------------
 --      Are you local?      --
 ------------------------------
 
@@ -13,7 +13,8 @@ L:RegisterTranslations("enUS", function() return {
 	cmd = "Broodlord",
 
 	trigger1 = "^([^%s]+) ([^%s]+) afflicted by Mortal Strike",
-	trigger2 = "^([^%s]+) ([^%s]+) afflicted by Blast Wave",
+	triggerms = "afflicted by Mortal Strike",
+	trigger2 = "afflicted by Blast Wave",
 
 	you = "You",
 	are = "are",
@@ -45,16 +46,16 @@ BigWigsBroodlord = BigWigs:NewModule(boss)
 BigWigsBroodlord.zonename = AceLibrary("Babble-Zone-2.2")["Blackwing Lair"]
 BigWigsBroodlord.enabletrigger = boss
 BigWigsBroodlord.toggleoptions = {"youms", "elsems", "wavebar", "bosskill"}
-BigWigsBroodlord.revision = tonumber(string.sub("$Revision: 16639 $", 12, -3))
+BigWigsBroodlord.revision = tonumber(string.sub("$Revision: 19008 $", 12, -3))
 
 ------------------------------
 --      Initialization      --
 ------------------------------
 
 function BigWigsBroodlord:OnEnable()
-	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_SELF_DAMAGE", "MSEvent")
-	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_FRIENDLYPLAYER_DAMAGE", "MSEvent")
-	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_PARTY_DAMAGE", "MSEvent")
+	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_SELF_DAMAGE", "Event")
+	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_FRIENDLYPLAYER_DAMAGE", "Event")
+	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_PARTY_DAMAGE", "Event")
 	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_SELF_DAMAGE", "Event")
 	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_FRIENDLYPLAYER_DAMAGE", "Event")
 	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_PARTY_DAMAGE", "Event")
@@ -65,25 +66,24 @@ end
 --      Event Handlers      --
 ------------------------------
 
-function BigWigsBroodlord:MSEvent(msg)
-	local _, _, EPlayer, EType = string.find(msg, L["trigger1"])
-	if (EPlayer and EType) then
-		if EPlayer == L["you"] and EType == L["are"] and self.db.profile.youms then
-			self:TriggerEvent("BigWigs_Message", L["warn1"], "Personal",  true, "Alert")
-			self:TriggerEvent("BigWigs_StartBar", self, string.format(L["warn2"], UnitName("player")), 5, "Interface\\Icons\\Ability_Warrior_SavageBlow")
-		elseif self.db.profile.elsems then
-			self:TriggerEvent("BigWigs_Message", string.format(L["warn2"], EPlayer), "Attention", true, "Alert")
-			self:TriggerEvent("BigWigs_StartBar", self, string.format(L["warn2"], EPlayer), 5, "Interface\\Icons\\Ability_Warrior_SavageBlow")
-		end
-	end
-end
-
-
 function BigWigsBroodlord:Event(msg)
-	if string.find(msg, L["trigger2"]) and self.db.profile.wavebar then
+	if string.find(msg, L["triggerms"]) then
+		local _, _, EPlayer, EType = string.find(msg, L["trigger1"])
+		DEFAULT_CHAT_FRAME:AddMessage(EPlayer)
+		DEFAULT_CHAT_FRAME:AddMessage(EType)
+		if (EPlayer and EType) then
+			if EPlayer == L["you"] and EType == L["are"] and self.db.profile.youms then
+				self:TriggerEvent("BigWigs_Message", L["warn1"], "Personal",  true, "Alert")
+				self:TriggerEvent("BigWigs_StartBar", self, string.format(L["warn2"], UnitName("player")), 5, "Interface\\Icons\\Ability_Warrior_SavageBlow")
+			elseif self.db.profile.elsems then
+				self:TriggerEvent("BigWigs_Message", string.format(L["warn2"], EPlayer), "Attention", true, "Alert")
+				self:TriggerEvent("BigWigs_StartBar", self, string.format(L["warn2"], EPlayer), 5, "Interface\\Icons\\Ability_Warrior_SavageBlow")
+			end
+		end
+	elseif string.find(msg, L["trigger2"]) and self.db.profile.wavebar then
 		        self:TriggerEvent("BigWigs_StartBar", self, L["wavebartext"], 11, "Interface\\Icons\\Spell_Holy_Excorcism_02")
 		        self:ScheduleEvent("BigWigs_Message", 8, L["warn3"], "Urgent", true, "Alarm")
-end
+	end
 end
 
 
