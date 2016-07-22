@@ -6,6 +6,7 @@ local victor = AceLibrary("Babble-Boss-2.2")["Lord Victor Nefarius"]
 local L = AceLibrary("AceLocale-2.2"):new("BigWigs"..boss)
 
 local warnpairs = nil
+local started = nil
 
 ----------------------------
 --      Localization      --
@@ -39,7 +40,7 @@ L:RegisterTranslations("enUS", function() return {
 	landing_warning = "Nefarian is landing!",
 	zerg_warning = "Zerg incoming!",
 	fear_warning = "Fear in 2 sec!",
-	fear_soon_warning = "Possible fear in ~5 sec",
+	fear_soon_warning = "Fear in ~5 sec",
 	shadowflame_warning = "Shadow Flame incoming!",
 	shadowflame_bar = "Shadow Flame",
 	classcall_warning = "Class call incoming!",
@@ -55,7 +56,7 @@ L:RegisterTranslations("enUS", function() return {
 	warnmage	= "Mages - Incoming polymorphs!",
 
 	classcall_bar = "Class call",
-	fear_bar = "Possible fear",
+	fear_bar = "Fear",
 
 	cmd = "Nefarian",
 
@@ -84,7 +85,7 @@ BigWigsNefarian = BigWigs:NewModule(boss)
 BigWigsNefarian.zonename = AceLibrary("Babble-Zone-2.2")["Blackwing Lair"]
 BigWigsNefarian.enabletrigger = { boss, victor }
 BigWigsNefarian.toggleoptions = {"shadowflame", "fear", "classcall", "otherwarn", "bosskill"}
-BigWigsNefarian.revision = tonumber(string.sub("$Revision: 16639 $", 12, -3))
+BigWigsNefarian.revision = tonumber(string.sub("$Revision: 19008 $", 12, -3))
 
 ------------------------------
 --      Initialization      --
@@ -98,6 +99,8 @@ function BigWigsNefarian:OnEnable()
 	self:RegisterEvent("BigWigs_RecvSync")
 	self:TriggerEvent("BigWigs_ThrottleSync", "NefarianShadowflame", 10)
 	self:TriggerEvent("BigWigs_ThrottleSync", "NefarianFear", 15)
+	
+	started = nil
 	
 	if not warnpairs then warnpairs = {
 		[L["triggershamans"]] = {L["warnshaman"], true},
@@ -154,14 +157,18 @@ function BigWigsNefarian:CHAT_MSG_SPELL_CREATURE_VS_CREATURE_DAMAGE(msg)
 	end
 end
 
-function BigWigsNefarian:BigWigs_RecvSync( sync )
-	if sync == "NefarianShadowflame" and self.db.profile.shadowflame then
+function BigWigsNefarian:BigWigs_RecvSync( sync, rest )
+	if sync == self:GetEngageSync() and spellId and spellId == boss and not started then
+	started = true
+	if self:IsEventRegistered("PLAYER_REGEN_DISABLED") then self:UnregisterEvent("PLAYER_REGEN_DISABLED") end
+		self:ScheduleEvent("BigWigs_StartBar",225 self, L["fear_bar"], 30, "Interface\\Icons\\Spell_Shadow_PsychicScream")
+	elseif sync == "NefarianShadowflame" and self.db.profile.shadowflame then
 		self:TriggerEvent("BigWigs_StartBar", self, L["shadowflame_bar"], 3, "Interface\\Icons\\Spell_Fire_Incinerate")
 		self:TriggerEvent("BigWigs_Message", L["shadowflame_warning"], "Important")
 	elseif sync == "NefarianFear" and self.db.profile.fear then
 		self:CancelScheduledEvent("bwneffearsoon")
 		self:TriggerEvent("BigWigs_Message", L["fear_warning"], "Important", true, "Alert")
-		self:TriggerEvent("BigWigs_StartBar", self, L["fear_bar"], 25, "Interface\\Icons\\Spell_Shadow_PsychicScream")
+		self:TriggerEvent("BigWigs_StartBar", self, L["fear_bar"], 30, "Interface\\Icons\\Spell_Shadow_PsychicScream")
 	end
 end
 
