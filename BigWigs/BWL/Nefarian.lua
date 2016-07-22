@@ -1,4 +1,4 @@
-﻿------------------------------
+------------------------------
 --      Are you local?      --
 ------------------------------
 local boss = AceLibrary("Babble-Boss-2.2")["Nefarian"]
@@ -6,7 +6,6 @@ local victor = AceLibrary("Babble-Boss-2.2")["Lord Victor Nefarius"]
 local L = AceLibrary("AceLocale-2.2"):new("BigWigs"..boss)
 
 local warnpairs = nil
-local started = nil
 
 ----------------------------
 --      Localization      --
@@ -100,7 +99,6 @@ function BigWigsNefarian:OnEnable()
 	self:TriggerEvent("BigWigs_ThrottleSync", "NefarianShadowflame", 10)
 	self:TriggerEvent("BigWigs_ThrottleSync", "NefarianFear", 15)
 	
-	started = nil
 	
 	if not warnpairs then warnpairs = {
 		[L["triggershamans"]] = {L["warnshaman"], true},
@@ -133,16 +131,17 @@ function BigWigsNefarian:CHAT_MSG_MONSTER_YELL(msg)
 				end
 			else
 				if self.db.profile.otherwarn and string.find(msg, L["landing_soon_trigger"]) then 
-                                   self:TriggerEvent("BigWigs_Message", v[1], "Important", true, "Long")
-			           self:TriggerEvent("BigWigs_StartBar", self, L["land"], 225, "Interface\\Icons\\INV_Misc_Head_Dragon_Black")
-			           self:TriggerEvent("BigWigs_StartBar", self, L["Mob_Spawn"], 10, "Interface\\Icons\\Spell_Holy_PrayerOfHealing")
-		                   self:ScheduleEvent("BigWigs_Message", 195, L["landing_soon_warning"], "Important", true, "Alarm")
-		                   self:ScheduleEvent("BigWigs_Message", 215, L["landing_very_soon"], "Important", true, "Long")
+					self:TriggerEvent("BigWigs_Message", v[1], "Important", true, "Long")
+					self:TriggerEvent("BigWigs_StartBar", self, L["land"], 225, "Interface\\Icons\\INV_Misc_Head_Dragon_Black")
+					self:TriggerEvent("BigWigs_StartBar", self, L["Mob_Spawn"], 10, "Interface\\Icons\\Spell_Holy_PrayerOfHealing")
+					self:ScheduleEvent("BigWigs_Message", 195, L["landing_soon_warning"], "Important", true, "Alarm")
+					self:ScheduleEvent("BigWigs_Message", 215, L["landing_very_soon"], "Important", true, "Long")
+					self:ScheduleEvent("BigWigs_StartBar", 225, self, L["fear_bar"], 40, "Interface\\Icons\\Spell_Shadow_PsychicScream")
 				elseif self.db.profile.otherwarn and string.find(msg, L["landing_trigger"]) then 
-                                   self:TriggerEvent("BigWigs_Message", v[1], "Important", true, "Long")
+					self:TriggerEvent("BigWigs_Message", v[1], "Important", true, "Long")
 				elseif self.db.profile.otherwarn and string.find(msg, L["zerg_trigger"]) then 
-                                   self:TriggerEvent("BigWigs_Message", v[1], "Important", true, "Long")
-end
+					self:TriggerEvent("BigWigs_Message", v[1], "Important", true, "Long")
+				end
 			end
 			return
 		end
@@ -157,12 +156,8 @@ function BigWigsNefarian:CHAT_MSG_SPELL_CREATURE_VS_CREATURE_DAMAGE(msg)
 	end
 end
 
-function BigWigsNefarian:BigWigs_RecvSync( sync, rest )
-	if sync == self:GetEngageSync() and spellId and spellId == boss and not started then
-	started = true
-	if self:IsEventRegistered("PLAYER_REGEN_DISABLED") then self:UnregisterEvent("PLAYER_REGEN_DISABLED") end
-		self:ScheduleEvent("BigWigs_StartBar",225 self, L["fear_bar"], 30, "Interface\\Icons\\Spell_Shadow_PsychicScream")
-	elseif sync == "NefarianShadowflame" and self.db.profile.shadowflame then
+function BigWigsNefarian:BigWigs_RecvSync( sync )
+	if sync == "NefarianShadowflame" and self.db.profile.shadowflame then
 		self:TriggerEvent("BigWigs_StartBar", self, L["shadowflame_bar"], 3, "Interface\\Icons\\Spell_Fire_Incinerate")
 		self:TriggerEvent("BigWigs_Message", L["shadowflame_warning"], "Important")
 	elseif sync == "NefarianFear" and self.db.profile.fear then
