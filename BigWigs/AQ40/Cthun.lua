@@ -9,7 +9,7 @@ local L = AceLibrary("AceLocale-2.2"):new("BigWigs" .. cthun)
 local gianteye = "Giant Eye Tentacle"
 
 local timeP1Tentacle = 80      -- tentacle timers for phase 1
-local timeP1TentacleStart = 45 -- delay for first tentacles from engage onwards
+local timeP1TentacleStart = 46 -- delay for first tentacles from engage onwards
 local timeP1GlareStart = 50    -- delay for first dark glare from engage onwards
 local timeP1Glare = 80         -- interval for dark glare
 local timeP1GlareDuration = 30 -- duration of dark glare
@@ -223,13 +223,13 @@ function BigWigsCThun:CThunStart()
 		self:TriggerEvent("BigWigs_Message", L["startwarn"], "Attention")
 
 		if self.db.profile.tentacle then
-	                self:ScheduleEvent("bwctea1", function() BigWigsThaddiusArrows:Direction("Cthuneyes") end, timeP1TentacleStart - 5)
+	                self:ScheduleEvent("bwctea1", function() BigWigsThaddiusArrows:Direction("Cthuneyes") end, timeP1TentacleStart)
 			self:TriggerEvent("BigWigs_StartBar", self, self.db.profile.rape and L["barTentacle"] or L["barNoRape"], timeP1TentacleStart, "Interface\\Icons\\Spell_Nature_CallStorm")
-			self:ScheduleEvent("bwcthuntentacle", "BigWigs_Message", timeP1TentacleStart - 5, self.db.profile.rape and L["tentacle"] or L["norape"], "Urgent", true, "Alert")
+			self:ScheduleEvent("bwcthuntentacle", "BigWigs_Message", timeP1TentacleStart, self.db.profile.rape and L["tentacle"] or L["norape"], "Urgent", true, "Alert")
 		end
 
 		if self.db.profile.glare then
-	                self:ScheduleEvent("bwctga", function() BigWigsThaddiusArrows:Direction("Cthunglare") end, timeP1GlareStart - 5)
+	                self:ScheduleEvent("bwctga", function() BigWigsThaddiusArrows:Direction("Cthunglare") end, timeP1GlareStart)
 			self:TriggerEvent("BigWigs_StartBar", self, L["barGlare"], timeP1GlareStart, "Interface\\Icons\\Spell_Shadow_ShadowBolt")
 			self:ScheduleEvent("BigWigs_Message", timeP1GlareStart, L["glare"], "Urgent", true, "Alarm" )
 		end
