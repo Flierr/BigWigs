@@ -107,7 +107,7 @@ BigWigsCThun = BigWigs:NewModule(cthun)
 BigWigsCThun.zonename = AceLibrary("Babble-Zone-2.2")["Ahn'Qiraj"]
 BigWigsCThun.enabletrigger = { eyeofcthun, cthun }
 BigWigsCThun.toggleoptions = { "rape", -1, "tentacle", "glare", "group", -1, "giant", "weakened", "bosskill" }
-BigWigsCThun.revision = tonumber(string.sub("$Revision: 15989 $", 12, -3))
+BigWigsCThun.revision = tonumber(string.sub("$Revision: 19008 $", 12, -3))
 
 function BigWigsCThun:OnEnable()
 	target = nil
