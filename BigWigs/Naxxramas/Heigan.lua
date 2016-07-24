@@ -57,8 +57,7 @@ L:RegisterTranslations("enUS", function() return {
 	dbar = "Decrepit Fever",
 	
 	splash_bar = "SPLASH!",
-	dancesound = "Interface\\AddOns\\BigWigs\\Sounds\\dance.mp3",
-	
+		
 	-- [[ Dream Room Mobs ]] --
 	["Eye Stalk"] = true,
 	["Rotting Maggot"] = true,
@@ -140,6 +139,9 @@ function BigWigsHeigan:BigWigs_RecvSync( sync )
 end
 
 function BigWigsHeigan:TeleportWarn()
+
+	PlaySoundFile("Interface\\AddOns\\BigWigs\\Sounds\\dance.mp3")
+	
 	self:ScheduleEvent( self.BackToRoom, self.toRoomTime, self )
 	self:TriggerEvent("BigWigs_StartBar", self, L["back_bar"], self.toRoomTime, "Interface\\Icons\\Spell_Magic_LesserInvisibilty")
 	self:TriggerEvent("BigWigs_Message", string.format(L["on_platform_message"], self.toRoomTime), "Attention")
@@ -153,8 +155,6 @@ function BigWigsHeigan:TeleportWarn()
 		self:TriggerEvent("BigWigs_StartBar", self, L["splash_bar"], self.dancetime, "Interface\\Icons\\Spell_Nature_CorrosiveBreath")
 		self:ScheduleRepeatingEvent( "bwheigansdance", self.Dance, self.dancetime, self )
 	end
-	
-	PlaySoundFile(L["dancesound"])
 	
 end
 
