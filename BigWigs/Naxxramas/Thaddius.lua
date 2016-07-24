@@ -69,7 +69,7 @@ L:RegisterTranslations("enUS", function() return {
 	startwarn = "Thaddius Phase 1",
 	startwarn2 = "Thaddius Phase 2, Enrage in 5 minutes!",
 	
-	redleftblueright = "|cffff0000 +++RED LEFT+++|r     |cff0000ff---BLUE RIGHT---|r",
+	redleftblueright = "|cffff0000 ----RED LEFT----|r     |cff0000ff++++BLUE RIGHT++++|r",
 	
 	addsdownwarn = "Adds are dead. Phase 2 inc!",
 	thaddiusincoming = "Thaddius incoming in 3 sec!",
