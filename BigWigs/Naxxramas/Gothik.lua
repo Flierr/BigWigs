@@ -66,7 +66,10 @@ L:RegisterTranslations("enUS", function() return {
 
 	inroomtrigger = "I have waited long enough! Now, you face the harvester of souls!",
 	inroomwarn = "He's in the room!",
-
+	
+	dooropen_bar = "Doors opening",
+	blink_bar = "Blink",
+	
 	inroombartext = "In Room",
 } end )
 
@@ -82,7 +85,7 @@ BigWigsGothik.wipemobs = {
 	L["spectral_rider_name"], L["spectral_deathknight_name"], L["spectral_trainee_name"]
 }
 BigWigsGothik.toggleoptions = { "room", "buff", -1, "add", "adddeath", "bosskill" }
-BigWigsGothik.revision = tonumber(string.sub("$Revision: 19007 $", 12, -3))
+BigWigsGothik.revision = tonumber(string.sub("$Revision: 19009 $", 12, -3))
 
 ------------------------------
 --      Initialization      --
@@ -147,12 +150,15 @@ function BigWigsGothik:StopRoom()
 	self:CancelScheduledEvent("bwgothiktrarepop")
 	self:CancelScheduledEvent("bwgothikdkrepop")
 	self:CancelScheduledEvent("bwgothikriderrepop")
+	
+
 end
 
 function BigWigsGothik:WaveWarn(message, L, color)
 	self.wave = self.wave + 1
         if self.wave == 23 then
         self:StopRoom()
+		CHAT_FRAME_DEFAULT:AddMessage("stoproom")
         self.wave = 0
 	self.tratime = 27
 	self.dktime = 77
@@ -215,6 +221,16 @@ function BigWigsGothik:CHAT_MSG_MONSTER_YELL( msg )
 		self.tratime = 20
 		self.dktime = 25
 		self.ridertime = 30
+		
+		--Blink
+		self:ScheduleEvent("BigWigs_StartBar", 282, self, L["blink_bar"], 19, "Interface\\Icons\\Spell_Arcane_Blink")
+		self:ScheduleEvent("BigWigs_StartBar", 302, self, L["blink_bar"], 20, "Interface\\Icons\\Spell_Arcane_Blink")
+		self:ScheduleEvent("BigWigs_StartBar", 322, self, L["blink_bar"], 20, "Interface\\Icons\\Spell_Arcane_Blink")
+		self:ScheduleEvent("BigWigs_StartBar", 342, self, L["blink_bar"], 20, "Interface\\Icons\\Spell_Arcane_Blink")
+		self:ScheduleEvent("BigWigs_StartBar", 362, self, L["blink_bar"], 20, "Interface\\Icons\\Spell_Arcane_Blink")
+		self:ScheduleEvent("BigWigs_StartBar", 382, self, L["blink_bar"], 20, "Interface\\Icons\\Spell_Arcane_Blink")
+
+		
 	elseif msg == L["inroomtrigger"] then
 		if self.db.profile.room then self:TriggerEvent("BigWigs_Message", L["inroomwarn"], "Important") end
 	        self:TriggerEvent("BigWigs_StopBar", self, L["inroombartext"])
