@@ -111,6 +111,7 @@ function BigWigsChromaggus:OnEnable()
 
 	self:RegisterEvent("BigWigs_RecvSync")
 	self:TriggerEvent("BigWigs_ThrottleSync", "ChromaggusBreath", 25)
+	self:TriggerEvent("BigWigs_ThrottleSync", "ChromaggusVuln", 25)
 end
 
 function BigWigsChromaggus:UNIT_HEALTH( msg )
@@ -160,6 +161,27 @@ function BigWigsChromaggus:BigWigs_RecvSync(sync, spellId)
 		self:TriggerEvent("BigWigs_StartBar", self, L["breath_bar_1st"], 30, L["iconunknown"])
 		self:ScheduleEvent("bwchromaggusbreathinitial2", "BigWigs_Message", 55, L["breath_warning_initial"], "Important", true, "Alarm")
 		self:TriggerEvent("BigWigs_StartBar", self, L["breath_bar_2nd"], 60, L["iconunknown"])
+		
+	elseif sync == "ChromaggusVuln" then
+		if self.db.profile.vulnerability then
+			if spellId == "Shadow" then
+				self:TriggerEvent("BigWigs_StartBar", self, format(L["vulnerability_message"], spellId), 30, L["icon_vuln_shadow"])
+			elseif spellId == "Rire" then
+				self:TriggerEvent("BigWigs_StartBar", self, format(L["vulnerability_message"], spellId), 30, L["icon_vuln_fire"])
+			elseif spellId == "Frost" then
+				self:TriggerEvent("BigWigs_StartBar", self, format(L["vulnerability_message"], spellId), 30, L["icon_vuln_frost"])
+			elseif spellId == "Arcane" then
+				self:TriggerEvent("BigWigs_StartBar", self, format(L["vulnerability_message"], spellId), 30, L["icon_vuln_arcane"])
+			elseif spellId == "Nature" then
+				self:TriggerEvent("BigWigs_StartBar", self, format(L["vulnerability_message"], spellId), 30, L["icon_vuln_nature"])
+			elseif spellId == nil then
+				return
+			end
+			
+			self:TriggerEvent("BigWigs_Message", format(L["vulnerability_message"], spellId), "Positive")
+			--end vulnerability after 30 secs
+			self:ScheduleEvent(function() BigWigsChromaggus.vulnerability = nil end, 30)
+		end
 	
 	elseif sync ~= "ChromaggusBreath" or not spellId or not self.db.profile.breath then return end
 	local spellName = L:HasTranslation("breath"..spellId) and L["breath"..spellId] or nil
@@ -191,26 +213,9 @@ function BigWigsChromaggus:PlayerDamageEvents(msg)
 	if (not self.vulnerability) then
 		local _,_, type, dmg, school = string.find(msg, L["vulnerability_test"])
 		if ( type == L["hit"] or type == L["crit"] ) and tonumber(dmg or "") and school then
-			if (tonumber(dmg) >= 6000 and type == L["hit"]) or (tonumber(dmg) >= 9000 and type == L["crit"]) then
+			if (tonumber(dmg) >= 300 and type == L["hit"]) or (tonumber(dmg) >= 9000 and type == L["crit"]) then
 				self.vulnerability = school
-				if self.db.profile.vulnerability then
-					self:TriggerEvent("BigWigs_Message", format(L["vulnerability_message"], school), "Positive")
-					if school == "Shadow" then
-						self:TriggerEvent("BigWigs_StartBar", self, format(L["vulnerability_message"], school), 30, L["icon_vuln_shadow"])
-					elseif school == "Rire" then
-						self:TriggerEvent("BigWigs_StartBar", self, format(L["vulnerability_message"], school), 30, L["icon_vuln_fire"])
-					elseif school == "Frost" then
-						self:TriggerEvent("BigWigs_StartBar", self, format(L["vulnerability_message"], school), 30, L["icon_vuln_frost"])
-					elseif school == "Arcane" then
-						self:TriggerEvent("BigWigs_StartBar", self, format(L["vulnerability_message"], school), 30, L["icon_vuln_arcane"])
-					elseif school == "Nature" then
-						self:TriggerEvent("BigWigs_StartBar", self, format(L["vulnerability_message"], school), 30, L["icon_vuln_nature"])
-					end
-					
-					--end vulnerability after 30 secs
-					self:ScheduleEvent(function() BigWigsChromaggus.vulnerability = nil end, 30)
-				end
-				
+				self:TriggerEvent("BigWigs_SendSync", "ChromaggusVuln "..school)
 			end
 		end
 	end
