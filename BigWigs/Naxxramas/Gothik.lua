@@ -223,7 +223,7 @@ function BigWigsGothik:CHAT_MSG_MONSTER_YELL( msg )
 		self.ridertime = 30
 		
 		--Blink
-		self:ScheduleEvent("BigWigs_StartBar", 282, self, L["blink_bar"], 19, "Interface\\Icons\\Spell_Arcane_Blink")
+		self:ScheduleEvent("BigWigs_StartBar", 282, self, L["blink_bar"], 20, "Interface\\Icons\\Spell_Arcane_Blink")
 		self:ScheduleEvent("BigWigs_StartBar", 302, self, L["blink_bar"], 20, "Interface\\Icons\\Spell_Arcane_Blink")
 		self:ScheduleEvent("BigWigs_StartBar", 322, self, L["blink_bar"], 20, "Interface\\Icons\\Spell_Arcane_Blink")
 		self:ScheduleEvent("BigWigs_StartBar", 342, self, L["blink_bar"], 20, "Interface\\Icons\\Spell_Arcane_Blink")
