@@ -4,7 +4,7 @@
 
 local boss = AceLibrary("Babble-Boss-2.2")["Anubisath Defender"]
 local L = AceLibrary("AceLocale-2.2"):new("BigWigs"..boss)
-
+local started = nil
 ----------------------------
 --      Localization      --
 ----------------------------
@@ -46,10 +46,6 @@ L:RegisterTranslations("enUS", function() return {
 	explodewarn = "Exploding!",
 	enragetrigger = "Anubisath Defender gains Enrage.",
 	enragewarn = "Enraged!",
-	summonguardtrigger = "Anubisath Defender casts Summon Anubisath Swarmguard.",
-	summonguardwarn = "Swarmguard Summoned",
-	summonwarriortrigger = "Anubisath Defender casts Summon Anubisath Warrior.",
-	summonwarriorwarn = "Warrior Summoned",
 	plaguetrigger = "^([^%s]+) ([^%s]+) afflicted by Plague%.$",
 	plaguewarn = " has the Plague!",
 	plagueyouwarn = "You have the plague!",
@@ -57,6 +53,7 @@ L:RegisterTranslations("enUS", function() return {
 	plagueare = "are",
 	thunderclaptrigger = "^Anubisath Defender's Thunderclap hits ([^%s]+) for %d+%.",
 	thunderclapwarn = "Thunderclap!",
+	summonbar = "Summon adds",
 } end )
 
 ----------------------------------
@@ -66,16 +63,19 @@ L:RegisterTranslations("enUS", function() return {
 BigWigsDefenders = BigWigs:NewModule(boss)
 BigWigsDefenders.zonename = AceLibrary("Babble-Zone-2.2")["Ahn'Qiraj"]
 BigWigsDefenders.enabletrigger = boss
-BigWigsDefenders.toggleoptions = { "plagueyou", "plagueother", "icon", -1, "thunderclap", "explode", "enrage", "bosskill"}
-BigWigsDefenders.revision = tonumber(string.sub("$Revision: 17584 $", 12, -3))
+BigWigsDefenders.toggleoptions = { "plagueyou", "plagueother", "icon", -1, "thunderclap", "explode", "enrage", "summon", "bosskill"}
+BigWigsDefenders.revision = tonumber(string.sub("$Revision: 19009 $", 12, -3))
 
 ------------------------------
 --      Initialization      --
 ------------------------------
 
 function BigWigsDefenders:OnEnable()
+	started = nil
+
 	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_CREATURE_BUFFS")
-	self:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_CREATURE_BUFF")
+	--self:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_CREATURE_BUFF")
+	self:RegisterEvent("PLAYER_REGEN_DISABLED", "CheckForEngage")
 	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_SELF_DAMAGE", "CheckPlague")
 	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_FRIENDLYPLAYER_DAMAGE", "CheckPlague")
 	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_PARTY_DAMAGE", "CheckPlague")
@@ -101,11 +101,23 @@ function BigWigsDefenders:CHAT_MSG_COMBAT_HOSTILE_DEATH(msg)
 end
 
 function BigWigsDefenders:BigWigs_RecvSync(sync, rest, nick)
-	if sync == "DefenderExplode" and self.db.profile.explode then
+	if sync == self:GetEngageSync() and rest and rest == boss and not started then
+		started = true
+		if self:IsEventRegistered("PLAYER_REGEN_DISABLED") then
+			self:UnregisterEvent("PLAYER_REGEN_DISABLED")
+		end
+		if self.db.profile.summon then
+			self:TriggerEvent("BigWigs_StartBar", self, L["summonbar"], 4, "Interface\\Icons\\Spell_Nature_MirrorImage")
+			self:ScheduleEvent("BigWigs_StartBar", 4, self, L["summonbar"], 60, "Interface\\Icons\\Spell_Nature_MirrorImage")
+			self:ScheduleEvent("BigWigs_StartBar", 64, self, L["summonbar"], 60, "Interface\\Icons\\Spell_Nature_MirrorImage")
+		end
+	elseif sync == "DefenderExplode" and self.db.profile.explode then
 		self:TriggerEvent("BigWigs_Message", L["explodewarn"], "Important")
-		self:TriggerEvent("BigWigs_StartBar", self, L["explodewarn"], 6, "\\Interface\\Icons\\Spell_Fire_SelfDestruct")
+		self:TriggerEvent("BigWigs_StartBar", self, L["explodewarn"], 6, "Interface\\Icons\\Spell_Fire_SelfDestruct")
+		--self:TriggerEvent("BigWigs_StopBar", self, L["summonbar"])
 	elseif sync == "DefenderEnrage" and self.db.profile.enrage then
 		self:TriggerEvent("BigWigs_Message", L["enragewarn"], "Important")
+		--self:TriggerEvent("BigWigs_StopBar", self, L["summonbar"])
 	elseif sync == "DefenderThunderclap" and self.db.profile.thunderclap then
 		self:TriggerEvent("BigWigs_Message", L["thunderclapwarn"], "Important")
 	end
@@ -116,15 +128,6 @@ function BigWigsDefenders:CHAT_MSG_SPELL_PERIODIC_CREATURE_BUFFS(msg)
 		self:TriggerEvent("BigWigs_SendSync", "DefenderExplode")
 	elseif msg == L["enragetrigger"] then
 		self:TriggerEvent("BigWigs_SendSync", "DefenderEnrage")
-	end
-end
-
-function BigWigsDefenders:CHAT_MSG_SPELL_CREATURE_VS_CREATURE_BUFF(msg)
-	if not self.db.profile.summon then return end
-	if msg == L["summonguardtrigger"] then
-		self:TriggerEvent("BigWigs_Message", L["summonguardwarn"], "Attention")
-	elseif msg == L["summonwarriortrigger"] then
-		self:TriggerEvent("BigWigs_Message", L["summonwarriorwarn"], "Attention")
 	end
 end
 
