@@ -1,4 +1,4 @@
-﻿------------------------------
+------------------------------
 --      Are you local?      --
 ------------------------------
 
@@ -9,7 +9,7 @@ local boss = AceLibrary("Babble-Boss-2.2")["The Bug Family"]
 
 local L = AceLibrary("AceLocale-2.2"):new("BigWigs"..boss)
 local deaths = 0
-local fearstatus
+local started = nil
 
 ----------------------------
 --      Localization      --
@@ -28,19 +28,27 @@ L:RegisterTranslations("enUS", function() return {
 	heal_cmd = "heal",
 	heal_name = "Heal Alert",
 	heal_desc = "Warn for Heal",
+	
+	charge_cmd = "charge",
+	charge_name = "Berserker Charge Alert",
+	charge_desc = "Berserker Charge Alert and Timer",
 
 	healtrigger = "Princess Yauj begins to cast Great Heal.",
 	healbar = "Great Heal",
 	healwarn = "Casting heal!",
-
-	feartrigger = "is afflicted by Panic.",
+	
+	feartrigger = "afflicted by Panic",
 	fearbar = "AoE Fear",
 	fearwarn = "AoE Fear in 5 Seconds!",
 
-	AoEtrigger = "Lord Kri's Toxic Volley hits",
+	AoEtrigger = "afflicted by Toxic Volley",
 	AoEbar = "Toxic Volley",
 	AoEwarn = "Toxic Volley in 3 Seconds!",
-	
+
+	chargetrigger = "Berserker Charge",
+	chargebar = "Berserker Charge",
+	chargewarn = "Berserker Charge in 3 Seconds!",
+
 } end )
 
 ----------------------------------
@@ -50,53 +58,76 @@ L:RegisterTranslations("enUS", function() return {
 BigWigsBugFamily = BigWigs:NewModule(boss)
 BigWigsBugFamily.zonename = AceLibrary("Babble-Zone-2.2")["Ahn'Qiraj"]
 BigWigsBugFamily.enabletrigger = {kri, yauj, vem}
-BigWigsBugFamily.toggleoptions = {"fear", "AoE", "heal", "bosskill"}
-BigWigsBugFamily.revision = tonumber(string.sub("$Revision: 16639 $", 12, -3))
+BigWigsBugFamily.toggleoptions = {"fear", "AoE", "heal", "charge", "bosskill"}
+BigWigsBugFamily.revision = tonumber(string.sub("$Revision: 19009 $", 12, -3))
 
 ------------------------------
 --      Initialization      --
 ------------------------------
 
 function BigWigsBugFamily:OnEnable()
+	started = nil
 	deaths = 0
-	fearstatus = nil
 	self:RegisterEvent("CHAT_MSG_COMBAT_HOSTILE_DEATH", "DeathCount")
 	self:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_CREATURE_BUFF")
 	self:RegisterEvent("PLAYER_REGEN_ENABLED", "CheckForWipe")
-	self:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_SELF_DAMAGE", "FearEvent")
-	self:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_PARTY_DAMAGE", "FearEvent")
-	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_PARTY_DAMAGE", "FearEvent")
-	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_SELF_DAMAGE", "FearEvent")
-	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_FRIENDLYPLAYER_DAMAGE", "FearEvent")
-	self:RegisterEvent("BigWigs_Message")
+	self:RegisterEvent("PLAYER_REGEN_DISABLED", "CheckForEngage")
+	self:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_SELF_DAMAGE", "BugFamilyEvent")
+	self:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_PARTY_DAMAGE", "BugFamilyEvent")
+	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_PARTY_DAMAGE", "BugFamilyEvent")
+	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_SELF_DAMAGE", "BugFamilyEvent")
+	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_FRIENDLYPLAYER_DAMAGE", "BugFamilyEvent")
 
 	self:RegisterEvent("BigWigs_RecvSync")
 	self:TriggerEvent("BigWigs_ThrottleSync", "KriBolt", 5)
+	self:TriggerEvent("BigWigs_ThrottleSync", "YaujHeal", 10)
+	self:TriggerEvent("BigWigs_ThrottleSync", "YaujFear", 10)
+	self:TriggerEvent("BigWigs_ThrottleSync", "VemCharge", 5)
 end
 
 ------------------------------
 --      Event Handlers      --
 ------------------------------
 
-function BigWigsBugFamily:FearEvent(msg)
-	if not fearstatus and string.find(msg, L["feartrigger"]) and self.db.profile.fear then
-		fearstatus = true
-		self:TriggerEvent("BigWigs_StartBar", self, L["fearbar"], 20, "Interface\\Icons\\Spell_Shadow_Possession")
-		self:ScheduleEvent("BigWigs_Message", 15, L["fearwarn"], "Urgent", true, "Alarm")
-	elseif string.find(msg, L["AoEtrigger"]) and self.db.profile.AoE then
+function BigWigsBugFamily:BugFamilyEvent(msg)
+	if string.find(msg, L["feartrigger"]) then
+		self:TriggerEvent("BigWigs_SendSync", "YaujFear")
+	elseif string.find(msg, L["AoEtrigger"]) then
 		self:TriggerEvent("BigWigs_SendSync", "KriBolt")
+	elseif string.find(msg, L["chargetrigger"]) then
+		self:TriggerEvent("BigWigs_SendSync", "VemCharge")
 	end
 end
 
-function BigWigsBugFamily:BigWigs_RecvSync(sync, rest, nick)
-	if sync == "KriBolt" then
-		self:TriggerEvent("BigWigs_StartBar", self, L["AoEbar"], 10, "Interface\\Icons\\Spell_Nature_Corrosivebreath")
-		self:ScheduleEvent("BigWigs_Message", 7, L["AoEwarn"], "Urgent")
+function BigWigsBugFamily:BigWigs_RecvSync(sync, rest)
+	if sync == self:GetEngageSync() and rest and rest == boss and not started then
+		started = true
+		if self:IsEventRegistered("PLAYER_REGEN_DISABLED") then
+			self:UnregisterEvent("PLAYER_REGEN_DISABLED")
+		end
+		self:TriggerEvent("BigWigs_StartBar", self, L["AoEbar"], 7, "Interface\\Icons\\Spell_Nature_Corrosivebreath")
+		self:TriggerEvent("BigWigs_StartBar", self, L["fearbar"], 21, "Interface\\Icons\\Spell_Shadow_Possession")
+		--self:TriggerEvent("BigWigs_StartBar", self, L["chargebar"], 13, "Interface\\Icons\\Ability_Warrior_Charge")
+	elseif sync == "KriBolt" and self.db.profile.AoE then
+		self:TriggerEvent("BigWigs_StartBar", self, L["AoEbar"], 12, "Interface\\Icons\\Spell_Nature_Corrosivebreath")
+		self:ScheduleEvent("BigWigs_Message", 9, L["AoEwarn"], "Urgent")
+	elseif sync == "YaujHeal" and self.db.profile.heal then
+		--self:TriggerEvent("BigWigs_StartBar", self, L["healbar"], 30, "Interface\\Icons\\Spell_Holy_Heal")
+		self:TriggerEvent("BigWigs_StartBar", self, L["healwarn"], 2, "Interface\\Icons\\Spell_Holy_Heal")
+		self:TriggerEvent("BigWigs_Message", L["healwarn"], "Urgent")
+	elseif sync == "YaujFear" and self.db.profile.fear then
+		self:TriggerEvent("BigWigs_StartBar", self, L["fearbar"], 20, "Interface\\Icons\\Spell_Shadow_Possession")
+		self:ScheduleEvent("BigWigs_Message", 35, L["fearwarn"], "Urgent", true, "Alarm")
+	elseif sync == "VemCharge" and self.db.profile.charge then
+		--self:TriggerEvent("BigWigs_StartBar", self, L["chargebar"], 10, "Interface\\Icons\\Ability_Warrior_Charge")
+		--self:ScheduleEvent("BigWigs_Message", 5, L["chargewarn"], "Urgent", true, "Alarm")
 	end
 end
 
-function BigWigsBugFamily:BigWigs_Message(txt)
-	if fearstatus and txt == L["fearwarn"] then fearstatus = nil end
+function BigWigsBugFamily:CHAT_MSG_SPELL_CREATURE_VS_CREATURE_BUFF(msg)
+	if msg == L["healtrigger"] then
+		self:TriggerEvent("BigWigs_SendSync", "YaujHeal")
+	end
 end
 
 function BigWigsBugFamily:DeathCount(msg)
@@ -108,11 +139,3 @@ function BigWigsBugFamily:DeathCount(msg)
 		end
 	end
 end
-
-function BigWigsBugFamily:CHAT_MSG_SPELL_CREATURE_VS_CREATURE_BUFF(msg)
-	if msg == L["healtrigger"] and self.db.profile.heal then
-		self:TriggerEvent("BigWigs_StartBar", self, L["healbar"], 2, "Interface\\Icons\\Spell_Holy_Heal")
-		self:TriggerEvent("BigWigs_Message", L["healwarn"], "Urgent")
-	end
-end
-
