@@ -66,8 +66,8 @@ function BigWigsSartura:BigWigs_RecvSync(sync)
 	if sync == "SarturaWhirlwind" and self.db.profile.whirlwind then
 		self:TriggerEvent("BigWigs_Message", L["whirlwindonwarn"], "Important")
 		self:TriggerEvent("BigWigs_StartBar", self, L["whirlwindbartext"], 15, "Interface\\Icons\\Ability_Whirlwind")
-		self:ScheduleEvent("BigWigs_Message", 39, L["whirlwindinctext"], "Attention", true, "Alarm")
-		self:TriggerEvent("BigWigs_StartBar", self, L["whirlwindnextbartext"], 42, "Interface\\Icons\\Ability_UpgradeMoonGlaive")
+		self:ScheduleEvent("BigWigs_Message", 42, L["whirlwindinctext"], "Attention", true, "Alarm")
+		self:TriggerEvent("BigWigs_StartBar", self, L["whirlwindnextbartext"], 45, "Interface\\Icons\\Ability_UpgradeMoonGlaive")
 	end
 end
 
