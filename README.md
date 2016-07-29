@@ -14,21 +14,54 @@ Naxxramas:
 - [x] Maexxna
 - [x] Patchwerk
 - [x] Grobbulus
-
 - [x] Gluth
-
 - [x] Thaddius
-
 - [x] Noth the Plaguebringer
-
 - [x] Heigan the Unclean
-
 - [x] Loatheb
+- [x] Instructor Razuvious
+- [x] Gothik the Harvester
+- [x] The Four Horsemen
 
-- [x] 
-- [x] 
-- [x] 
+Temple of Ahn'Qiraj
+- [x] The Prophet Skeram
+- [x] The Bug Family
+- [x] Battleguard Sartura
+- [x] Fankriss the Unyielding
+- [x] Viscidus
+- [x] Princess Huhuran
+- [x] The Twin Emperors
+- [x] Ouro
+- [ ] C'Thun
 
+Blackwing Lair
+- [x] Razorgore the Untamed
+- [x] Vaelastrasz the Corrupt
+- [x] Firemaw
+- [x] Ebonroc
+- [x] Flamegor
+- [x] Chromaggus
+- [x] Nefarian
+
+Molten Core
+- [x] 
+- [x] 
+- [x] 
+- [x] 
+- [x] 
+- [x] 
+- [x] 
+- [x] 
+- [x] 
+- [x] 
+- [x] 
+- [x] 
+- [x] 
+- [x] 
+- [x] 
+- [x] 
+- [x] 
+- [x] 
 http://vanillagaming.org/
 
 http://deprofundis.shivtr.com/
