@@ -11,12 +11,20 @@ VG edit by Flier & Luise (De Profundis)
 Naxxramas:
 - [x] Anub'Rekhan
 - [x] Grand Widow Faerlina
-- [x] 
-- [x] 
-- [x] 
-- [x] 
-- [x] 
-- [x] 
+- [x] Maexxna
+- [x] Patchwerk
+- [x] Grobbulus
+
+- [x] Gluth
+
+- [x] Thaddius
+
+- [x] Noth the Plaguebringer
+
+- [x] Heigan the Unclean
+
+- [x] Loatheb
+
 - [x] 
 - [x] 
 - [x] 
