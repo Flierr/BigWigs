@@ -8,7 +8,7 @@ This is a repository for the maintenance and upkeep of BigWigs VG Edition, initi
 
 VG edit by Flier & Luise (De Profundis)
 
-Naxxramas:
+## Naxxramas:
 - [x] Anub'Rekhan
 - [x] Grand Widow Faerlina
 - [x] Maexxna
@@ -23,7 +23,7 @@ Naxxramas:
 - [x] Gothik the Harvester
 - [x] The Four Horsemen
 
-Temple of Ahn'Qiraj
+## Temple of Ahn'Qiraj
 - [x] The Prophet Skeram
 - [x] The Bug Family
 - [x] Battleguard Sartura
@@ -34,7 +34,7 @@ Temple of Ahn'Qiraj
 - [x] Ouro
 - [ ] C'Thun
 
-Blackwing Lair
+## Blackwing Lair
 - [x] Razorgore the Untamed
 - [x] Vaelastrasz the Corrupt
 - [x] Firemaw
@@ -43,7 +43,7 @@ Blackwing Lair
 - [x] Chromaggus
 - [x] Nefarian
 
-Molten Core
+## Molten Core
 - [x] 
 - [x] 
 - [x] 
@@ -62,6 +62,7 @@ Molten Core
 - [x] 
 - [x] 
 - [x] 
+
 http://vanillagaming.org/
 
 http://deprofundis.shivtr.com/
