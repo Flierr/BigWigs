@@ -44,24 +44,16 @@ VG edit by Flier & Luise (De Profundis)
 - [x] Nefarian
 
 ## Molten Core
-- [x] 
-- [x] 
-- [x] 
-- [x] 
-- [x] 
-- [x] 
-- [x] 
-- [x] 
-- [x] 
-- [x] 
-- [x] 
-- [x] 
-- [x] 
-- [x] 
-- [x] 
-- [x] 
-- [x] 
-- [x] 
+- [x] Lucifron
+- [ ] Magmadar
+- [ ] Gehennas
+- [ ] Garr
+- [x] Baron Geddon
+- [ ] Shazzrah
+- [ ] Sulfuron Harbinger
+- [ ] Golemagg the Incinerator
+- [ ] Majordomo Executus
+- [ ] Ragnarso
 
 http://vanillagaming.org/
 
