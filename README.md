@@ -28,8 +28,8 @@ VG edit by Flier & Luise (De Profundis)
 - [x] The Bug Family
 - [x] Battleguard Sartura
 - [x] Fankriss the Unyielding
-- [x] Viscidus
-- [x] Princess Huhuran
+- [ ] Viscidus
+- [ ] Princess Huhuran
 - [x] The Twin Emperors
 - [x] Ouro
 - [ ] C'Thun
