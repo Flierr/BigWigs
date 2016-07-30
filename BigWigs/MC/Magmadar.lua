@@ -1,9 +1,10 @@
-﻿------------------------------
+------------------------------
 --      Are you local?      --
 ------------------------------
 
 local boss = AceLibrary("Babble-Boss-2.2")["Magmadar"]
 local L = AceLibrary("AceLocale-2.2"):new("BigWigs"..boss)
+local started = nil
 
 ----------------------------
 --      Localization      --
@@ -21,6 +22,7 @@ L:RegisterTranslations("enUS", function() return {
 	["Frenzy alert!"] = true,
 	["5 seconds until AoE Fear!"] = true,
 	["AoE Fear - 35 seconds until next!"] = true,
+	["AoE Fear - 20 seconds until next!"] = true,
 	["AoE Fear"] = true,
 
 	-- AceConsole strings
@@ -33,6 +35,13 @@ L:RegisterTranslations("enUS", function() return {
 	frenzy_cmd = "frenzy",
 	frenzy_name = "Frenzy alert",
 	frenzy_desc = "Warn when Magmadar goes into a frenzy",
+	
+	conflag_cmd = "conflag",
+	conflag_name = "Conflagration alert",
+	conflag_desc = "Timer Bar for Conflagration",
+	
+	conflagtrigger = "afflicted by Conflagration",
+	conflagbar = "Conflagration"
 } end)
 
 ----------------------------------
@@ -42,8 +51,8 @@ L:RegisterTranslations("enUS", function() return {
 BigWigsMagmadar = BigWigs:NewModule(boss)
 BigWigsMagmadar.zonename = AceLibrary("Babble-Zone-2.2")["Molten Core"]
 BigWigsMagmadar.enabletrigger = boss
-BigWigsMagmadar.toggleoptions = {"fear", "frenzy", "bosskill"}
-BigWigsMagmadar.revision = tonumber(string.sub("$Revision: 16639 $", 12, -3))
+BigWigsMagmadar.toggleoptions = {"fear", "frenzy", "conflag", "bosskill"}
+BigWigsMagmadar.revision = tonumber(string.sub("$Revision: 19009 $", 12, -3))
 
 ------------------------------
 --      Initialization      --
@@ -51,16 +60,20 @@ BigWigsMagmadar.revision = tonumber(string.sub("$Revision: 16639 $", 12, -3))
 
 function BigWigsMagmadar:OnEnable()
 	self.prior = nil
+	started = nil
+	
+	self:RegisterEvent("PLAYER_REGEN_DISABLED", "CheckForEngage")
 	self:RegisterEvent("BigWigs_Message")
 	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_CREATURE_BUFFS")
 	self:RegisterEvent("CHAT_MSG_SPELL_AURA_GONE_OTHER")
-	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_PARTY_DAMAGE", "Fear")
-	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_SELF_DAMAGE", "Fear")
-	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_FRIENDLYPLAYER_DAMAGE", "Fear")
+	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_PARTY_DAMAGE", "MagEvent")
+	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_SELF_DAMAGE", "MagEvent")
+	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_FRIENDLYPLAYER_DAMAGE", "MagEvent")
 	self:RegisterEvent("CHAT_MSG_COMBAT_HOSTILE_DEATH", "GenericBossDeath")
 
 	self:RegisterEvent("BigWigs_RecvSync")
 	self:TriggerEvent("BigWigs_ThrottleSync", "MagmadarFear", 5)
+	self:TriggerEvent("BigWigs_ThrottleSync", "MagmadarConflag", 5)
 end
 
 ------------------------------
@@ -82,19 +95,35 @@ function BigWigsMagmadar:CHAT_MSG_SPELL_AURA_GONE_OTHER(msg)
 	end
 end
 
-function BigWigsMagmadar:BigWigs_RecvSync( sync ) 
-	if sync ~= "MagmadarFear" then return end
-	if self.db.profile.fear then
+function BigWigsMagmadar:BigWigs_RecvSync( sync, rest) 
+	if sync == self:GetEngageSync() and rest and rest == boss and not started then
+		started = true
+		if self:IsEventRegistered("PLAYER_REGEN_DISABLED") then
+			self:UnregisterEvent("PLAYER_REGEN_DISABLED")
+		end
+		if self.db.profile.fear then
+			self:TriggerEvent("BigWigs_StartBar", self, L["AoE Fear"], 20, "Interface\\Icons\\Spell_Shadow_PsychicScream")
+			self:TriggerEvent("BigWigs_Message", L["AoE Fear - 20 seconds until next!"], "Important")
+			self:ScheduleEvent("BigWigs_Message", 15, L["5 seconds until AoE Fear!"], "Urgent", true, "Alert")
+		end
+		if self.db.profile.conflag then
+			self:TriggerEvent("BigWigs_StartBar", self, L["conflagbar"], 12, "Interface\\Icons\\Spell_Fire_Incinerate")
+		end
+	elseif sync == "MagmadarFear" and self.db.profile.fear then 
 		self:TriggerEvent("BigWigs_StartBar", self, L["AoE Fear"], 35, "Interface\\Icons\\Spell_Shadow_PsychicScream")
 		self:TriggerEvent("BigWigs_Message", L["AoE Fear - 35 seconds until next!"], "Important")
 		self:ScheduleEvent("BigWigs_Message", 30, L["5 seconds until AoE Fear!"], "Urgent", true, "Alert")
+	elseif sync == "MagmadarConflag" and self.db.profile.conflag then
+		self:TriggerEvent("BigWigs_StartBar", self, L["conflagbar"], 12, "Interface\\Icons\\Spell_Fire_Incinerate")
 	end
 end
 
-function BigWigsMagmadar:Fear(msg)
+function BigWigsMagmadar:MagEvent(msg)
 	if not self.prior and string.find(msg, L["trigger2"]) then
 		self:TriggerEvent("BigWigs_SendSync", "MagmadarFear")
 		self.prior = true
+	elseif string.find(msg, L["conflagtrigger"]) then
+		self:TriggerEvent("BigWigs_SendSync", "MagmadarConflag")
 	end
 end
 
