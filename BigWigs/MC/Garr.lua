@@ -1,4 +1,4 @@
-﻿------------------------------
+------------------------------
 --      Are you local?      --
 ------------------------------
 
@@ -12,8 +12,8 @@ local prior
 ----------------------------
 
 L:RegisterTranslations("enUS", function() return {
-	triggerdead = "Firesworn",
-	triggercast = "Eruption",
+	triggerdead = "Firesworn dies",
+	
 	banish_trigger = "Banish fades from Firesworn",
 
 	addmsg = "%d/8 Firesworns dead!",
@@ -35,7 +35,7 @@ BigWigsGarr = BigWigs:NewModule(boss)
 BigWigsGarr.zonename = AceLibrary("Babble-Zone-2.2")["Molten Core"]
 BigWigsGarr.enabletrigger = boss
 BigWigsGarr.toggleoptions = {"adds", "bosskill"}
-BigWigsGarr.revision = tonumber(string.sub("$Revision: 16639 $", 12, -3))
+BigWigsGarr.revision = tonumber(string.sub("$Revision: 19009 $", 12, -3))
 
 ------------------------------
 --      Initialization      --
@@ -45,27 +45,23 @@ function BigWigsGarr:OnEnable()
 	self.adddead = 0
 
 	self:RegisterEvent("CHAT_MSG_SPELL_AURA_GONE_OTHER")
-	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_PARTY_DAMAGE", "Event")
-	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_FRIENDLYPLAYER_DAMAGE", "Event")
-	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_SELF_DAMAGE", "Event")
-	self:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_CREATURE_DAMAGE", "Event")
 	self:RegisterEvent("CHAT_MSG_COMBAT_HOSTILE_DEATH", "GenericBossDeath")
 
 	self:RegisterEvent("BigWigs_RecvSync")
-	self:TriggerEvent("BigWigs_ThrottleSync", "GarrAddDead", 2)
+	self:TriggerEvent("BigWigs_ThrottleSync", "GarrAddDead", 1)
 end
 
 ------------------------------
 --      Event Handlers      --
 ------------------------------
 
-function BigWigsGarr:Event(msg)
-	if string.find(msg, L["triggercast"]) then
+function BigWigsGarr:GenericBossDeath(msg)
+	if string.find(msg, L["triggerdead"]) then
 		self:TriggerEvent("BigWigs_SendSync", "GarrAddDead "..tostring(self.adddead + 1) )
 	end
 end
 
-function BigWigsGarr:BigWigs_RecvSync( sync )
+function BigWigsGarr:BigWigs_RecvSync( sync, rest )
 	if sync == "GarrAddDead" and rest then
 		rest = tonumber(rest)
 		if not rest then return end
