@@ -1,9 +1,10 @@
-﻿------------------------------
+------------------------------
 --      Are you local?      --
 ------------------------------
 
 local boss = AceLibrary("Babble-Boss-2.2")["Gehennas"]
 local L = AceLibrary("AceLocale-2.2"):new("BigWigs"..boss)
+local started = nil
 
 local prior
 
@@ -44,13 +45,14 @@ BigWigsGehennas = BigWigs:NewModule(boss)
 BigWigsGehennas.zonename = AceLibrary("Babble-Zone-2.2")["Molten Core"]
 BigWigsGehennas.enabletrigger = boss
 BigWigsGehennas.toggleoptions = {"shadowbolt", "curse", "bosskill"}
-BigWigsGehennas.revision = tonumber(string.sub("$Revision: 16639 $", 12, -3))
+BigWigsGehennas.revision = tonumber(string.sub("$Revision: 19009 $", 12, -3))
 
 ------------------------------
 --      Initialization      --
 ------------------------------
 
 function BigWigsGehennas:OnEnable()
+	self:RegisterEvent("PLAYER_REGEN_DISABLED", "CheckForEngage")
 	self:RegisterEvent("BigWigs_Message")
 	self:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_CREATURE_DAMAGE")
 	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_PARTY_DAMAGE", "Event")
@@ -58,7 +60,13 @@ function BigWigsGehennas:OnEnable()
 	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_SELF_DAMAGE", "Event")
 	self:RegisterEvent("CHAT_MSG_SPELL_AURA_GONE_SELF")
 	self:RegisterEvent("CHAT_MSG_COMBAT_HOSTILE_DEATH", "GenericBossDeath")
+	self:RegisterEvent("BigWigs_RecvSync")
+	
+	self:TriggerEvent("BigWigs_ThrottleSync", "GehennasCurse", 5)
+	
 	prior = nil
+	started = nil
+	
 end
 
 ------------------------------
@@ -66,24 +74,36 @@ end
 ------------------------------
 
 function BigWigsGehennas:Event(msg)
-	if (not prior and string.find(msg, L["trigger1"]) and not self.db.profile.notCurse) then
-		self:TriggerEvent("BigWigs_Message", L["warn2"], "Important", true, "Alarm")
-		self:ScheduleEvent("BigWigs_Message", 25, L["warn1"], "Urgent")
-		self:TriggerEvent("BigWigs_StartBar", self, L["bar1text"], 30, "Interface\\Icons\\Spell_Shadow_BlackPlague")
-		prior = true
+	if not prior and string.find(msg, L["trigger1"]) then
+		self:TriggerEvent("BigWigs_SendSync", "GehennasCurse")
 	elseif string.find(msg, L["trigger3"]) then
 		self:CancelScheduledEvent("bwgehennasfire")
-		self:ScheduleEvent("bwgehennasfire", self.Stop, 6, self )
 		self:TriggerEvent("BigWigs_Message", L["firewarn"], "Personal", true, "Alarm")
 	end
 end
 
-function BigWigsGehennas:CHAT_MSG_SPELL_AURA_GONE_SELF(msg)
-	if string.find(msg, L["trigger"]) then
+function BigWigsGehennas:BigWigs_RecvSync( sync, rest) 
+	if sync == self:GetEngageSync() and rest and rest == boss and not started then
+		started = true
+		if self:IsEventRegistered("PLAYER_REGEN_DISABLED") then
+			self:UnregisterEvent("PLAYER_REGEN_DISABLED")
+		end
+		if self.db.profile.curse then
+			self:ScheduleEvent("BigWigs_Message", 7, L["warn1"], "Urgent")
+			self:TriggerEvent("BigWigs_StartBar", self, L["bar1text"], 12, "Interface\\Icons\\Spell_Shadow_BlackPlague")
+		end
+	elseif sync == "GehennasCurse" and self.db.profile.curse then
+		self:TriggerEvent("BigWigs_Message", L["warn2"], "Important", true, "Alarm")
+		self:ScheduleEvent("BigWigs_Message", 20, L["warn1"], "Urgent")
+		self:TriggerEvent("BigWigs_StartBar", self, L["bar1text"], 25, "Interface\\Icons\\Spell_Shadow_BlackPlague")
+		prior = true
 	end
 end
 
-function BigWigsGehennas:Stop()
+
+function BigWigsGehennas:CHAT_MSG_SPELL_AURA_GONE_SELF(msg)
+	if string.find(msg, L["trigger"]) then
+	end
 end
 
 function BigWigsGehennas:BigWigs_Message(msg)
