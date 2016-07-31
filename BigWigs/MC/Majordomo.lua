@@ -1,4 +1,4 @@
-﻿------------------------------
+------------------------------
 --      Are you local?      --
 ------------------------------
 
@@ -55,14 +55,14 @@ BigWigsMajordomo = BigWigs:NewModule(boss)
 BigWigsMajordomo.zonename = AceLibrary("Babble-Zone-2.2")["Molten Core"]
 BigWigsMajordomo.enabletrigger = boss
 BigWigsMajordomo.toggleoptions = {"magic", "dmg", "bosskill"}
-BigWigsMajordomo.revision = tonumber(string.sub("$Revision: 16639 $", 12, -3))
+BigWigsMajordomo.revision = tonumber(string.sub("$Revision: 19009 $", 12, -3))
 
 ------------------------------
 --      Initialization      --
 ------------------------------
 
 function BigWigsMajordomo:OnEnable()
-	self:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_CREATURE_DAMAGE")
+	--self:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_CREATURE_DAMAGE")
 	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_CREATURE_BUFFS")
 	self:RegisterEvent("CHAT_MSG_SPELL_AURA_GONE_OTHER")
 	self:RegisterEvent("CHAT_MSG_MONSTER_YELL")
@@ -85,12 +85,14 @@ function BigWigsMajordomo:CHAT_MSG_MONSTER_YELL(msg)
 	end
 end
 
+--[[ Flamewaker Healer have no heal cast
 function BigWigsMajordomo:CHAT_MSG_SPELL_CREATURE_VS_CREATURE_DAMAGE(msg)
 	if string.find(msg, L["triggercast"]) then
 		self:TriggerEvent("BigWigs_Message", L["healwarn"], "Important", true, "Alarm")
 		self:TriggerEvent("BigWigs_StartBar", self, L["healbar"], 2, "Interface\\Icons\\Spell_Holy_Heal")
 	end
 end
+]]
 
 function BigWigsMajordomo:CHAT_MSG_SPELL_PERIODIC_CREATURE_BUFFS(msg)
 	if (string.find(msg, L["trigger1"]) and not aura and self.db.profile.magic) then self:NewPowers(1)
