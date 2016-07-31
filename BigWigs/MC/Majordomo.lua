@@ -45,6 +45,17 @@ L:RegisterTranslations("enUS", function() return {
 	dmg_cmd = "dmg",
 	dmg_name = "Damage Shields alert",
 	dmg_desc = "Warn for Damage Shields",
+	
+	adds_cmd = "adds",
+	adds_name = "Majordomo's adds",
+	adds_desc = "Mods for Majordomo's adds",
+	
+	healerdeadmsg = "%d/4 Flamewaker Healer dead!",
+	elitedeadmsg = "%d/4 Flamewaker Elite dead!",
+	
+	triggerhealerdead = "Flamewaker Healer",
+	triggerelitedead = "Flamewaker Elite",
+	
 } end)
 
 ----------------------------------
@@ -54,7 +65,7 @@ L:RegisterTranslations("enUS", function() return {
 BigWigsMajordomo = BigWigs:NewModule(boss)
 BigWigsMajordomo.zonename = AceLibrary("Babble-Zone-2.2")["Molten Core"]
 BigWigsMajordomo.enabletrigger = boss
-BigWigsMajordomo.toggleoptions = {"magic", "dmg", "bosskill"}
+BigWigsMajordomo.toggleoptions = {"magic", "dmg", "adds", "bosskill"}
 BigWigsMajordomo.revision = tonumber(string.sub("$Revision: 19009 $", 12, -3))
 
 ------------------------------
@@ -67,6 +78,11 @@ function BigWigsMajordomo:OnEnable()
 	self:RegisterEvent("CHAT_MSG_SPELL_AURA_GONE_OTHER")
 	self:RegisterEvent("CHAT_MSG_MONSTER_YELL")
 	aura = nil
+	self.healerdead = 0
+	self.elitedead = 0
+	self:RegisterEvent("CHAT_MSG_COMBAT_HOSTILE_DEATH")
+	self:TriggerEvent("BigWigs_ThrottleSync", "MajoHealerDead", 2)
+	self:TriggerEvent("BigWigs_ThrottleSync", "MajoEliteDead", 2)
 end
 
 function BigWigsMajordomo:VerifyEnable(unit)
@@ -76,11 +92,46 @@ end
 ------------------------------
 --      Event Handlers      --
 ------------------------------
+function BigWigsMajordomo:CHAT_MSG_COMBAT_HOSTILE_DEATH(msg)
+	if string.find(msg, L["triggerhealerdead"]) then
+		self:TriggerEvent("BigWigs_SendSync", "MajoHealerDead "..tostring(self.healerdead + 1) )
+	elseif string.find(msg, L["triggerelitedead"]) then
+		self:TriggerEvent("BigWigs_SendSync", "MajoEliteDead "..tostring(self.elitedead + 1) )
+	end
+end
+
+function BigWigsMajordomo:BigWigs_RecvSync( sync, rest )
+	if sync == "MajoHealerDead" and rest then
+		rest = tonumber(rest)
+		if not rest then return	end
+		if rest == (self.healerdead + 1) then
+			self.healerdead = self.healerdead + 1
+			if self.db.profile.adds then
+				self:TriggerEvent("BigWigs_Message", string.format(L["healerdeadmsg"], self.healerdead), "Positive")
+			end
+			if self.healerdead == 4 then
+				self.healerdead = 0 -- reset counter
+            end
+		end
+	elseif sync == "MajoEliteDead" and rest then
+		rest = tonumber(rest)
+		if not rest then return end
+		if rest == (self.elitedead + 1) then
+			self.elitedead = self.elitedead + 1
+			if self.db.profile.adds then
+				self:TriggerEvent("BigWigs_Message", string.format(L["elitedeadmsg"], self.elitedead), "Positive")
+			end
+			if self.elitedead == 4 then
+				self.elitedead = 0 -- reset counter
+            end
+		end
+	end
+end
 
 function BigWigsMajordomo:CHAT_MSG_MONSTER_YELL(msg)
 	if (msg == L["disabletrigger"]) then
 		if self.db.profile.bosskill then self:TriggerEvent("BigWigs_Message", string.format(AceLibrary("AceLocale-2.2"):new("BigWigs")["%s has been defeated"], self:ToString()), "Bosskill", nil, "Victory") end
-                BigWigs:Flawless()
+                --BigWigs:Flawless()
 		self.core:ToggleModuleActive(self, false)
 	end
 end
