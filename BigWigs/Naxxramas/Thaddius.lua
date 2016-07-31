@@ -114,7 +114,7 @@ BigWigsThaddius = BigWigs:NewModule(boss)
 BigWigsThaddius.zonename = AceLibrary("Babble-Zone-2.2")["Naxxramas"]
 BigWigsThaddius.enabletrigger = { boss, feugen, stalagg }
 BigWigsThaddius.toggleoptions = {"enrage", "charge", "polarity", -1, "power", "throw", "warstomp", "phase", "bosskill"}
-BigWigsThaddius.revision = tonumber(string.sub("$Revision: 19008 $", 12, -3))
+BigWigsThaddius.revision = tonumber(string.sub("$Revision: 19010 $", 12, -3))
 
 ------------------------------
 --      Initialization      --
@@ -134,6 +134,7 @@ function BigWigsThaddius:OnEnable()
 	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_CREATURE_BUFFS")
 	self:RegisterEvent("CHAT_MSG_MONSTER_YELL")
 	self:RegisterEvent("PLAYER_REGEN_ENABLED", "CheckForWipe")
+	self:RegisterEvent("PLAYER_REGEN_DISABLED", "CheckForEngage")
 	self:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_CREATURE_DAMAGE")
 	self:RegisterEvent("CHAT_MSG_MONSTER_EMOTE")
 
@@ -226,19 +227,6 @@ function BigWigsThaddius:CHAT_MSG_MONSTER_EMOTE( msg )
 		self:CancelScheduledEvent("bwthaddiuswarn3")
 		self:CancelScheduledEvent("bwthaddiuswarn4")
 		self:CancelScheduledEvent("bwthaddiuswarn5")
-[[-	elseif msg == L["adddeath"] then
-		self.addsdead = self.addsdead + 1
-		if self.addsdead == 2 then
-                        self:TriggerEvent("BigWigs_StartBar", self, L["adddiebartext"], 10, "Interface\\Icons\\Spell_Holy_Resurrection")
-                        self:TriggerEvent("BigWigs_StartBar", self, L["P2inc"], 19, "Interface\\Icons\\Spell_Nature_Purge")
-			if self.db.profile.phase then self:TriggerEvent("BigWigs_Message", L["addsdownwarn"], "Attention") end
-			self:CancelScheduledEvent("bwthaddiusthrow")
-			self:CancelScheduledEvent("bwthaddiusthrowwarn")
-		end
-	elseif msg == L["teslaoverload"] and self.db.profile.phase and not self.teslawarn then
-		self.teslawarn = true
-		self:TriggerEvent("BigWigs_Message", L["thaddiusincoming"], "Important")
--]]
 	end
 end
 
@@ -302,10 +290,6 @@ function BigWigsThaddius:BigWigs_RecvSync( sync )
 		self:ScheduleEvent("bwthaddiuswarstompfeugenwarn", "BigWigs_Message", 7, L["warstomp_warn_feugen"], "Urgent")
 	end
 end
-
---function BigWigsThaddius:Throwst()
---		self:ScheduleRepeatingEvent( "bwthaddiusthrow", self.Throw, self.throwtime, self )
---end
 
 function BigWigsThaddius:Throw()
 	if self.db.profile.throw then
