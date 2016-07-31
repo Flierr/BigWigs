@@ -29,10 +29,10 @@ VG edit by Flier & Luise (De Profundis)
 - [x] Battleguard Sartura
 - [x] Fankriss the Unyielding
 - [ ] Viscidus
-- [ ] Princess Huhuran
+- [x] Princess Huhuran
 - [x] The Twin Emperors
 - [x] Ouro
-- [ ] C'Thun
+- [ ] C'Thun 
 
 ## Blackwing Lair
 - [x] Razorgore the Untamed
@@ -45,13 +45,13 @@ VG edit by Flier & Luise (De Profundis)
 
 ## Molten Core
 - [x] Lucifron
-- [ ] Magmadar
-- [ ] Gehennas
-- [ ] Garr
+- [x] Magmadar
+- [x] Gehennas
+- [x] Garr
 - [x] Baron Geddon
-- [ ] Shazzrah
-- [ ] Sulfuron Harbinger
-- [ ] Golemagg the Incinerator
+- [x] Shazzrah
+- [x] Sulfuron Harbinger
+- [x] Golemagg the Incinerator
 - [ ] Majordomo Executus
 - [ ] Ragnarso
 
