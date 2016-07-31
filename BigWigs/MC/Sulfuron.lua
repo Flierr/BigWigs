@@ -1,4 +1,4 @@
-﻿------------------------------
+------------------------------
 --      Are you local?      --
 ------------------------------
 
@@ -13,7 +13,7 @@ local prior
 
 L:RegisterTranslations("enUS", function() return {
 	triggerdead = "Flamewaker Priest",
-	triggercast = "Dark Mending",
+	triggercast = "begins to cast Dark Mending",
 	healbar = "Heal",
 	healwarn = "Healing!",
 
@@ -34,7 +34,7 @@ BigWigsSulfuron = BigWigs:NewModule(boss)
 BigWigsSulfuron.zonename = AceLibrary("Babble-Zone-2.2")["Molten Core"]
 BigWigsSulfuron.enabletrigger = boss
 BigWigsSulfuron.toggleoptions = {"adds", "bosskill"}
-BigWigsSulfuron.revision = tonumber(string.sub("$Revision: 20003 $", 12, -3))
+BigWigsSulfuron.revision = tonumber(string.sub("$Revision: 19009 $", 12, -3))
 
 ------------------------------
 --      Initialization      --
@@ -44,10 +44,12 @@ function BigWigsSulfuron:OnEnable()
 	self.adddead = 0
 
 	self:RegisterEvent("CHAT_MSG_COMBAT_HOSTILE_DEATH")
-	self:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_CREATURE_DAMAGE")
-
+	--self:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_CREATURE_DAMAGE")
+	self:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_CREATURE_BUFF")
+	
 	self:RegisterEvent("BigWigs_RecvSync")
 	self:TriggerEvent("BigWigs_ThrottleSync", "SulfAddDead", 2)
+	self:TriggerEvent("BigWigs_ThrottleSync", "SulfHeal", 2)
 end
 
 ------------------------------
@@ -62,14 +64,13 @@ function BigWigsSulfuron:CHAT_MSG_COMBAT_HOSTILE_DEATH(msg)
 	end
 end
 
-function BigWigsSulfuron:CHAT_MSG_SPELL_CREATURE_VS_CREATURE_DAMAGE(msg)
+function BigWigsSulfuron:CHAT_MSG_SPELL_CREATURE_VS_CREATURE_BUFF(msg)
 	if string.find(msg, L["triggercast"]) then
-		self:TriggerEvent("BigWigs_Message", L["healwarn"], "Important", true, "Alarm")
-		self:TriggerEvent("BigWigs_StartBar", self, L["healbar"], 3.5, "Interface\\Icons\\Spell_Holy_Heal")
+		self:TriggerEvent("BigWigs_SendSync", "SulfHeal")
 	end
 end
 
-function BigWigsSulfuron:BigWigs_RecvSync( sync )
+function BigWigsSulfuron:BigWigs_RecvSync( sync, rest )
 	if sync == "SulfAddDead" and rest then
 		rest = tonumber(rest)
 		if not rest then return end
@@ -82,5 +83,8 @@ function BigWigsSulfuron:BigWigs_RecvSync( sync )
 				self.adddead = 0 -- reset counter
                          end
 		end
+	elseif sync == "SulfHeal" then
+		self:TriggerEvent("BigWigs_Message", L["healwarn"], "Important", true, "Alarm")
+		self:TriggerEvent("BigWigs_StartBar", self, L["healbar"], 2, "Interface\\Icons\\Spell_Holy_Heal")
 	end
 end
