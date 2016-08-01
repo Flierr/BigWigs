@@ -1,4 +1,4 @@
-﻿------------------------------
+------------------------------
 --      Are you local?      --
 ------------------------------
 
@@ -24,8 +24,8 @@ L:RegisterTranslations("enUS", function() return {
 	spore_desc = "Warn when a spore spawns",
 
 	curse_cmd = "curse",
-	curse_name = "Disable Curse Alert",
-	curse_desc = "Uncheck to enable warning when curses are removed from Loatheb",
+	curse_name = "Curse Alert",
+	curse_desc = "Enable warning when curses are removed from Loatheb",
 
 	debuff_cmd = "debuff",
 	debuff_name = "Deuff Alert",
@@ -81,7 +81,7 @@ BigWigsLoatheb = BigWigs:NewModule(boss)
 BigWigsLoatheb.zonename = AceLibrary("Babble-Zone-2.2")["Naxxramas"]
 BigWigsLoatheb.enabletrigger = boss
 BigWigsLoatheb.toggleoptions = {"doom", "spore", "curse", "debuff", "bosskill"}
-BigWigsLoatheb.revision = tonumber(string.sub("$Revision: 15709 $", 12, -3))
+BigWigsLoatheb.revision = tonumber(string.sub("$Revision: 19010 $", 12, -3))
 
 ------------------------------
 --      Initialization      --
@@ -130,7 +130,7 @@ function BigWigsLoatheb:BigWigs_RecvSync(sync, rest, nick)
 
             self:Sporespawnstart()
             self:ScheduleEvent("bwloathebcursesstart", self.Cursesstart, 6, self)
-			self:TriggerEvent("BigWigs_StartBar", self, L["removecursebar"], 36, "Interface\\Icons\\Spell_Holy_RemoveCurse")
+			--self:TriggerEvent("BigWigs_StartBar", self, L["removecursebar"], 36, "Interface\\Icons\\Spell_Holy_RemoveCurse")
 
 			self:ScheduleEvent("bwloathebdoomtimerreduce", function () BigWigsLoatheb.doomTime = 15 end, 300)
 
@@ -166,7 +166,7 @@ function BigWigsLoatheb:BigWigs_RecvSync(sync, rest, nick)
 			end
 		end
 	elseif sync == "LoathebRemoveCurse" then
-		if not self.db.profile.curse then
+		if self.db.profile.curse then
 			self:TriggerEvent("BigWigs_Message", L["removecursewarn"], "Important")
 			self:TriggerEvent("BigWigs_StartBar", self, L["removecursebar"], 30, "Interface\\Icons\\Spell_Holy_RemoveCurse")
 		end
@@ -180,7 +180,7 @@ function BigWigsLoatheb:Event( msg )
 end
 
 function BigWigsLoatheb:CHAT_MSG_SPELL_BREAK_AURA( msg )
-	if msg == L["removecursetrigger"] then
+	if string.find(msg, L["removecursetrigger"]) then
 		self:TriggerEvent("BigWigs_SendSync", "LoathebRemoveCurse")
 	end
 end
