@@ -224,7 +224,6 @@ function BigWigsFaerlina:BigWigs_RecvSync( sync )
 			self:ScheduleEvent("bwfaerlinasilence5", "BigWigs_Message", self.silencetime -5, L["silencewarn5sec"], "Urgent")
 			self:TriggerEvent("BigWigs_StartBar", self, L["silencebar"], self.silencetime, "Interface\\Icons\\Spell_Holy_Silence")
 		end
-		DEFAULT_CHAT_FRAME:AddMessage("Silence Sync")
 		if self.enraged then
 			--VG Enrage Bar 60sec after silence when enraged
 			self:ScheduleEvent( "bwfaerlinaenrage15", "BigWigs_Message", self.enragetimewhilesilenced - 15, L["enragewarn15sec"], "Important")
