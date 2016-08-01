@@ -17,12 +17,12 @@ local timeP1GlareDuration = 40 -- duration of dark glare
 --local timeP2Offset = 55        -- delay for all timers to restart after the Eye dies
 
 local timeP2TentacleStart = 40     --tentacle start timer for phase 2
-local timeP2GiantEyeStart = 60	   --Giant Eye start timer for phase 2
-local timeP2GiantClawStart = 90	   --Giant Claw start timer for phase 2
+local timeP2GiantEyeStart = 56	   --Giant Eye start timer for phase 2
+local timeP2GiantClawStart = 26	   --Giant Claw start timer for phase 2
 
 local timeP2Tentacle = 30      -- tentacle timers for phase 2
-local timeP2GiantEye = 65	   --Giant Eye timer for phase 2
-local timeP2GiantClaw = 35	   --Giant Claw timer for phase 2
+local timeP2GiantEye = 60	   --Giant Eye timer for phase 2
+local timeP2GiantClaw = 60	   --Giant Claw timer for phase 2
 
 
 --local timeReschedule = 50      -- delay from the moment of weakening for timers to restart
@@ -359,9 +359,9 @@ function BigWigsCThun:CThunWeakenedVG()
 	--recalculate timers after weakened
 	local t = GetTime()
 	
-	timeTentacleRapeleft = t - timeTentacleRape
-	timeGiantEyeRapeleft = t - timeGiantEyeRape
-	timeGiantClawRapeleft = t - timeGiantClawRape
+	timeTentacleRapeleft = timeP2Tentacle - (t - timeTentacleRape)
+	timeGiantEyeRapeleft = timeP2GiantEye - (t - timeGiantEyeRape)
+	timeGiantClawRapeleft = timeP2GiantClaw - (t - timeGiantClawRape)
 	
 	--DEFAULT_CHAT_FRAME:AddMessage(timeTentacleRapeleft)
 	--DEFAULT_CHAT_FRAME:AddMessage(timeGiantEyeRapeleft)
