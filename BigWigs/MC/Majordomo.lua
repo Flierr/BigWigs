@@ -80,6 +80,7 @@ function BigWigsMajordomo:OnEnable()
 	aura = nil
 	self.healerdead = 0
 	self.elitedead = 0
+	self:RegisterEvent("BigWigs_RecvSync")
 	self:RegisterEvent("CHAT_MSG_COMBAT_HOSTILE_DEATH")
 	self:TriggerEvent("BigWigs_ThrottleSync", "MajoHealerDead", 2)
 	self:TriggerEvent("BigWigs_ThrottleSync", "MajoEliteDead", 2)
