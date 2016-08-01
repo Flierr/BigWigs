@@ -72,7 +72,7 @@ BigWigsHeigan.zonename = AceLibrary("Babble-Zone-2.2")["Naxxramas"]
 BigWigsHeigan.enabletrigger = boss
 BigWigsHeigan.wipemobs = { L["Eye Stalk"], L["Rotting Maggot"] }
 BigWigsHeigan.toggleoptions = {"engage", "teleport", "disease", "splash", "bosskill"}
-BigWigsHeigan.revision = tonumber(string.sub("$Revision: 19008 $", 12, -3))
+BigWigsHeigan.revision = tonumber(string.sub("$Revision: 19010 $", 12, -3))
 
 ------------------------------
 --      Initialization      --
@@ -133,7 +133,7 @@ end
 
 function BigWigsHeigan:BigWigs_RecvSync( sync )
 	if sync == "HeiganDisease" then
-		self:TriggerEvent("BigWigs_Message", L["dwarn"], "Important") 
+		--self:TriggerEvent("BigWigs_Message", L["dwarn"], "Important") 
 		self:TriggerEvent("BigWigs_StartBar", self, L["dbar"], 15, "Interface\\Icons\\Ability_Creature_Disease_03")
 	end
 end
