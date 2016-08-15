@@ -69,8 +69,6 @@ end
 function BigWigsBroodlord:Event(msg)
 	if string.find(msg, L["triggerms"]) then
 		local _, _, EPlayer, EType = string.find(msg, L["trigger1"])
-		DEFAULT_CHAT_FRAME:AddMessage(EPlayer)
-		DEFAULT_CHAT_FRAME:AddMessage(EType)
 		if (EPlayer and EType) then
 			if EPlayer == L["you"] and EType == L["are"] and self.db.profile.youms then
 				self:TriggerEvent("BigWigs_Message", L["warn1"], "Personal",  true, "Alert")
