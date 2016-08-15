@@ -213,7 +213,11 @@ function BigWigsChromaggus:PlayerDamageEvents(msg)
 	if (not self.vulnerability) then
 		local _,_, type, dmg, school = string.find(msg, L["vulnerability_test"])
 		if ( type == L["hit"] or type == L["crit"] ) and tonumber(dmg or "") and school then
-			if (tonumber(dmg) >= 6000 and type == L["hit"]) or (tonumber(dmg) >= 9000 and type == L["crit"]) then
+			--nature
+			if school == "Nature" and (tonumber(dmg) >= 3000 and type == L["hit"]) or (tonumber(dmg) >= 4000 and type == L["crit"]) then
+				self.vulnerability = school
+				self:TriggerEvent("BigWigs_SendSync", "ChromaggusVuln "..school)
+			elseif (tonumber(dmg) >= 5000 and type == L["hit"]) or (tonumber(dmg) >= 8000 and type == L["crit"]) then
 				self.vulnerability = school
 				self:TriggerEvent("BigWigs_SendSync", "ChromaggusVuln "..school)
 			end
