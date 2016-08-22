@@ -1,4 +1,4 @@
-﻿--[[
+--[[
 --
 -- BigWigs Strategy Module for Thaddius in Naxxramas.
 --
@@ -487,7 +487,19 @@ function BigWigsThaddiusArrows:OnRegister()
 	self.frameVoidZone:SetAlpha(0.6)
 	self.frameVoidZone:Hide()
 	
-	self:RegisterChatCommand({ "/"..L["setstrategy_cmd"] }, {
+	self.frameCorrHeal = CreateFrame("Frame", nil, UIParent)
+	self.texCorrHeal = self.frameCorrHeal:CreateTexture(nil, "BACKGROUND")
+	-- Create the frame we will be using for the Arrow
+	self.frameCorrHeal:SetFrameStrata("MEDIUM")
+	self.frameCorrHeal:SetWidth(100)  -- Set These to whatever height/width is needed 
+	self.frameCorrHeal:SetHeight(100) -- for your Texture
+	-- Apply Texture
+	self.texCorrHeal:SetTexture("Interface\\Icons\\Spell_Shadow_DetectInvisibility")	
+	self.texCorrHeal:SetAllPoints(self.frameCorrHeal)
+	self.frameCorrHeal:SetAlpha(0.6)
+	self.frameCorrHeal:Hide()
+	
+		self:RegisterChatCommand({ "/"..L["setstrategy_cmd"] }, {
 		type = "execute",
 		name = L["setstrategy_name"],
 		desc = L["setstrategy_desc"],
@@ -930,6 +942,14 @@ function BigWigsThaddiusArrows:Direction( direction )
 			self.frameVoidZone:Show()
 			self:ScheduleEvent(function() self.frameVoidZone:Hide() end, 15)
 		end
+	elseif direction == "CorrHeal" then -- Nef Corr Heal
+		if self.db.profile.graphic then
+			self.frameCorrHeal.texture = self.texCorrHeal
+			self.texCorrHeal:SetTexCoord(0, 1, 0, 1)
+			self.frameCorrHeal:SetPoint("CENTER", -175, 100)
+			self.frameCorrHeal:Show()
+			self:ScheduleEvent(function() self.frameCorrHeal:Hide() end, 15)
+		end
 	end
 end
 
@@ -1056,6 +1076,11 @@ end
 function BigWigsThaddiusArrows:VoidZonestop()
 	self.frameVoidZone:Hide()
 end
+
+function BigWigsThaddiusArrows:CorrHealstop)
+	self.frameCorrHeal:Hide()
+end
+
 
 function BigWigsThaddiusArrows:CrystalCharge()
 	self:TriggerEvent("BigWigs_StartBar", self, L["Crystal Charge"], 120, "Interface\\Icons\\Inv_Misc_Gem_Amethyst_01")
