@@ -491,8 +491,8 @@ function BigWigsThaddiusArrows:OnRegister()
 	self.texCorrHeal = self.frameCorrHeal:CreateTexture(nil, "BACKGROUND")
 	-- Create the frame we will be using for the Arrow
 	self.frameCorrHeal:SetFrameStrata("MEDIUM")
-	self.frameCorrHeal:SetWidth(100)  -- Set These to whatever height/width is needed 
-	self.frameCorrHeal:SetHeight(100) -- for your Texture
+	self.frameCorrHeal:SetWidth(200)  -- Set These to whatever height/width is needed 
+	self.frameCorrHeal:SetHeight(200) -- for your Texture
 	-- Apply Texture
 	self.texCorrHeal:SetTexture("Interface\\Icons\\Spell_Shadow_DetectInvisibility")	
 	self.texCorrHeal:SetAllPoints(self.frameCorrHeal)
@@ -948,7 +948,7 @@ function BigWigsThaddiusArrows:Direction( direction )
 			self.texCorrHeal:SetTexCoord(0, 1, 0, 1)
 			self.frameCorrHeal:SetPoint("CENTER", -175, 100)
 			self.frameCorrHeal:Show()
-			self:ScheduleEvent(function() self.frameCorrHeal:Hide() end, 15)
+			self:ScheduleEvent(function() self.frameCorrHeal:Hide() end, 30)
 		end
 	end
 end
@@ -1077,7 +1077,7 @@ function BigWigsThaddiusArrows:VoidZonestop()
 	self.frameVoidZone:Hide()
 end
 
-function BigWigsThaddiusArrows:CorrHealstop)
+function BigWigsThaddiusArrows:CorrHealstop()
 	self.frameCorrHeal:Hide()
 end
 
