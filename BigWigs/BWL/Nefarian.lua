@@ -86,7 +86,7 @@ BigWigsNefarian = BigWigs:NewModule(boss)
 BigWigsNefarian.zonename = AceLibrary("Babble-Zone-2.2")["Blackwing Lair"]
 BigWigsNefarian.enabletrigger = { boss, victor }
 BigWigsNefarian.toggleoptions = {"shadowflame", "fear", "classcall", "otherwarn", "bosskill"}
-BigWigsNefarian.revision = tonumber(string.sub("$Revision: 19008 $", 12, -3))
+BigWigsNefarian.revision = tonumber(string.sub("$Revision: 19010 $", 12, -3))
 
 ------------------------------
 --      Initialization      --
