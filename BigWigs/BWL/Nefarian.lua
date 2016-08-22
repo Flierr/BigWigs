@@ -131,6 +131,10 @@ function BigWigsNefarian:CHAT_MSG_MONSTER_YELL(msg)
 					self:ScheduleEvent("BigWigs_Message", 25, L["classcall_warning"], "Important", true, "Alarm")
 					self:TriggerEvent("BigWigs_StartBar", self, L["classcall_bar"], 30, "Interface\\Icons\\Spell_Shadow_Charm")
 				end
+				if v[1] == L["warnpriest"] and UnitClass("player") == "Priest" then
+					self:TriggerEvent(function() BigWigsThaddiusArrows:Direction("CorrHeal") end) 
+				end
+
 			else
 				if self.db.profile.otherwarn and string.find(msg, L["landing_soon_trigger"]) then 
 					self:TriggerEvent("BigWigs_Message", v[1], "Important", true, "Long")
