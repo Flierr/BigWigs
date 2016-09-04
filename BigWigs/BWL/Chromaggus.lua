@@ -111,7 +111,7 @@ function BigWigsChromaggus:OnEnable()
 
 	self:RegisterEvent("BigWigs_RecvSync")
 	self:TriggerEvent("BigWigs_ThrottleSync", "ChromaggusBreath", 25)
-	self:TriggerEvent("BigWigs_ThrottleSync", "ChromaggusVuln", 25)
+	self:TriggerEvent("BigWigs_ThrottleSync", "ChromaggusVuln1", 10)
 end
 
 function BigWigsChromaggus:UNIT_HEALTH( msg )
@@ -162,7 +162,7 @@ function BigWigsChromaggus:BigWigs_RecvSync(sync, spellId)
 		self:ScheduleEvent("bwchromaggusbreathinitial2", "BigWigs_Message", 55, L["breath_warning_initial"], "Important", true, "Alarm")
 		self:TriggerEvent("BigWigs_StartBar", self, L["breath_bar_2nd"], 60, L["iconunknown"])
 		
-	elseif sync == "ChromaggusVuln" then
+	elseif sync == "ChromaggusVuln1" then
 		if self.db.profile.vulnerability then
 			if spellId == "Shadow" then
 				self:TriggerEvent("BigWigs_StartBar", self, format(L["vulnerability_message"], spellId), 30, L["icon_vuln_shadow"])
@@ -216,10 +216,10 @@ function BigWigsChromaggus:PlayerDamageEvents(msg)
 			--nature
 			if school == "Nature" and (tonumber(dmg) >= 3000 and type == L["hit"]) or (tonumber(dmg) >= 4000 and type == L["crit"]) then
 				self.vulnerability = school
-				self:TriggerEvent("BigWigs_SendSync", "ChromaggusVuln "..school)
+				self:TriggerEvent("BigWigs_SendSync", "ChromaggusVuln1 "..school)
 			elseif (tonumber(dmg) >= 5000 and type == L["hit"]) or (tonumber(dmg) >= 8000 and type == L["crit"]) then
 				self.vulnerability = school
-				self:TriggerEvent("BigWigs_SendSync", "ChromaggusVuln "..school)
+				self:TriggerEvent("BigWigs_SendSync", "ChromaggusVuln1 "..school)
 			end
 		end
 	end
