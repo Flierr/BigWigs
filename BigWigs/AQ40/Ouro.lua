@@ -6,6 +6,7 @@ local L = AceLibrary("AceLocale-2.2"):new("BigWigs"..boss)
 
 local berserkannounced
 local started 
+local ouroonsurface
 
 ----------------------------
 --      Localization      --
@@ -84,7 +85,7 @@ BigWigsOuro = BigWigs:NewModule(boss)
 BigWigsOuro.zonename = AceLibrary("Babble-Zone-2.2")["Ahn'Qiraj"]
 BigWigsOuro.enabletrigger = boss
 BigWigsOuro.toggleoptions = {"sweep", "sandblast", "scarab", -1, "emerge", "submerge", -1, "berserk", "bosskill"}
-BigWigsOuro.revision = tonumber(string.sub("$Revision: 19008 $", 12, -3))
+BigWigsOuro.revision = tonumber(string.sub("$Revision: 19010 $", 12, -3))
 
 ------------------------------
 --      Initialization      --
@@ -168,9 +169,9 @@ function BigWigsOuro:BigWigs_RecvSync( sync, rest, nick )
 		self:Sweep()
 	elseif sync == "OuroSandblast" then
 		self:Sandblast()
-	elseif sync == "OuroEmerge" then
+	elseif sync == "OuroEmerge" and ouroonsurface == false then
 		self:Emerge()
-	elseif sync == "OuroSubmerge" then
+	elseif sync == "OuroSubmerge" and ouroonsurface == true then
 		self:Submerge()
 	elseif sync == "OuroBerserk" then
 		self:Berserk()
@@ -271,13 +272,13 @@ function BigWigsOuro:CHAT_MSG_SPELL_CREATURE_VS_CREATURE_BUFF( msg )
 end
 
 function BigWigsOuro:checksubmerge( msg )
-	if string.find(msg, L["submergetrigger"]) and ouroonsurface == true then
+	if string.find(msg, L["submergetrigger"]) then
 		self:TriggerEvent("BigWigs_SendSync", "OuroSubmerge")
 	end
 end
 
 function BigWigsOuro:checkemerge( msg )
-	if string.find(msg, L["emergetrigger"]) and ouroonsurface == false then
+	if string.find(msg, L["emergetrigger"]) then
 		self:TriggerEvent("BigWigs_SendSync", "OuroEmerge")
 	end
 end
