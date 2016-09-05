@@ -177,10 +177,10 @@ function BigWigsThaddius:CHAT_MSG_MONSTER_YELL( msg )
 		self:ScheduleRepeatingEvent( "bwthaddiusthrow", self.Throw, self.throwtime, self )
 		
 		if self.db.profile.warstomp then
-			self:TriggerEvent("BigWigs_StartBar", self, L["warstomp_bar_stalagg"], 9, "Interface\\Icons\\Ability_Druid_Maul")
+			self:TriggerEvent("BigWigs_StartBar", self, L["warstomp_bar_stalagg"], 9, "Interface\\Icons\\Ability_WarStomp")
 			self:ScheduleEvent("bwthaddiuswarstompstalaggwarn", "BigWigs_Message", 7, L["warstomp_warn_stalagg"], "Urgent")
 			
-			self:TriggerEvent("BigWigs_StartBar", self, L["warstomp_bar_feugen"], 9, "Interface\\Icons\\Ability_Druid_Maul")
+			self:TriggerEvent("BigWigs_StartBar", self, L["warstomp_bar_feugen"], 9, "Interface\\Icons\\Ability_WarStomp")
 			self:ScheduleEvent("bwthaddiuswarstompfeugenwarn", "BigWigs_Message", 7, L["warstomp_warn_feugen"], "Urgent")
 		end
 	elseif msg == L["adddie1"] or msg == L["adddie2"] then
