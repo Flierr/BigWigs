@@ -1,4 +1,4 @@
-﻿------------------------------
+------------------------------
 --      Are you local?      --
 ------------------------------
 
@@ -224,7 +224,7 @@ BigWigsRagnaros.zonename = AceLibrary("Babble-Zone-2.2")["Molten Core"]
 BigWigsRagnaros.enabletrigger = boss
 BigWigsRagnaros.wipemobs = { L["sonofflame"] }
 BigWigsRagnaros.toggleoptions = { "sondeath", "submerge", "emerge", "aoeknock", "bosskill" }
-BigWigsRagnaros.revision = tonumber(string.sub("$Revision: 16639 $", 12, -3))
+BigWigsRagnaros.revision = tonumber(string.sub("$Revision: 19010 $", 12, -3))
 
 ------------------------------
 --      Initialization      --
@@ -261,7 +261,14 @@ function BigWigsRagnaros:BigWigs_RecvSync(sync, rest)
 		if self:IsEventRegistered("PLAYER_REGEN_ENABLED") then
 			self:UnregisterEvent("PLAYER_REGEN_ENABLED")
 		end
+		if self.db.profile.aoeknock then
+			self:ScheduleEvent("bwragnarosaekbwarn", "BigWigs_Message", 20, L["knockback_soon_message"], "Urgent")
+			self:TriggerEvent("BigWigs_StartBar", self, L["knockback_bar"], 25, "Interface\\Icons\\Spell_Fire_SoulBurn")
+			self:ScheduleEvent("bwragnarosknockbackrepeat", self.KnockbackRepeat, 25, self)
+			self:ScheduleEvent("bwragnarosknockfirst", self.Knockback, 25, self)
+		end
 		self:Emerge()
+		
 	elseif sync == "RagnarosSonDead" and rest then
 		rest = tonumber(rest)
 		if not rest then return end
@@ -274,7 +281,7 @@ function BigWigsRagnaros:BigWigs_RecvSync(sync, rest)
 				self:CancelScheduledEvent("bwragnarosemerge")
 				self:TriggerEvent("BigWigs_StopBar", L["emerge_bar"])
 				self.sonsdead = 0 -- reset counter
-				self:Emerge()
+				--self:Emerge()
 			end
 		end
 	end
@@ -282,9 +289,9 @@ end
 
 function BigWigsRagnaros:CHAT_MSG_MONSTER_YELL(msg)
 	if string.find(msg, L["knockback_trigger"]) and self.db.profile.aoeknock then
-		self:TriggerEvent("BigWigs_Message", L["knockback_message"], "Important")
-		self:ScheduleEvent("bwragnarosaekbwarn", "BigWigs_Message", 23, L["knockback_soon_message"], "Urgent")
-		self:TriggerEvent("BigWigs_StartBar", self, L["knockback_bar"], 28, "Interface\\Icons\\Spell_Fire_SoulBurn")
+--		self:TriggerEvent("BigWigs_Message", L["knockback_message"], "Important")
+--		self:ScheduleEvent("bwragnarosaekbwarn", "BigWigs_Message", 25, L["knockback_soon_message"], "Urgent")
+--		self:TriggerEvent("BigWigs_StartBar", self, L["knockback_bar"], 30, "Interface\\Icons\\Spell_Fire_SoulBurn")
 	elseif string.find(msg, L["submerge_trigger"]) then
 		self:Submerge()
 	end
@@ -335,3 +342,11 @@ function BigWigsRagnaros:Emerge()
 	end
 end
 
+function BigWigsRagnaros:Knockback()
+	self:ScheduleEvent("bwragnarosaekbwarn", "BigWigs_Message", 25, L["knockback_soon_message"], "Urgent")
+	self:TriggerEvent("BigWigs_StartBar", self, L["knockback_bar"], 30, "Interface\\Icons\\Spell_Fire_SoulBurn")
+end
+
+function BigWigsRagnaros:KnockbackRepeat()
+	self:ScheduleRepeatingEvent("bwragnarosknockback", self.Knockback, 30, self)
+end
