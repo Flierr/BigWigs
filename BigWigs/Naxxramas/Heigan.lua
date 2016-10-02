@@ -139,9 +139,6 @@ function BigWigsHeigan:BigWigs_RecvSync( sync )
 end
 
 function BigWigsHeigan:TeleportWarn()
-
-	PlaySoundFile("Interface\\AddOns\\BigWigs\\Sounds\\dance.mp3")
-	
 	self:ScheduleEvent( self.BackToRoom, self.toRoomTime, self )
 	self:TriggerEvent("BigWigs_StartBar", self, L["back_bar"], self.toRoomTime, "Interface\\Icons\\Spell_Magic_LesserInvisibilty")
 	self:TriggerEvent("BigWigs_Message", string.format(L["on_platform_message"], self.toRoomTime), "Attention")
