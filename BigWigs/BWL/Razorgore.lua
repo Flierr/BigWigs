@@ -20,11 +20,14 @@ L:RegisterTranslations("enUS", function() return {
 	start_soon = "Mob Spawn in 10sec!",
 	start_verysoon = "Mob Spawn in 5sec!",
 	start_mob = "Mob Spawn",
-        enragebartext = "Enrage",
+    enragebartext = "Enrage",
 	
-	mindcontrol_trigger = "Foolish ([^%s]+).",
-	mindcontrol_message = "%s has been mind controlled!",
 
+	mc_trigger = "^([^%s]+) ([^%s]+) afflicted by Mind Exhaustion%.$",
+	mc_bar = "Mind Exhaustion: ",
+	mcyou = "You",
+	mcare = "are",
+		
 	egg_trigger = "Destroy Egg",
 	egg_message = "%d/30 eggs destroyed!",
 
@@ -52,7 +55,7 @@ BigWigsRazorgore = BigWigs:NewModule(boss)
 BigWigsRazorgore.zonename = AceLibrary("Babble-Zone-2.2")["Blackwing Lair"]
 BigWigsRazorgore.enabletrigger = { boss, controller }
 BigWigsRazorgore.toggleoptions = { "mc", "eggs", "phase", "bosskill" }
-BigWigsRazorgore.revision = tonumber(string.sub("$Revision: 19004 $", 12, -3))
+BigWigsRazorgore.revision = tonumber(string.sub("$Revision: 19010 $", 12, -3))
 
 ------------------------------
 --      Initialization      --
@@ -65,6 +68,9 @@ function BigWigsRazorgore:OnEnable()
 	self:RegisterEvent("CHAT_MSG_MONSTER_YELL")
 	self:RegisterEvent("CHAT_MSG_SPELL_FRIENDLYPLAYER_BUFF")
 	self:RegisterEvent("CHAT_MSG_COMBAT_HOSTILE_DEATH", "GenericBossDeath")
+	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_SELF_DAMAGE", "MC")
+	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_PARTY_DAMAGE", "MC")
+	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_FRIENDLYPLAYER_DAMAGE", "MC")
 
 	self:RegisterEvent("BigWigs_RecvSync")
 	self:TriggerEvent("BigWigs_ThrottleSync", "RazorgoreEgg", 8)
@@ -73,11 +79,19 @@ end
 ------------------------------
 --      Event Handlers      --
 ------------------------------
+function BigWigsRazorgore:MC(msg)
+	local _,_, pplayer, ptype = string.find(msg, L["mc_trigger"])
+	if pplayer then
+		if self.db.profile.mc then
+			self:TriggerEvent("BigWigs_StartBar", self, L["mc_bar"] .. pplayer, 180, "Interface\\Icons\\Spell_Shadow_Teleport")
+		end
+	end
+end
 
 function BigWigsRazorgore:CHAT_MSG_MONSTER_YELL(msg)
 	if string.find(msg, L["start_trigger"]) then
 		if self.db.profile.phase then
-		        self:TriggerEvent("BigWigs_StartBar", self, L["enragebartext"], 900, "Interface\\Icons\\Spell_Shadow_UnholyFrenzy")
+		    self:TriggerEvent("BigWigs_StartBar", self, L["enragebartext"], 900, "Interface\\Icons\\Spell_Shadow_UnholyFrenzy")
 			self:TriggerEvent("BigWigs_Message", L["start_message"], "Urgent")
 			self:TriggerEvent("BigWigs_StartBar", self, L["start_mob"], 35, "Interface\\Icons\\Spell_Holy_PrayerOfHealing")
 			self:ScheduleEvent("BigWigs_Message", 15, L["start_incsoon"], "Important")
@@ -85,11 +99,6 @@ function BigWigsRazorgore:CHAT_MSG_MONSTER_YELL(msg)
 			self:ScheduleEvent("BigWigs_Message", 30, L["start_verysoon"], "Important")
 		end
 		eggs = 0
-	elseif self.db.profile.mc then
-		local _, _, player = string.find(msg, L["mindcontrol_trigger"]);
-		if player then
-			self:TriggerEvent("BigWigs_Message", string.format(L["mindcontrol_message"], player), "Important")
-		end
 	end
 end
 
