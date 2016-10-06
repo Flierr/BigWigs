@@ -8,6 +8,8 @@ This is a repository for the maintenance and upkeep of BigWigs VG Edition, initi
 
 VG edit by Flier & Luise (De Profundis)
 
+Revision 19010
+
 ## Naxxramas:
 - [x] Anub'Rekhan
 - [x] Grand Widow Faerlina
@@ -53,7 +55,18 @@ VG edit by Flier & Luise (De Profundis)
 - [x] Sulfuron Harbinger
 - [x] Golemagg the Incinerator
 - [ ] Majordomo Executus
-- [ ] Ragnarso
+- [ ] Ragnaros
+
+## Zul'Gurub
+- [ ] High Priestess Jeklik
+- [ ] High Priest Venoxis
+- [ ] High Priestess Mar'li
+- [x] Bloodlord Mandokir
+- [ ] High Priestess Arlokk
+- [ ] High Priest Thekal
+- [x] Jin'do the Hexxer
+- [ ] Hakkar
+
 
 http://vanillagaming.org/
 
