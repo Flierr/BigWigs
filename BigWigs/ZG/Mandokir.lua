@@ -1,4 +1,4 @@
-﻿------------------------------
+------------------------------
 --      Are you local??     --
 ------------------------------
 
@@ -21,14 +21,18 @@ L:RegisterTranslations("enUS", function() return {
 	other_desc = "Warn when others are being watched",
 
 	icon_cmd = "icon",
-	icon_name = "Raid icon on watched",
-	icon_desc = "Puts a raid icon on the watched person",
+	icon_name = "Raid icon and whisper on watched",
+	icon_desc = "Puts a raid icon and whispers the watched person",
 
 	watch_trigger = "([^%s]+)! I'm watching you!$",
+	watch_trigger_vg = "I'm keeping my eye on you, ([^%s]+)!",
 	enrage_trigger = "goes into a rage after seeing his raptor fall in battle!$",
 
 	watched_warning_self = "You are being watched!",
 	watched_warning_other = "%s is being watched!",
+	watched_bar_self = "You are being watched!",
+	watched_bar_other = "%s is being watched!",
+	
 	enraged_message = "Ohgan down! Mandokir enraged!",	
 } end )
 
@@ -40,7 +44,7 @@ BigWigsMandokir = BigWigs:NewModule(boss)
 BigWigsMandokir.zonename = AceLibrary("Babble-Zone-2.2")["Zul'Gurub"]
 BigWigsMandokir.enabletrigger = boss
 BigWigsMandokir.toggleoptions = {"you", "other", "icon", "bosskill"}
-BigWigsMandokir.revision = tonumber(string.sub("$Revision: 16639 $", 12, -3))
+BigWigsMandokir.revision = tonumber(string.sub("$Revision: 19010 $", 12, -3))
 
 ------------------------------
 --      Initialization      --
@@ -63,15 +67,22 @@ function BigWigsMandokir:CHAT_MSG_MONSTER_EMOTE(msg)
 end
 
 function BigWigsMandokir:CHAT_MSG_MONSTER_YELL(msg)
-	local _,_, n = string.find(msg, L["watch_trigger"])
+	local _,_, n = string.find(msg, L["watch_trigger_vg"])
 	if n then
 		if n == UnitName("player") and self.db.profile.you then
-	                BigWigsThaddiusArrows:Direction("Ragna")
+	        BigWigsThaddiusArrows:Direction("Ragna")
 			self:TriggerEvent("BigWigs_Message", L["watched_warning_self"], "Personal", true, "Alarm")
 			self:TriggerEvent("BigWigs_Message", string.format(L["watched_warning_other"], UnitName("player")), "Attention", nil, nil, true)
+			--self:TriggerEvent("BigWigs_StartBar", self, string.format(L["watched_bar_self"], UnitName("player")), 20, "Interface\\Icons\\Spell_Shadow_Charm")
+			self:TriggerEvent("BigWigs_StartBar", self, string.format(L["watched_bar_other"], UnitName("player")), 20, "Interface\\Icons\\Spell_Shadow_Charm")
 		elseif self.db.profile.other then
 			self:TriggerEvent("BigWigs_Message", string.format(L["watched_warning_other"], n), "Attention")
-			self:TriggerEvent("BigWigs_SendTell", n, L["watched_warning_self"])
+			self:TriggerEvent("BigWigs_StartBar", self, string.format(L["watched_bar_other"], UnitName("player")), 20, "Interface\\Icons\\Spell_Shadow_Charm")
+			
+			if self.db.profile.icon then
+				self:TriggerEvent("BigWigs_SendTell", n, L["watched_warning_self"])
+			end
+
 		end
 		if self.db.profile.icon then
 			self:TriggerEvent("BigWigs_SetRaidIcon", n)
