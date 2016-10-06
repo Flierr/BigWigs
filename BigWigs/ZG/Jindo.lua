@@ -1,4 +1,4 @@
-﻿------------------------------
+------------------------------
 --      Are you local?      --
 ------------------------------
 
@@ -34,7 +34,10 @@ L:RegisterTranslations("enUS", function() return {
 
 	triggerbrainwash = "Jin'do the Hexxer casts Summon Brain Wash Totem.",
 	triggerhealing = "Jin'do the Hexxer casts Powerful Healing Ward.",
+	triggerhealing_vg = "Powerful Healing Ward hits",
+	
 	triggercurse = "^([^%s]+) ([^%s]+) afflicted by Jin'do the Hexxer's Delusion.", -- CHECK
+	triggercurse_vg = "^([^%s]+) ([^%s]+) afflicted by Delusions of Jin'do.", -- Welcome to VanillaGaming ;)
 
 	warnbrainwash = "Brain Wash Totem!",
 	warnhealing = "Healing Totem!",
@@ -56,7 +59,7 @@ BigWigsJindo = BigWigs:NewModule(boss)
 BigWigsJindo.zonename = AceLibrary("Babble-Zone-2.2")["Zul'Gurub"]
 BigWigsJindo.enabletrigger = boss
 BigWigsJindo.toggleoptions = {"youcurse", "elsecurse", "icon", -1, "brainwash", "healing", "bosskill"}
-BigWigsJindo.revision = tonumber(string.sub("$Revision: 16639 $", 12, -3))
+BigWigsJindo.revision = tonumber(string.sub("$Revision: 19010 $", 12, -3))
 
 ------------------------------
 --      Initialization      --
@@ -72,6 +75,11 @@ function BigWigsJindo:OnEnable()
 	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_FRIENDLYPLAYER_DAMAGE", "Event")
 	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_PARTY_DAMAGE", "Event")
 
+	self:RegisterEvent("CHAT_MSG_COMBAT_CREATURE_VS_SELF_HITS", "HealingWardEvent")
+	self:RegisterEvent("CHAT_MSG_COMBAT_CREATURE_VS_SELF_MISSES", "HealingWardEvent")
+	self:RegisterEvent("CHAT_MSG_COMBAT_CREATURE_VS_PARTY_HITS", "HealingWardEvent")
+	self:RegisterEvent("CHAT_MSG_COMBAT_CREATURE_VS_PARTY_MISSES", "HealingWardEvent")
+
 	self:RegisterEvent("BigWigs_RecvSync")
 	self:TriggerEvent("BigWigs_ThrottleSync", "JindoCurse", 5)
 end
@@ -82,22 +90,32 @@ end
 
 function BigWigsJindo:CHAT_MSG_MONSTER_YELL(msg)
 	if string.find(msg, L["start"]) then
-	        self:ScheduleRepeatingEvent("bwjindototembar", self.Totembar, 18, self)
-		self:TriggerEvent("BigWigs_StartBar", self, L["warnhealing"], 18, "Interface\\Icons\\Spell_Nature_MagicImmunity")
+	    --self:ScheduleRepeatingEvent("bwjindototembar", self.Totembar, 16, self)
+		if self.db.profile.healing then
+			self:TriggerEvent("BigWigs_StartBar", self, L["warnhealing"], 16, "Interface\\Icons\\Spell_Nature_MagicImmunity")
+		end
+	end
+end
+
+function BigWigsJindo:HealingWardEvent(msg)
+	if string.find(msg, L["triggerhealing_vg"]) and self.db.profile.healing then
+		self:Totembar()
 	end
 end
 
 function BigWigsJindo:Totembar()
 		self:ScheduleEvent("BigWigs_Message", 1, L["warnhealing"], "Urgent")
 		self:ScheduleEvent("BigWigs_SetRaidIcon", 1.5, "Powerful Healing Ward")
-		self:TriggerEvent("BigWigs_StartBar", self, L["warnhealing"], 18, "Interface\\Icons\\Spell_Nature_MagicImmunity")
+		self:TriggerEvent("BigWigs_StartBar", self, L["warnhealing"], 16, "Interface\\Icons\\Spell_Nature_MagicImmunity")
 end
 
 function BigWigsJindo:CHAT_MSG_SPELL_CREATURE_VS_CREATURE_BUFF( msg )
 	if self.db.profile.brainwash and msg == L["triggerbrainwash"] then
 		self:TriggerEvent("BigWigs_Message", L["warnbrainwash"], "Urgent")
+		self:TriggerEvent("BigWigs_StartBar", self, L["warnbrainwash"], 16, "Interface\\Icons\\Ability_Creature_Disease_02")
 	elseif self.db.profile.healing and msg == L["triggerhealing"] then
 		self:TriggerEvent("BigWigs_Message", L["warnhealing"], "Important" )
+		self:TriggerEvent("BigWigs_StartBar", self, L["warnhealing"], 20, "Interface\\Icons\\Spell_Nature_MagicImmunity")
 	end
 end
 
@@ -119,7 +137,7 @@ function BigWigsJindo:BigWigs_RecvSync(sync, rest, nick)
 end
 
 function BigWigsJindo:Event(msg)
-	local _, _, baPlayer = string.find(msg, L["triggercurse"])
+	local _, _, baPlayer = string.find(msg, L["triggercurse_vg"])
 	if baPlayer then
 		if baPlayer == L["you"] then
 			baPlayer = UnitName("player")
