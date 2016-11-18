@@ -10,6 +10,8 @@ VG edit by Flier & Luise (De Profundis)
 
 Revision 19010
 
+The continued development of this addon is found here: https://github.com/isitLoVe/BigWigsVG
+
 ## Naxxramas:
 - [x] Anub'Rekhan
 - [x] Grand Widow Faerlina
